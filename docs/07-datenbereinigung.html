@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>7&nbsp; Datenbereinigung – Einführung in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./08-datenzusammenführung.html" rel="next">
+<link href="./06-datenimport-und-export.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Keine Treffer",
+    "search-matching-documents-text": "Treffer",
+    "search-copy-link-title": "Link in die Suche kopieren",
+    "search-hide-matches-text": "Zusätzliche Treffer verbergen",
+    "search-more-match-text": "weitere Treffer in diesem Dokument",
+    "search-more-matches-text": "weitere Treffer in diesem Dokument",
+    "search-clear-button-title": "Zurücksetzen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Abbrechen",
+    "search-submit-button-title": "Abschicken",
+    "search-label": "Suchen"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-datenbereinigung.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Datenbereinigung</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/bayReuth-logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Einführung in R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Suchen"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vorwort</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-einfuehrung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Einführung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-grundlagen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Grundlagen</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-datentransformation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Datentransformation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-datenvisualisierung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Datenvisualisierung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-datenbereinigung.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Datenbereinigung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-datenzusammenführung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Datenzusammenführung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-geodatenbearbeitung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geodatenbearbeitung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99-lernressourcen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lernressourcen</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Literatur</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Inhaltsverzeichnis</h2>
+   
+  <ul>
+  <li><a href="#sec-datenbereinigung-tidy-data" id="toc-sec-datenbereinigung-tidy-data" class="nav-link active" data-scroll-target="#sec-datenbereinigung-tidy-data"><span class="header-section-number">7.1</span> <em>Tidy data</em></a>
+  <ul>
+  <li><a href="#definition" id="toc-definition" class="nav-link" data-scroll-target="#definition"><span class="header-section-number">7.1.1</span> Definition</a></li>
+  <li><a href="#beispiele" id="toc-beispiele" class="nav-link" data-scroll-target="#beispiele"><span class="header-section-number">7.1.2</span> Beispiele</a></li>
+  <li><a href="#vorteile" id="toc-vorteile" class="nav-link" data-scroll-target="#vorteile"><span class="header-section-number">7.1.3</span> Vorteile</a></li>
+  <li><a href="#tidyr" id="toc-tidyr" class="nav-link" data-scroll-target="#tidyr"><span class="header-section-number">7.1.4</span> <code>tidyr</code></a></li>
+  </ul></li>
+  <li><a href="#variablen" id="toc-variablen" class="nav-link" data-scroll-target="#variablen"><span class="header-section-number">7.2</span> Variablen</a>
+  <ul>
+  <li><a href="#trennen" id="toc-trennen" class="nav-link" data-scroll-target="#trennen"><span class="header-section-number">7.2.1</span> Trennen</a></li>
+  <li><a href="#zusammenführen" id="toc-zusammenführen" class="nav-link" data-scroll-target="#zusammenführen"><span class="header-section-number">7.2.2</span> Zusammenführen</a></li>
+  </ul></li>
+  <li><a href="#tabellenorganisation" id="toc-tabellenorganisation" class="nav-link" data-scroll-target="#tabellenorganisation"><span class="header-section-number">7.3</span> Tabellenorganisation</a>
+  <ul>
+  <li><a href="#verlängern" id="toc-verlängern" class="nav-link" data-scroll-target="#verlängern"><span class="header-section-number">7.3.1</span> Verlängern</a></li>
+  <li><a href="#verbreitern" id="toc-verbreitern" class="nav-link" data-scroll-target="#verbreitern"><span class="header-section-number">7.3.2</span> Verbreitern</a></li>
+  </ul></li>
+  <li><a href="#übungsaufgaben" id="toc-übungsaufgaben" class="nav-link" data-scroll-target="#übungsaufgaben"><span class="header-section-number">7.4</span> Übungsaufgaben</a>
+  <ul>
+  <li><a href="#variablen-1" id="toc-variablen-1" class="nav-link" data-scroll-target="#variablen-1"><span class="header-section-number">7.4.1</span> Variablen</a>
+  <ul class="collapse">
+  <li><a href="#trennen-1" id="toc-trennen-1" class="nav-link" data-scroll-target="#trennen-1"><span class="header-section-number">7.4.1.1</span> Trennen</a></li>
+  <li><a href="#verbinden" id="toc-verbinden" class="nav-link" data-scroll-target="#verbinden"><span class="header-section-number">7.4.1.2</span> Verbinden</a></li>
+  </ul></li>
+  <li><a href="#tabellenorganisation-1" id="toc-tabellenorganisation-1" class="nav-link" data-scroll-target="#tabellenorganisation-1"><span class="header-section-number">7.4.2</span> Tabellenorganisation</a>
+  <ul class="collapse">
+  <li><a href="#billboard" id="toc-billboard" class="nav-link" data-scroll-target="#billboard"><span class="header-section-number">7.4.2.1</span> <code>billboard</code></a></li>
+  <li><a href="#who2" id="toc-who2" class="nav-link" data-scroll-target="#who2"><span class="header-section-number">7.4.2.2</span> <code>who2</code></a></li>
+  <li><a href="#geburten" id="toc-geburten" class="nav-link" data-scroll-target="#geburten"><span class="header-section-number">7.4.2.3</span> <code>geburten</code></a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-datenbereinigung" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Datenbereinigung</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Nachdem wir gelernt haben, eigens gewählte Daten zu importieren, ist es notwendig, in einem nächsten Schritt zu lernen, wie wir derartige Daten in ein Format überführen können, das wir mittels der uns bekannten Funktionen auswerten und visualisieren können. Hierfür werden wir zunächst ein Verständnis einheitlicher Datenformate gewinnen, bevor wir Funktionen kennenlernen, um vorhandene Tabellen umzugestalten.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>In diesem Kapitel lernen wir…</p>
+<ul>
+<li>…was innerhalb des <code>tidyverse</code> als “ordentliche” Daten (<em>tidy data</em>) verstanden wird.</li>
+<li>…wie wir eine Variable in mehrere Variablen trennen oder mehrere Variablen zu einer einzigen Variablen zusammenfügen.</li>
+<li>…was “lange” und “breite” Tabellenformate sind und wie wir vorhandene Tabellenformate verändern können.</li>
+</ul>
+<p>Wir benötigen hierfür das folgende Paket:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="sec-datenbereinigung-tidy-data" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="sec-datenbereinigung-tidy-data"><span class="header-section-number">7.1</span> <em>Tidy data</em></h2>
+<section id="definition" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">7.1.1</span> Definition</h3>
+<p>Nachdem wir bereits viele Pakete des <code>tidyverse</code> kennengelernt haben, ist die Frage angebracht, weshalb diese Kombination von Paketen das Wort <em>tidy</em> (zu deutsch “ordentlich” oder “aufgeräumt”) im Namen trägt. Tatsächlich verbirgt sich hinter dieser Bezeichnung eine präzise Vorstellung davon, wie Daten idealerweise für die Weitervera<strong>R</strong>beitung in einer Tabelle angeordnet sein sollten. Laut <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 5.2</a>)</span> sind Daten dann <em>tidy</em>, wenn <strong>drei Prinzipien</strong> erfüllt sind:</p>
+<ol type="1">
+<li>Jede <strong>Variable</strong> ist eine <strong>Spalte</strong>; jede Spalte ist eine Variable.</li>
+<li>Jede <strong>Beobachtung</strong> ist eine <strong>Zeile</strong>; jede Zeile ist eine Beobachtung.</li>
+<li>Jeder <strong>Wert</strong> ist eine <strong>Zelle</strong>; jede Zelle ist ein Wert.</li>
+</ol>
+<p>Diese drei Prinzipien lassen sich <strong>visuell</strong> leicht darstellen.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/images/tidy-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Die Prinzipien ordentlicher Daten <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 5.2</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Diese drei Prinzipien erscheinen einfach und intuitiv, dennoch sind <strong>Tabellen oftmals anders aufgebaut</strong>. Die Gründe hierfür sind, dass die Organisation einer Tabelle oft eher die <strong>Eingabe</strong>, nicht die Auswertung, widerspiegelt und dass die meisten <strong>Nutzer*innen</strong> von Tabellen mit den Prinzipien von <em>tidy data</em> <strong>nicht vertraut</strong> sind. Sobald wir aber professionelle Datenauswertung betreiben möchten, lohnt es sich, diese Prinzipien zu erlernen und umzusetzen.</p>
+</section>
+<section id="beispiele" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="beispiele"><span class="header-section-number">7.1.2</span> Beispiele</h3>
+<p>Betrachten wir drei <strong>Beispiele</strong>, um unser Verständnis zu schärfen. Handelt es sich bei <strong><code>table2</code></strong> um <em>tidy data</em>?<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>table2</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 4
+   country      year type            count
+   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583</code></pre>
+</div>
+</div>
+<p><strong>Nein</strong>, das tut es nicht. Die Spalten <code>type</code> und <code>count</code> folgen nicht der Logik von <em>tidy data</em>, denn die <strong>Werte von <code>count</code> beziehen sich jeweils auf eine in der Spalte <code>type</code> angegebene Variable</strong>. Wollten wir zum Beispiel die Bevölkerungswerte mit <code>mutate()</code> ein eine andere Dimension umrechnen, müssten wir alle Werte in der Spalte <code>count</code> umrechnen, was die Werte der Lebenserwartung verzerren würde.</p>
+<p>Wie steht es mit <strong><code>table3</code></strong>, handelt es sich hierbei um <em>tidy data</em>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>table3</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country      year rate             
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583</code></pre>
+</div>
+</div>
+<p><strong>Nein</strong>, auch diese Tabelle ist nicht <em>tidy</em>. Die Variable <strong><code>rate</code></strong> ist ein <code>character</code>-String, der augenscheinlich <strong>zwei Variablen</strong> beinhaltet, nämlich einen Zähler (die <code>cases</code>-Angabe) und einen Nenner (die <code>population</code>-Angabe). In einer aufgeräumten Tabelle würden sich diese Variablen in separaten Spalten befinden, sodass wir etwa aus ihnen eine dritte Variable mit <code>mutate()</code> berechnen könnten.</p>
+<p>Wie sieht es zuletzt mit <code>table1</code> aus, ist diese Tabelle <em>tidy</em>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>table1</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  country      year  cases population
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583</code></pre>
+</div>
+</div>
+<p><strong>Ja</strong>, in diesem Fall sind <strong>alle drei Prinzipien erfüllt</strong>.</p>
+</section>
+<section id="vorteile" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="vorteile"><span class="header-section-number">7.1.3</span> Vorteile</h3>
+<p>Auf den ersten Blick mögen die vorangegangenen Beispiele wenig bedeutsam wirken. Wie aber die Hinweise bereits andeuteten, hat <em>tidy data</em> zwei wichtige Vorteile:</p>
+<ol type="1">
+<li><strong>Konsistenz</strong>: Sobald wir einmal lernen, mit einem einheitlichen Tabellenformat zu arbeiten, können wir uns besser darauf konzentrieren, diesem Format entsprechende Funktionen zu erlernen.</li>
+<li><strong>Funktionalität</strong>: Weil R besonders auf die Arbeit mit Vektoren ausgerichtet ist (<a href="03-grundlagen.html#sec-grundlagen-datenstrukturen-vektor" class="quarto-xref"><span>Kapitel 3.5.1</span></a>), erleichtert es die Arbeit erheblich, wenn Variablen in Spalten angeordnet sind. Alle Funktionen aus <code>dplyr</code> und <code>ggplot2</code>, die wir bislang kennengelernt haben, funktionieren mit <em>tidy data</em> am besten.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<em>Messy data</em>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Die Bezeichnung <em>tidy data</em> soll im Umkehrschluss <strong>nicht</strong> bedeuten, dass Daten in jedem anderen möglichen Format “schlecht” sind. Viele Tabellenformate haben gewisse Vorteile für bestimmte Anwendungsbereiche. Die Vorteile von <em>tidy data</em> gelten insbesondere für R und sind deshalb nicht uneingeschränkt universalisierbar.</p>
+</div>
+</div>
+</section>
+<section id="tidyr" class="level3" data-number="7.1.4">
+<h3 data-number="7.1.4" class="anchored" data-anchor-id="tidyr"><span class="header-section-number">7.1.4</span> <code>tidyr</code></h3>
+<p>Das <code>tidyverse</code>-Paket, dessen Aufgabe die Bereinigung von Tabellen ist, nennt sich <code>tidyr</code>.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> Dieses Paket bietet eine Reihe an Funktionen, wir beschränken uns jedoch auf <strong>zwei Anwendungsbereiche</strong>: den Umgang mit Variablen und die Organisation von Tabellen.</p>
+</section>
+</section>
+<section id="variablen" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="variablen"><span class="header-section-number">7.2</span> Variablen</h2>
+<section id="trennen" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="trennen"><span class="header-section-number">7.2.1</span> Trennen</h3>
+<p>Ein Problem, dem wir regelmäßig begegnen, ist, dass <strong>eine Spalte mehrere Variablen</strong> beinhaltet. Dies war der Fall bei <code>table3</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>table3</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country      year rate             
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583</code></pre>
+</div>
+</div>
+<p>Wie bereits erklärt, beinhaltet <code>rate</code> tatsächlich <strong>zwei Variablen</strong>, wobei die erste Zahl für die Fallzahl (<code>cases</code>) und die zweite Zahl für die Bevölkerung (<code>population</code>) steht. Um eine solche Variable in zwei (oder mehr) separate Variablen zu trennen, nutzen wir <strong><code>separate()</code></strong>. Diese Funktion benötigt Angaben zu mindestens vier Parametern:</p>
+<ul>
+<li><strong><code>data</code></strong>: Der Inhalt welcher Tabelle soll bereinigt werden?</li>
+<li><strong><code>col</code></strong>: Welche Spalte (<em>column</em>) soll getrennt werden?</li>
+<li><strong><code>into</code></strong>: In welche Spalten sollen in die Inhalte der Spalte getrennt werden?</li>
+<li><strong><code>sep</code></strong>: Durch welches Trennzeichen (<em>separator</em>) sind die Inhalte der Spalte voneinander getrennt?</li>
+</ul>
+<p>In diesem Fall möchten wir die Spalte <code>rate</code> (<code>col</code>) von <code>table3</code> (<code>data</code>) in zwei neue Variablen namens <code>cases</code> und <code>population</code> (<code>into</code>) trennen, wobei wir als Trennzeichen (<code>sep</code>) den Ausdruck <code>"/"</code> nutzen möchten.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>table3 <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> rate, <span class="co"># Spalte trennen</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>), <span class="co"># Neue Variablen erstellen</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">"/"</span>) <span class="co"># Trennzeichen angeben</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  country      year cases  population
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     
+1 Afghanistan  1999 745    19987071  
+2 Afghanistan  2000 2666   20595360  
+3 Brazil       1999 37737  172006362 
+4 Brazil       2000 80488  174504898 
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583</code></pre>
+</div>
+</div>
+<p>Die Trennung war erfolgreich: <code>rate</code> haben wir in <code>cases</code> und <code>population</code> getrennt. Wichtig ist, dass bei der Trennung die <strong>ursprüngliche Variable entfernt</strong> wurde, weil standardmäßig der Parameter <code>remove</code> auf <code>TRUE</code> gesetzt ist. Wollen wir die ursprüngliche Variable behalten, ändern wir diese Einstellung.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>table3 <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> rate,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">"/"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">remove =</span> <span class="cn">FALSE</span>) <span class="co"># Ursprüngliche Variable behalten</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  country      year rate              cases  population
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;             &lt;chr&gt;  &lt;chr&gt;     
+1 Afghanistan  1999 745/19987071      745    19987071  
+2 Afghanistan  2000 2666/20595360     2666   20595360  
+3 Brazil       1999 37737/172006362   37737  172006362 
+4 Brazil       2000 80488/174504898   80488  174504898 
+5 China        1999 212258/1272915272 212258 1272915272
+6 China        2000 213766/1280428583 213766 1280428583</code></pre>
+</div>
+</div>
+<p>Uns fällt jedoch auf, dass die beiden neuen Variablen vom Datentyp <code>character</code> (<a href="03-grundlagen.html#sec-grundlagen-datentypen" class="quarto-xref"><span>Kapitel 3.4</span></a>) sind. Tatsächlich handelt es sich jedoch um Zahlen. <code>separate()</code> verfügt glücklicherweise über weitere optionale Parameter neben <code>remove</code>, darunter auch <code>convert</code> (zu deutsch “konvertieren”). Setzen wir diesen Parameter auf <code>TRUE</code>, versucht <code>tidyr</code>, die neuen Variablen automatisch in einen passenden Datentyp umzuwandeln.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>table3 <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col =</span> rate,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"cases"</span>, <span class="st">"population"</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">"/"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">convert =</span> <span class="cn">TRUE</span>) <span class="co"># Variablentypen umwandeln</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  country      year  cases population
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;int&gt;      &lt;int&gt;
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583</code></pre>
+</div>
+</div>
+</section>
+<section id="zusammenführen" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="zusammenführen"><span class="header-section-number">7.2.2</span> Zusammenführen</h3>
+<p>Wo wir etwas trennen können, können wir es auch zusammenführen. Nehmen wir an, wir würden uns mit der Tabelle <code>kurs</code> beschäftigen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>kurs</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  vorname nachname  kurs       semester
+  &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;   
+1 Juliane Außendorf Einf. in R 2024/25 
+2 Finn    Bianga    Einf. in R 2024/25 
+3 Rangin  Dalu      Einf. in R 2024/25 
+4 Jakob   Feuerer   Einf. in R 2024/25 
+5 Leander Förster   Einf. in R 2024/25 
+6 Tobias  &lt;NA&gt;      Einf. in R 2024/25 </code></pre>
+</div>
+</div>
+<p>Hierfür können wir das Gegenstück zu <code>separate()</code> namens <strong><code>unite()</code></strong> (zu deutsch “vereinigen”) nutzen. Als Informationen benötigt <code>unite()</code>:</p>
+<ul>
+<li><strong><code>data</code></strong>: Der Inhalt welcher Tabelle soll zusammengeführt werden?</li>
+<li><strong><code>...</code></strong>: Die Inhalte welcher Spalten (<em>column</em>) sollen zusammengeführt werden?</li>
+<li><strong><code>col</code></strong>: Wie soll die neue Variable heißen?</li>
+<li><strong><code>sep</code></strong>: Durch welches Trennzeichen (<em>separator</em>) sollen die Inhalte der Spalten miteinander verbunden werden?</li>
+</ul>
+<p>In diesem Fall möchten wir die Spalten <code>vorname</code> und <code>nachname</code> (<code>...</code>) der Tabelle <code>kurs</code> (<code>data</code>) in eine neue Variable namens <code>name</code> (<code>sep</code>) zusammenführen, wobei wir als Trennzeichen (<code>sep</code>) ein Leerzeichen (<code>" "</code>) nutzen möchten.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>kurs <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(vorname, nachname, <span class="co"># Spalten zusammenführen</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"name"</span>, <span class="co"># Neue Variable erstellen</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep =</span> <span class="st">" "</span>) <span class="co"># Trennzeichen angeben</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  name              kurs       semester
+  &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;   
+1 Juliane Außendorf Einf. in R 2024/25 
+2 Finn Bianga       Einf. in R 2024/25 
+3 Rangin Dalu       Einf. in R 2024/25 
+4 Jakob Feuerer     Einf. in R 2024/25 
+5 Leander Förster   Einf. in R 2024/25 
+6 Tobias NA         Einf. in R 2024/25 </code></pre>
+</div>
+</div>
+<p>Auch dieser Schritt ist uns geglückt. Allerdings hat R den Platzhalter für einen <strong>fehlenden Nachnamen</strong> (<code>NA</code>, <a href="03-grundlagen.html#sec-grundlagen-sorge-na" class="quarto-xref"><span>Kapitel 3.5.1.5</span></a>) als Text behandelt. Abermals hilft ein Blick in die optionalen Parameter von <code>unite()</code><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, um zu erfahren, dass wir mit <code>na.rm = TRUE</code> ein derartiges Vorgehen unterbinden können.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>kurs <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(vorname, nachname, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="st">"name"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep =</span> <span class="st">" "</span>, </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co"># Fehlende Werte entfernen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  name              kurs       semester
+  &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;   
+1 Juliane Außendorf Einf. in R 2024/25 
+2 Finn Bianga       Einf. in R 2024/25 
+3 Rangin Dalu       Einf. in R 2024/25 
+4 Jakob Feuerer     Einf. in R 2024/25 
+5 Leander Förster   Einf. in R 2024/25 
+6 Tobias            Einf. in R 2024/25 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tabellenorganisation" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="tabellenorganisation"><span class="header-section-number">7.3</span> Tabellenorganisation</h2>
+<p>Neben den unordentlichen Inhalten bestimmter Variablen besteht ein weiteres Problem von importierten Tabellen darin, dass sich die <strong>Werte einer Variablen nicht in einer, sondern in mehreren Spalten befinden</strong> und die <strong>Bezeichnung der Spalten wiederum selbst eine Variable enthält</strong>. Das klingt kompliziert, wird aber anhand eines Beispiels deutlich.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>table4b</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  country         `1999`     `2000`
+  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583</code></pre>
+</div>
+</div>
+<p>Diese Tabelle stellt die <strong>Bevölkerungszahl</strong> nicht in einer, sondern in <strong>zwei Spalten</strong> dar. Die Bezeichnung der Spalten (<code>1999</code> und <code>2000</code>) wiederum enthält eigentlich keine Variablenbezeichnung, sondern die Werte einer weiteren Variable: nämlich des Jahres. Die Tabelle befindet sich damit in einem sog. <strong>breiten</strong> (<em>wide</em>) <strong>Format</strong>. Demgegenüber stehen Tabellen in einem sog. <strong>langen</strong> (<em>long</em>) <strong>Format</strong>, wie dieses Schema illustriert:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://bookdown.org/wangminjie/R4DS/images/tidyr-fig.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Breite und lange Tabellenformate <span class="citation" data-cites="wang2024">(<a href="#ref-wang2024" role="doc-biblioref">Wang 2024</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="verlängern" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="verlängern"><span class="header-section-number">7.3.1</span> Verlängern</h3>
+<p>Bevor wir mit ihnen arbeiten können, müssen wir regelmäßig breite Tabellen so bearbeiten, dass ihr Inhalt als lange Tabelle dargestellt wird. Hierbei sprechen wir vom <strong>“Drehen”</strong> (<em>pivoting</em>) einer Tabelle. Die zuständigen Funktionen heißen entsprechend <code>pivot_*()</code>. Um eine breite Tabelle zu “verlängern”, bedienen wir uns <strong><code>pivot_longer()</code></strong>. Folgende <strong>Parameter</strong> benötigt die Funktion:</p>
+<ul>
+<li><strong><code>data</code></strong>: Der Inhalt welcher Tabelle soll gedreht werden?</li>
+<li><strong><code>cols</code></strong>: Der Inhalt welcher Spalten (<em>column</em>) soll gedreht werden?</li>
+<li><strong><code>names_to</code></strong>: Wie soll die neue Spalte heißen, in der die Namen der bisherigen Spalten erfasst werden sollen?</li>
+<li><strong><code>values_to</code></strong>: Wie soll die neue Spalte heißen, in der die Werte der bisherigen Spalten erfasst werden sollen?</li>
+</ul>
+<p>In unserem Beispiel wollen wir die Inhalte der Spalten <code>1999</code> und <code>2000</code> (<code>cols</code>) aus der Tabelle <code>table4b</code> (<code>data</code>) so drehen, dass die bisherigen Namen in einer neuen Spalte <code>year</code> (<code>names_to</code>) und die bisherigen Werte in einer neuen Spalte <code>pop</code> (<code>values_to</code>) festgehalten werden.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>table4b <span class="sc">|&gt;</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">1999</span><span class="st">`</span>, <span class="st">`</span><span class="at">2000</span><span class="st">`</span>), <span class="co"># Spalten auswählen</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>, <span class="co"># Variable für Namen</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"pop"</span>) <span class="co"># Variable für Werte</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country     year         pop
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;
+1 Afghanistan 1999    19987071
+2 Afghanistan 2000    20595360
+3 Brazil      1999   172006362
+4 Brazil      2000   174504898
+5 China       1999  1272915272
+6 China       2000  1280428583</code></pre>
+</div>
+</div>
+<p>Sollte es sich um mehrere Spalten handeln, die wir nicht manuell angeben möchten, können wir auch die Spalten anhand ihrer <strong>Position</strong> auswählen. Außerdem könnten wir, wie in Verwendung von <code>select()</code> gelernt, auch <strong>Hilfsfunktionen</strong> verwenden (<a href="04-datentransformation.html#sec-datentransformation-spalten-selecting-bereiche" class="quarto-xref"><span>Kapitel 4.3.2.2</span></a>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>table4b_long <span class="ot">&lt;-</span> table4b <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="co"># Spalten anhand der Position auswählen</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"pop"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>table4b_long</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country     year         pop
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;
+1 Afghanistan 1999    19987071
+2 Afghanistan 2000    20595360
+3 Brazil      1999   172006362
+4 Brazil      2000   174504898
+5 China       1999  1272915272
+6 China       2000  1280428583</code></pre>
+</div>
+</div>
+<p>In diesem Format können wir auf einfachste Art mit <code>ggplot2</code> eine Visualisierung erstellen. Mit der Ursprungstabelle wäre dies nicht möglich gewesen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>table4b_long <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y =</span> pop)) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> country)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07-datenbereinigung_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Oft enthalten die <strong>Spaltennamen</strong> in breiten Tabellen neben Variablen auch noch <strong>Präfixe</strong>, also vorangestellte Worte. In dieser veränderten Tabelle steht in letzten beiden Spalten neben der Jahresabgabe noch <code>year_</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>table4b_prefix <span class="ot">&lt;-</span> table4b <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">year_1999 =</span> <span class="st">`</span><span class="at">1999</span><span class="st">`</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">year_2000 =</span> <span class="st">`</span><span class="at">2000</span><span class="st">`</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>table4b_prefix</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  country      year_1999  year_2000
+  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583</code></pre>
+</div>
+</div>
+<p>Wenn wir beim Verlängern dieser Tabelle solche <strong>einheitliche Präfixe weglassen</strong> möchten, können wir mit dem Parameter <strong><code>names_prefix</code></strong> einstellen, dass diese vor dem Verlängern entfernt werden sollen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>table4b_prefix <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"year_"</span>, <span class="co"># Präfix entfernen</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"pop"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country     year         pop
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt;
+1 Afghanistan 1999    19987071
+2 Afghanistan 2000    20595360
+3 Brazil      1999   172006362
+4 Brazil      2000   174504898
+5 China       1999  1272915272
+6 China       2000  1280428583</code></pre>
+</div>
+</div>
+</section>
+<section id="verbreitern" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="verbreitern"><span class="header-section-number">7.3.2</span> Verbreitern</h3>
+<p>Vergleichbar mit <code>separate()</code> und <code>unite()</code> gibt es zu <code>pivot_longer()</code> auch ein Gegenstück: <strong><code>pivot_wider()</code></strong>. Mit dieser Funktion können wir eine bestehende Tabelle “verbreitern”. Folgende <strong>Parameter</strong> benötigt die Funktion:</p>
+<ul>
+<li><strong><code>data</code></strong>: Der Inhalt welcher Tabelle soll gedreht werden?</li>
+<li><strong><code>names_from</code></strong>: In welcher Spalte befinden sich die Werte, die als neue Spaltennamen genutzt werden sollen?</li>
+<li><strong><code>values_from</code></strong>: In welcher Spalte befinden sich die Werte, die als neue Werte für mehrere Spalten genutzt werden sollen?</li>
+</ul>
+<p>Wenn wir unsere verlängerte Tabelle <code>table4b_long</code> (<code>data</code>) also wieder in ihr Ursprungsformat verwandeln möchten, müssen wir lediglich angeben, dass die Namen der zu erzeugenden Spalten (<code>names_from</code>) aus der Spalte <code>year</code> und die Werte (<code>values_from</code>) aus der Spalte <code>pop</code> entnommen werden sollen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>table4b_wide <span class="ot">&lt;-</span> table4b_long <span class="sc">|&gt;</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> pop)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>table4b_wide</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  country         `1999`     `2000`
+  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
+1 Afghanistan   19987071   20595360
+2 Brazil       172006362  174504898
+3 China       1272915272 1280428583</code></pre>
+</div>
+</div>
+<p><strong>Sowohl lange als auch breite Tabellen haben nützliche Eigenschaften.</strong> Mit <code>table4b</code> bzw. <code>table4b_wide</code> könnten wir zwar weniger leicht ein einfaches Diagramm zeichnen, dafür aber leicht eine Veränderungsrate als neue Variable berechnen.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>table4b_wide <span class="sc">|&gt;</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">change_percent =</span> (<span class="st">`</span><span class="at">2000</span><span class="st">`</span> <span class="sc">-</span> <span class="st">`</span><span class="at">1999</span><span class="st">`</span>) <span class="sc">/</span> <span class="st">`</span><span class="at">1999</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">100</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  country         `1999`     `2000` change_percent
+  &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
+1 Afghanistan   19987071   20595360          3.04 
+2 Brazil       172006362  174504898          1.45 
+3 China       1272915272 1280428583          0.590</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="übungsaufgaben" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="übungsaufgaben"><span class="header-section-number">7.4</span> Übungsaufgaben</h2>
+<section id="variablen-1" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="variablen-1"><span class="header-section-number">7.4.1</span> Variablen</h3>
+<section id="trennen-1" class="level4" data-number="7.4.1.1">
+<h4 data-number="7.4.1.1" class="anchored" data-anchor-id="trennen-1"><span class="header-section-number">7.4.1.1</span> Trennen</h4>
+<p>Betrachten Sie die durch <code>tidyr</code> mitgelieferte Tabelle <strong><code>billboard</code></strong>, welche US-Chartpositionen aus dem Jahr 2000 enthält. Stellen Sie sich die folgenden Fragen:</p>
+<ul>
+<li>Welches Format hat die Tabelle? Ist sie weit oder lang?</li>
+<li>Welche Prinzipien von <em>tidy data</em> werden (nicht) befolgt?</li>
+</ul>
+<p>In einem weiteren Schritt trennen Sie die Variable <code>date.entered</code> in drei separate Variablen (<code>year</code>, <code>month</code> und <code>day</code>). Ihr Ergebnis (ohne die <code>wk</code>-Spalten) sollte so aussehen (beachten Sie auch die Variablentypen!):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(<span class="at">col =</span> date.entered,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"m"</span>, <span class="st">"d"</span>),</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">sep =</span> <span class="st">"-"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">convert =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 317 × 5
+   artist         track                       y     m     d
+   &lt;chr&gt;          &lt;chr&gt;                   &lt;int&gt; &lt;int&gt; &lt;int&gt;
+ 1 2 Pac          Baby Don't Cry (Keep...  2000     2    26
+ 2 2Ge+her        The Hardest Part Of ...  2000     9     2
+ 3 3 Doors Down   Kryptonite               2000     4     8
+ 4 3 Doors Down   Loser                    2000    10    21
+ 5 504 Boyz       Wobble Wobble            2000     4    15
+ 6 98^0           Give Me Just One Nig...  2000     8    19
+ 7 A*Teens        Dancing Queen            2000     7     8
+ 8 Aaliyah        I Don't Wanna            2000     1    29
+ 9 Aaliyah        Try Again                2000     3    18
+10 Adams, Yolanda Open My Heart            2000     8    26
+# ℹ 307 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="verbinden" class="level4" data-number="7.4.1.2">
+<h4 data-number="7.4.1.2" class="anchored" data-anchor-id="verbinden"><span class="header-section-number">7.4.1.2</span> Verbinden</h4>
+<p>Betrachten Sie die durch <code>tidyr</code> mitgelieferte Tabelle <strong><code>table5</code></strong>. Verbinden Sie die Spalten <code>century</code> und <code>year</code> zu einer neuen Spalte <code>year</code>, die eine korrekte, vierstellige Jahresangabe beinhaltet. Nutzen Sie außerdem ein weiteres <code>dplyr</code>-Verb, um die Variable in den richtigen Datentyp zu transformieren (<a href="03-grundlagen.html#sec-grundlagen-datentypen-arbeiten-transformieren" class="quarto-xref"><span>Kapitel 3.4.8.3</span></a>). Ihr Ergebnis sollte so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>table5 <span class="sc">|&gt;</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(year, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>        century, year, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep =</span> <span class="st">""</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(year))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country      year rate             
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tabellenorganisation-1" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="tabellenorganisation-1"><span class="header-section-number">7.4.2</span> Tabellenorganisation</h3>
+<section id="billboard" class="level4" data-number="7.4.2.1">
+<h4 data-number="7.4.2.1" class="anchored" data-anchor-id="billboard"><span class="header-section-number">7.4.2.1</span> <code>billboard</code></h4>
+<p>Verlängern Sie <code>billboard</code> so, dass die Wochenangaben in einer Variable <code>week</code> und die Platzierungen in einer Variable <code>rank</code> dargestellt werden. Ihr Ergebnis sollte so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"wk"</span>), <span class="co"># or !1:2</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="st">"week"</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"rank"</span>,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_prefix =</span> <span class="st">"wk"</span>, <span class="co"># or parse_number afterwards</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_drop_na =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5,307 × 5
+   artist  track                   date.entered week   rank
+   &lt;chr&gt;   &lt;chr&gt;                   &lt;date&gt;       &lt;chr&gt; &lt;dbl&gt;
+ 1 2 Pac   Baby Don't Cry (Keep... 2000-02-26   1        87
+ 2 2 Pac   Baby Don't Cry (Keep... 2000-02-26   2        82
+ 3 2 Pac   Baby Don't Cry (Keep... 2000-02-26   3        72
+ 4 2 Pac   Baby Don't Cry (Keep... 2000-02-26   4        77
+ 5 2 Pac   Baby Don't Cry (Keep... 2000-02-26   5        87
+ 6 2 Pac   Baby Don't Cry (Keep... 2000-02-26   6        94
+ 7 2 Pac   Baby Don't Cry (Keep... 2000-02-26   7        99
+ 8 2Ge+her The Hardest Part Of ... 2000-09-02   1        91
+ 9 2Ge+her The Hardest Part Of ... 2000-09-02   2        87
+10 2Ge+her The Hardest Part Of ... 2000-09-02   3        92
+# ℹ 5,297 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="who2" class="level4" data-number="7.4.2.2">
+<h4 data-number="7.4.2.2" class="anchored" data-anchor-id="who2"><span class="header-section-number">7.4.2.2</span> <code>who2</code></h4>
+<p>Betrachten Sie die Tabelle <strong><code>who2</code></strong>. Stellen Sie sich erneut die folgenden Fragen:</p>
+<ul>
+<li>Welches Format hat die Tabelle? Ist sie weit oder lang?</li>
+<li>Welche Prinzipien von <em>tidy data</em> werden (nicht) befolgt?</li>
+</ul>
+<p>Nachdem wie in Erfahrung gebracht haben, wofür die Spaltennamen stehen<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, verlängern Sie die Tabelle so, dass die einzelnen Informationen in drei verschiedene Variablen <code>diagnosis</code>, <code>gender</code> und <code>age_group</code> sowie die Fallzahlen in einer Variable <code>count</code> dargestellt werden. Ihr Ergebnis sollte so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>who2 <span class="sc">|&gt;</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">!</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"diagnosis"</span>, <span class="st">"gender"</span>, <span class="st">"age_group"</span>), </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"count"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 405,440 × 6
+   country      year diagnosis gender age_group count
+   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
+ 1 Afghanistan  1980 sp        m      014          NA
+ 2 Afghanistan  1980 sp        m      1524         NA
+ 3 Afghanistan  1980 sp        m      2534         NA
+ 4 Afghanistan  1980 sp        m      3544         NA
+ 5 Afghanistan  1980 sp        m      4554         NA
+ 6 Afghanistan  1980 sp        m      5564         NA
+ 7 Afghanistan  1980 sp        m      65           NA
+ 8 Afghanistan  1980 sp        f      014          NA
+ 9 Afghanistan  1980 sp        f      1524         NA
+10 Afghanistan  1980 sp        f      2534         NA
+# ℹ 405,430 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="geburten" class="level4" data-number="7.4.2.3">
+<h4 data-number="7.4.2.3" class="anchored" data-anchor-id="geburten"><span class="header-section-number">7.4.2.3</span> <code>geburten</code></h4>
+<p>Erzeugen und betrachten Sie die Tabelle <code>geburten</code>, die wir in der letzten Sitzung eingelesen haben (<a href="06-datenimport-und-export.html#sec-datenimport-uebungsaufgaben-csv" class="quarto-xref"><span>Kapitel 6.4.1</span></a>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">jahr =</span> <span class="fu">c</span>(<span class="dv">2013</span>, <span class="dv">2014</span>, <span class="dv">2015</span>, <span class="dv">2016</span>, <span class="dv">2017</span>, <span class="dv">2018</span>, <span class="dv">2019</span>, </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>), </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_insgesamt =</span> <span class="fu">c</span>(<span class="dv">109562</span>, <span class="dv">113935</span>, </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">118228</span>, <span class="dv">125689</span>, <span class="dv">126191</span>, <span class="dv">127616</span>, <span class="dv">128227</span>, <span class="dv">128764</span>, <span class="dv">134321</span>, <span class="dv">124897</span>, </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">116505</span>), </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_maennlich =</span> <span class="fu">c</span>(<span class="dv">55913</span>, <span class="dv">58695</span>, <span class="dv">60511</span>, <span class="dv">64503</span>, <span class="dv">64294</span>, </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">65272</span>, <span class="dv">65760</span>, <span class="dv">65932</span>, <span class="dv">68881</span>, <span class="dv">64000</span>, <span class="dv">59917</span>), </span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_weiblich =</span> <span class="fu">c</span>(<span class="dv">53649</span>, </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>                                         <span class="dv">55240</span>, <span class="dv">57717</span>, <span class="dv">61186</span>, <span class="dv">61897</span>, <span class="dv">62344</span>, <span class="dv">62467</span>, <span class="dv">62832</span>, <span class="dv">65440</span>, <span class="dv">60897</span>, </span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>                                         <span class="dv">56588</span>))</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>geburten</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 11 × 4
+    jahr geburten_insgesamt geburten_maennlich geburten_weiblich
+   &lt;dbl&gt;              &lt;dbl&gt;              &lt;dbl&gt;             &lt;dbl&gt;
+ 1  2013             109562              55913             53649
+ 2  2014             113935              58695             55240
+ 3  2015             118228              60511             57717
+ 4  2016             125689              64503             61186
+ 5  2017             126191              64294             61897
+ 6  2018             127616              65272             62344
+ 7  2019             128227              65760             62467
+ 8  2020             128764              65932             62832
+ 9  2021             134321              68881             65440
+10  2022             124897              64000             60897
+11  2023             116505              59917             56588</code></pre>
+</div>
+</div>
+<p>Verlängern Sie diese Tabelle so, dass die Geschlechtsangabe und die Anzahl der Geburten in eigenen Variablen vorliegen. Ihr Ergebnis sollte so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"geburten"</span>),</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"geschlecht"</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"geburten_"</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"geburten"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 33 × 3
+    jahr geschlecht geburten
+   &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;
+ 1  2013 insgesamt    109562
+ 2  2013 maennlich     55913
+ 3  2013 weiblich      53649
+ 4  2014 insgesamt    113935
+ 5  2014 maennlich     58695
+ 6  2014 weiblich      55240
+ 7  2015 insgesamt    118228
+ 8  2015 maennlich     60511
+ 9  2015 weiblich      57717
+10  2016 insgesamt    125689
+# ℹ 23 more rows</code></pre>
+</div>
+</div>
+<p>Diese Tabelle ist aufgeräumt, aber für manche Zwecke ungeeignet. Was, wenn wir den Anteil an Geburten je nach Geschlecht und Jahr berechnen wollen? Eine Möglichkeit, dies zu tun, wäre die folgende: Verlängern Sie <code>geburten</code> statt wie zuvor so, dass nur die Spalten <code>geburten_maennlich</code> und <code>geburten_weiblich</code> herangezogen werden. Die Spalten <code>geburten_insgesamt</code> soll hingegen erhalten bleiben. In einem weiteren Schritt nutzen Sie <code>mutate()</code>, um den jeweiligen Anteil zu berechnen. Ihr Ergebnis sollte so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="sc">|&gt;</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(geburten_maennlich, geburten_weiblich),</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"geschlecht"</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"geburten_"</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"geburten"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">anteil =</span> <span class="fu">round</span>(geburten <span class="sc">/</span> geburten_insgesamt <span class="sc">*</span> <span class="dv">100</span>, <span class="at">digits =</span> <span class="dv">1</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22 × 5
+    jahr geburten_insgesamt geschlecht geburten anteil
+   &lt;dbl&gt;              &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;
+ 1  2013             109562 maennlich     55913   51  
+ 2  2013             109562 weiblich      53649   49  
+ 3  2014             113935 maennlich     58695   51.5
+ 4  2014             113935 weiblich      55240   48.5
+ 5  2015             118228 maennlich     60511   51.2
+ 6  2015             118228 weiblich      57717   48.8
+ 7  2016             125689 maennlich     64503   51.3
+ 8  2016             125689 weiblich      61186   48.7
+ 9  2017             126191 maennlich     64294   50.9
+10  2017             126191 weiblich      61897   49.1
+# ℹ 12 more rows</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-wang2024" class="csl-entry" role="listitem">
+Wang, Minjie. 2024. <span>„数据科学中的 R 语言“</span>. <a href="https://bookdown.org/wangminjie/R4DS/" class="uri">https://bookdown.org/wangminjie/R4DS/</a>.
+</div>
+<div id="ref-r4ds2023" class="csl-entry" role="listitem">
+Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for Data Science. Import, Tidy, Transform, Visualize and Model Data</em>. 2nd Aufl. Sebastopol: O’Reilly. <a href="https://r4ds.hadley.nz/">https://r4ds.hadley.nz/</a>.
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Dieses Kapitel basiert auf <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 5</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Bei <code>table1</code> bis <code>table5</code> wie auch bei <code>who</code> und <code>who2</code> handelt es sich um Beispieltabellen, die im Paket <code>tidyr</code> vorhanden sind. Sie beziehen sich auf Bevölkerungsangaben und von der Weltgesundheitsorganisation dokumentierte Tuberkulose-Fälle (siehe <code>?table1</code>).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Auch für dieses Package liegt ein <em>cheatsheet</em> vor (<a href="02-workflow.html#sec-workflow-hilfe-und-selbsthilfe-cheatsheets" class="quarto-xref"><span>Kapitel 2.4.5</span></a>). In der aktuellsten Version wurde die Funktion <code>separate()</code> jedoch durch neuere Varianten (<code>separate_wider_position()</code> und <code>separate_wider_delim()</code>) ersetzt. Weil <code>separate()</code> in der älteren Form jedoch nach wie vor sehr verbreitet und seine Logik sich ohne Mühe auf die Nachfolgefunktionen übertragen lässt, nutzen wir in diesem Kapitel nach wie vor <code>separate()</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Siehe <code>?separate</code>. Dasselbe Vorgehen gilt für <code>unite()</code>.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Siehe <code>?unite</code>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Im langen Tabellenformat hätten wir für diese Berechnung <code>group_by()</code>, <code>mutate()</code> und die Hilfsfunktion <code>lag()</code> nutzen müssen: <code>table4b_long |&gt; group_by(country) |&gt; mutate(change_percent = (pop - lag(pop)) / pop * 100)</code>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Siehe <code>?who2</code>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Kopiert");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Kopiert");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./06-datenimport-und-export.html" class="pagination-link" aria-label="Allgemeiner Ablauf">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./08-datenzusammenführung.html" class="pagination-link" aria-label="Datenzusammenführung">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Datenzusammenführung</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

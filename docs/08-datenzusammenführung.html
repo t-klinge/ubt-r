@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>8&nbsp; Datenzusammenführung – Einführung in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./09-geodatenbearbeitung.html" rel="next">
+<link href="./07-datenbereinigung.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Keine Treffer",
+    "search-matching-documents-text": "Treffer",
+    "search-copy-link-title": "Link in die Suche kopieren",
+    "search-hide-matches-text": "Zusätzliche Treffer verbergen",
+    "search-more-match-text": "weitere Treffer in diesem Dokument",
+    "search-more-matches-text": "weitere Treffer in diesem Dokument",
+    "search-clear-button-title": "Zurücksetzen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Abbrechen",
+    "search-submit-button-title": "Abschicken",
+    "search-label": "Suchen"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-datenzusammenführung.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Datenzusammenführung</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/bayReuth-logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Einführung in R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Suchen"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vorwort</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-einfuehrung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Einführung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-grundlagen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Grundlagen</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-datentransformation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Datentransformation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-datenvisualisierung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Datenvisualisierung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-datenbereinigung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Datenbereinigung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-datenzusammenführung.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Datenzusammenführung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-geodatenbearbeitung.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geodatenbearbeitung</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./99-lernressourcen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lernressourcen</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Literatur</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Inhaltsverzeichnis</h2>
+   
+  <ul>
+  <li><a href="#was-sind-joins" id="toc-was-sind-joins" class="nav-link active" data-scroll-target="#was-sind-joins"><span class="header-section-number">8.1</span> Was sind Joins?</a></li>
+  <li><a href="#schlüsselfelder" id="toc-schlüsselfelder" class="nav-link" data-scroll-target="#schlüsselfelder"><span class="header-section-number">8.2</span> Schlüsselfelder</a>
+  <ul>
+  <li><a href="#definition" id="toc-definition" class="nav-link" data-scroll-target="#definition"><span class="header-section-number">8.2.1</span> Definition</a></li>
+  <li><a href="#schlüsselfelder-überprüfen" id="toc-schlüsselfelder-überprüfen" class="nav-link" data-scroll-target="#schlüsselfelder-überprüfen"><span class="header-section-number">8.2.2</span> Schlüsselfelder überprüfen</a></li>
+  <li><a href="#primär--und-fremdschlüssel" id="toc-primär--und-fremdschlüssel" class="nav-link" data-scroll-target="#primär--und-fremdschlüssel"><span class="header-section-number">8.2.3</span> Primär- und Fremdschlüssel</a></li>
+  </ul></li>
+  <li><a href="#arten-von-joins" id="toc-arten-von-joins" class="nav-link" data-scroll-target="#arten-von-joins"><span class="header-section-number">8.3</span> Arten von Joins</a>
+  <ul>
+  <li><a href="#mutating-joins" id="toc-mutating-joins" class="nav-link" data-scroll-target="#mutating-joins"><span class="header-section-number">8.3.1</span> Mutating Joins</a>
+  <ul class="collapse">
+  <li><a href="#sec-datenzusammenfuehrung-arten-mutating-left" id="toc-sec-datenzusammenfuehrung-arten-mutating-left" class="nav-link" data-scroll-target="#sec-datenzusammenfuehrung-arten-mutating-left"><span class="header-section-number">8.3.1.1</span> Left Join</a></li>
+  <li><a href="#right-join" id="toc-right-join" class="nav-link" data-scroll-target="#right-join"><span class="header-section-number">8.3.1.2</span> Right Join</a></li>
+  <li><a href="#full-join" id="toc-full-join" class="nav-link" data-scroll-target="#full-join"><span class="header-section-number">8.3.1.3</span> Full Join</a></li>
+  <li><a href="#sec-datenzusammenfuehrung-arten-mutating-inner" id="toc-sec-datenzusammenfuehrung-arten-mutating-inner" class="nav-link" data-scroll-target="#sec-datenzusammenfuehrung-arten-mutating-inner"><span class="header-section-number">8.3.1.4</span> Inner Join</a></li>
+  </ul></li>
+  <li><a href="#filtering-joins" id="toc-filtering-joins" class="nav-link" data-scroll-target="#filtering-joins"><span class="header-section-number">8.3.2</span> Filtering Joins</a>
+  <ul class="collapse">
+  <li><a href="#semi-join" id="toc-semi-join" class="nav-link" data-scroll-target="#semi-join"><span class="header-section-number">8.3.2.1</span> Semi Join</a></li>
+  <li><a href="#anti-join" id="toc-anti-join" class="nav-link" data-scroll-target="#anti-join"><span class="header-section-number">8.3.2.2</span> Anti Join</a></li>
+  </ul></li>
+  <li><a href="#weitere-arten-von-join" id="toc-weitere-arten-von-join" class="nav-link" data-scroll-target="#weitere-arten-von-join"><span class="header-section-number">8.3.3</span> Weitere Arten von Join</a></li>
+  </ul></li>
+  <li><a href="#übungsaufgaben" id="toc-übungsaufgaben" class="nav-link" data-scroll-target="#übungsaufgaben"><span class="header-section-number">8.4</span> Übungsaufgaben</a>
+  <ul>
+  <li><a href="#a-long-time-ago-in-a-galaxy-far-far-away" id="toc-a-long-time-ago-in-a-galaxy-far-far-away" class="nav-link" data-scroll-target="#a-long-time-ago-in-a-galaxy-far-far-away"><span class="header-section-number">8.4.1</span> <em>A long time ago in a galaxy far, far away…</em></a></li>
+  <li><a href="#left-join" id="toc-left-join" class="nav-link" data-scroll-target="#left-join"><span class="header-section-number">8.4.2</span> Left Join</a></li>
+  <li><a href="#right-join-1" id="toc-right-join-1" class="nav-link" data-scroll-target="#right-join-1"><span class="header-section-number">8.4.3</span> Right Join</a></li>
+  <li><a href="#full-join-1" id="toc-full-join-1" class="nav-link" data-scroll-target="#full-join-1"><span class="header-section-number">8.4.4</span> Full Join</a></li>
+  <li><a href="#inner-join" id="toc-inner-join" class="nav-link" data-scroll-target="#inner-join"><span class="header-section-number">8.4.5</span> Inner Join</a></li>
+  <li><a href="#semi-join-1" id="toc-semi-join-1" class="nav-link" data-scroll-target="#semi-join-1"><span class="header-section-number">8.4.6</span> Semi Join</a></li>
+  <li><a href="#anti-join-1" id="toc-anti-join-1" class="nav-link" data-scroll-target="#anti-join-1"><span class="header-section-number">8.4.7</span> Anti Join</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Datenzusammenführung</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Nur selten beziehen wir alle Daten, die wir auswerten oder visualisieren möchten, an einem einzigen Ort bzw. in einer einzigen Datei. Um dies zu bewerkstelligen, müssen wir begreifen, wie Tabellen miteinander zusammenhängen und welche Funktionen wir nutzen können, um sie zusammenzuführen.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>In diesem Kapitel lernen wir…</p>
+<ul>
+<li>…was Datenzusammenführung in Form sog. <em>joins</em> bedeutet.</li>
+<li>…welche unterschiedlichen Arten von <em>joins</em> es gibt.</li>
+<li>…wie wir im Rahmen des <code>tidyverse</code> unterschiedliche Arten von <em>joins</em> ausführen.</li>
+</ul>
+<p>Wir benötigen hierfür die folgenden Pakete:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(starwarsdb)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="was-sind-joins" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="was-sind-joins"><span class="header-section-number">8.1</span> Was sind Joins?</h2>
+<p>Im <em>Data Science</em>-Jargon wird das Zusammenführen von Daten in Tabellenform als <em>joining</em> (zu deutsch “zusammenführen”, “verbinden”) bezeichnet, der einzelne Schritt als <em>join</em>. Dabei werden zwei grundsätzliche Arten von <em>joins</em> unterschieden:</p>
+<ul>
+<li><strong><em>Mutating joins</em></strong>: Bei diesen <em>joins</em> werden einer Tabelle auf Basis von passenden Beobachtungen in einer anderen Tabelle <strong>neue Variablen</strong> hinzugefügt.</li>
+<li><strong><em>Filtering joins</em></strong>: Bei diesen <em>joins</em> werden Beobachtungen in einer Tabelle auf Basis von (nicht-)passenden Beobachtungen in einer anderen Tabelle <strong>gefiltert</strong>.</li>
+</ul>
+<p>Grundsätzlich lautet die zu klärende Frage beim Zusammenführen von Tabellen also immer: <strong>Gibt es eine Übereinstimmung?</strong> Oder, um die zentrale Frage der digitalen Praxis der Partnervermittlung zu bemühen: <strong><em>Is it a match?</em></strong></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzMzdDRyZXVkdnc0MWQ5ZGdsbmVua2dxdWh2bDU2a3dxcWFhdWNyNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Sr36wKcQi3vtBMldT9/giphy.webp" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Is it a match? (<a href="https://giphy.com/gifs/RBLS-hakim-simoes-rbls-Sr36wKcQi3vtBMldT9">GIPHY</a> 2024).</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="schlüsselfelder" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="schlüsselfelder"><span class="header-section-number">8.2</span> Schlüsselfelder</h2>
+<section id="definition" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">8.2.1</span> Definition</h3>
+<p><em>Joins</em> hängen davon ab, dass zwei miteinander zusammenzuführende Tabellen sog. <strong>Schlüsselfelder</strong> (<em>keys</em>) enthalten. Ein sog. <strong>Primärschlüssel</strong> (<em>primary key</em>) ist eine Variable, die jede Beobachtung in einer Tabelle eindeutig identifiziert. Werden mehrere Variablen benötigt, um eine Beobachtung eindeutig zu identifizieren, ist von <strong>zusammengesetzten Schlüsseln</strong> (<em>compound keys</em>) die Rede. Wo der bzw. die Schlüssel auch in einer zweiten Tabelle vorhanden sind, sprechen wir vom <strong>Fremdschlüssel</strong> (<em>foreign key</em>).</p>
+<p>Anschauliche Beispiele bieten die unterschieden <em>data frames</em> aus dem uns bereits bekannten Package <code>nycflights13</code> (<a href="04-datentransformation.html#sec-datentransformation-uebungsaufgaben" class="quarto-xref"><span>Kapitel 4.5</span></a>):</p>
+<ul>
+<li><strong><code>airlines</code></strong> enthält zwei Variablen: die Abkürzung jeder Fluggesellschaft sowie ihren vollen Namen. Als kürzerer und einfacherer Primärschlüssel bietet sich also <strong><code>carrier</code></strong> an.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>airlines</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16 × 2
+   carrier name                       
+   &lt;chr&gt;   &lt;chr&gt;                      
+ 1 9E      Endeavor Air Inc.          
+ 2 AA      American Airlines Inc.     
+ 3 AS      Alaska Airlines Inc.       
+ 4 B6      JetBlue Airways            
+ 5 DL      Delta Air Lines Inc.       
+ 6 EV      ExpressJet Airlines Inc.   
+ 7 F9      Frontier Airlines Inc.     
+ 8 FL      AirTran Airways Corporation
+ 9 HA      Hawaiian Airlines Inc.     
+10 MQ      Envoy Air                  
+11 OO      SkyWest Airlines Inc.      
+12 UA      United Air Lines Inc.      
+13 US      US Airways Inc.            
+14 VX      Virgin America             
+15 WN      Southwest Airlines Co.     
+16 YV      Mesa Airlines Inc.         </code></pre>
+</div>
+</div>
+<ul>
+<li><strong><code>airports</code></strong> enthält acht Variablen: einen dreistelligen internationalen Code sowie den Namen und unterschiedliche geographische und zeitliche Informationen. Als Primärschlüssel bietet sich auch hier der Code (<strong><code>faa</code></strong>) an.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>airports</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,458 × 8
+   faa   name                             lat    lon   alt    tz dst   tzone    
+   &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
+ 1 04G   Lansdowne Airport               41.1  -80.6  1044    -5 A     America/…
+ 2 06A   Moton Field Municipal Airport   32.5  -85.7   264    -6 A     America/…
+ 3 06C   Schaumburg Regional             42.0  -88.1   801    -6 A     America/…
+ 4 06N   Randall Airport                 41.4  -74.4   523    -5 A     America/…
+ 5 09J   Jekyll Island Airport           31.1  -81.4    11    -5 A     America/…
+ 6 0A9   Elizabethton Municipal Airport  36.4  -82.2  1593    -5 A     America/…
+ 7 0G6   Williams County Airport         41.5  -84.5   730    -5 A     America/…
+ 8 0G7   Finger Lakes Regional Airport   42.9  -76.8   492    -5 A     America/…
+ 9 0P2   Shoestring Aviation Airfield    39.8  -76.6  1000    -5 U     America/…
+10 0S9   Jefferson County Intl           48.1 -123.    108    -8 A     America/…
+# ℹ 1,448 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li><strong><code>planes</code></strong> enthält neun Variablen: einen für jedes Flugzeug individuellen Code sowie unterschiedliche technische Informationen. Abermals ist der Code (<strong><code>tailnum</code></strong>) als Primärschlüssel besonders geeignet.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>planes</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3,322 × 9
+   tailnum  year type              manufacturer model engines seats speed engine
+   &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;             &lt;chr&gt;        &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; 
+ 1 N10156   2004 Fixed wing multi… EMBRAER      EMB-…       2    55    NA Turbo…
+ 2 N102UW   1998 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+ 3 N103US   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+ 4 N104UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+ 5 N10575   2002 Fixed wing multi… EMBRAER      EMB-…       2    55    NA Turbo…
+ 6 N105UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+ 7 N107US   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+ 8 N108UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+ 9 N109UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+10 N110UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+# ℹ 3,312 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li><strong><code>weather</code></strong> enthält 15 Variablen: einen Code für jeden Flughafen sowie Wetterangaben für unterschiedliche Tage und Uhrzeiten; in der Variablen <code>time_hour</code> sind Tages- und Uhrzeit zusammengefügt. Als zusammengesetzter Schlüssel böte sich hier also eine Kombination aus <strong><code>origin</code> und <code>time_hour</code></strong> an.</li>
+</ul>
+</section>
+<section id="schlüsselfelder-überprüfen" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="schlüsselfelder-überprüfen"><span class="header-section-number">8.2.2</span> Schlüsselfelder überprüfen</h3>
+<p>Bislang haben wir nur behauptet, dass bestimmte Variablen geeignete Primär- oder zusammengesetzte Schlüssel sind. Wir können überprüfen, ob dies wirklich so ist, indem wir mithilfe von <strong><code>count()</code></strong> (<a href="04-datentransformation.html#sec-datentransformation-spalten-counting" class="quarto-xref"><span>Kapitel 4.3.1</span></a>) die Häufigkeit von einem oder mehreren Schlüsselfeldern zählen und <strong>sichergehen, dass keine Kombination häufiger als einmal vorkommt</strong>. Möchten wir also wissen, dass <code>carrier</code> ein geeigneter Schlüssel von <strong><code>airlines</code></strong> ist, gehen wir so vor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>airlines <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(carrier) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 2
+# ℹ 2 variables: carrier &lt;chr&gt;, n &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Unsere Ergebnistabelle hat null Zeilen, es kommt also kein <code>carrier</code>-Wert mehr als einmal vor. Die Variable ist als Schlüsselfeld geeignet. Wie steht es mit <code>origin</code> in <strong><code>weather</code></strong>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>weather <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(origin) <span class="sc">|&gt;</span> <span class="co"># Anzahl vorhandener Werte zählen</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="co"># Nur Werte angeben, die häufiger als einmal vorhanden sind</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  origin     n
+  &lt;chr&gt;  &lt;int&gt;
+1 EWR     8703
+2 JFK     8706
+3 LGA     8706</code></pre>
+</div>
+</div>
+<p>Alle drei Flughäfen kommen mehr als 8700 Mal vor, <code>origin</code> allein ist also kein geeigneter Schlüssel. Was aber, wenn wir <code>time_hour</code> hinzunehmen?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>weather <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(origin, time_hour) <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 3
+# ℹ 3 variables: origin &lt;chr&gt;, time_hour &lt;dttm&gt;, n &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Das sieht viel besser aus. <strong>Gemeinsam kommen <code>origin</code> und <code>time_hour</code> jeweils nur einmal vor</strong>, es gibt also für jeden Flughafen an jedem Tag zu jeder Stunde nur eine Beobachtung.</p>
+</section>
+<section id="primär--und-fremdschlüssel" class="level3" data-number="8.2.3">
+<h3 data-number="8.2.3" class="anchored" data-anchor-id="primär--und-fremdschlüssel"><span class="header-section-number">8.2.3</span> Primär- und Fremdschlüssel</h3>
+<p>Sobald wir passende Schlüssel in einer Tabelle identifiziert haben, stellt sich die Frage, welche Variablen als <strong>Primärschlüssel</strong> in einer Tabelle auch in einer anderen Tabelle als <strong>Fremdschlüssel</strong> vorhanden sind. Bei näherer Betrachtung von <code>airlines</code>, <code>airports</code>, <code>weather</code> und (der uns bereits bekannten Tabelle) <code>flights</code> können wir folgende Verbindungen erkennen:</p>
+<ul>
+<li><code>flights$tailnum</code> entspricht <code>planes$tailnum</code>.</li>
+<li><code>flights$carrier</code> entspricht <code>airlines$carrier</code>.</li>
+<li><code>flights$origin</code> entspricht <code>airports$faa</code>.</li>
+<li><code>flights$dest</code> entspricht ebenfalls <code>airports$faa</code>.</li>
+<li><code>flights$origin</code> in Verbindung mit <code>flights$time_hour</code> entspricht <code>weather$origin</code> in Verbindung mit <code>weather$time_hour</code>.</li>
+</ul>
+<p><strong>Visuell</strong> können wir die <strong>Verbindungen</strong> zwischen den Primärschlüsseln in <code>airlines</code>, <code>airports</code>, <code>planes</code> sowie <code>weather</code> und den Fremdschlüsseln in <code>flights</code> mit verbindenden Pfeilen darstellen.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/diagrams/relational.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Die Verbindungen zwischen Primärschlüsseln in <code>airlines</code>, <code>airports</code>, <code>planes</code>, <code>weather</code> und Fremdschlüsseln in <code>flights</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.2</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Dabei ist wichtig, festzuhalten, dass in diesen Beispielen alle Schlüsselfelder identische Namen tragen. Das ist ein vereinfachender Umstand, der leider nicht immer vorliegt.</p>
+</section>
+</section>
+<section id="arten-von-joins" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="arten-von-joins"><span class="header-section-number">8.3</span> Arten von Joins</h2>
+<section id="mutating-joins" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="mutating-joins"><span class="header-section-number">8.3.1</span> Mutating Joins</h3>
+<p>Durch das <code>tidyverse</code>-Paket <code>dplyr</code> (<a href="04-datentransformation.html#sec-datentransformation-tidyverse-dplyr" class="quarto-xref"><span>Kapitel 4.1.1</span></a>) stehen uns insgesamt <strong>sechs <code>*_join()</code>-Funktionen</strong> zur Verfügung: <code>left_join()</code>, <code>right_join()</code>, <code>full_join()</code>, <code>inner_join()</code>, <code>semi_join()</code> und <code>anti_join()</code>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> All diese Funktionen benötigen zwei <em>data frames</em> (<code>x</code> und <code>y</code>). Das <strong>Ergebnis</strong> eines <em>joins</em> ist immer ein weiterer <strong><em>data frame</em></strong>, wobei die Reihenfolge der Zeilen durch <code>x</code> bestimmt wird.</p>
+<section id="sec-datenzusammenfuehrung-arten-mutating-left" class="level4" data-number="8.3.1.1">
+<h4 data-number="8.3.1.1" class="anchored" data-anchor-id="sec-datenzusammenfuehrung-arten-mutating-left"><span class="header-section-number">8.3.1.1</span> Left Join</h4>
+<p>Die vermutlich <strong>am häufigsten genutzte Spielart</strong> eines <em>joins</em> ist ein <em>left join</em>. Bei einem solchen <em>mutating join</em> werden auf Grundlage eines Schlüsselfeldes alle Zeilen von <code>x</code> durch passende Variablen von <code>y</code> ergänzt. Die Angabe <code>left</code> bezieht sich darauf, dass es die <strong>“linke” Tabelle</strong> ist, die <strong>bestimmt, wie die zusammengeführte Tabelle aussieht</strong>. Die Ergebnistabelle enthält alle Zeilen aus <code>x</code> und fügt dort, wo sich eine Verbindung durch das Schlüsselfeld ergibt, alle Spalten aus <code>y</code> ein.</p>
+<p>Visuell können wir uns den Ablauf eines <strong><code>left_join()</code></strong> wie folgt vorstellen:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/diagrams/join/left.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Die Logik eines <code>left_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Nehmen wir als Beispiel an, wir würden die <strong>ausgeschriebenen Namen der Fluggesellschaften aus <code>airlines</code> unserer Tabelle <code>flights2</code></strong> (einer Auswahl von <code>flights</code>) <strong>hinzufügen</strong> wollen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>flights2 <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time_hour, flight, origin, dest, carrier, tailnum) <span class="co"># Auswahl an Variablen treffen und einem Objekt namens flights2 zuschreiben</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>flights2</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 6
+   time_hour           flight origin dest  carrier tailnum
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  
+ 1 2013-01-01 05:00:00   1545 EWR    IAH   UA      N14228 
+ 2 2013-01-01 05:00:00   1714 LGA    IAH   UA      N24211 
+ 3 2013-01-01 05:00:00   1141 JFK    MIA   AA      N619AA 
+ 4 2013-01-01 05:00:00    725 JFK    BQN   B6      N804JB 
+ 5 2013-01-01 06:00:00    461 LGA    ATL   DL      N668DN 
+ 6 2013-01-01 05:00:00   1696 EWR    ORD   UA      N39463 
+ 7 2013-01-01 06:00:00    507 EWR    FLL   B6      N516JB 
+ 8 2013-01-01 06:00:00   5708 LGA    IAD   EV      N829AS 
+ 9 2013-01-01 06:00:00     79 JFK    MCO   B6      N593JB 
+10 2013-01-01 06:00:00    301 LGA    ORD   AA      N3ALAA 
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+<p>Um dies zu tun, verbinden wir <code>flights2</code> durch <code>|&gt;</code> mit <code>left_join()</code>. Weil <code>flights2</code> bereits als erster Parameter (also <code>x</code>) in <code>left_join()</code> eingeht, nimmt <code>airlines</code> die Rolle von <code>y</code> ein.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>flights2 <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airlines) <span class="co"># Left join durchführen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 7
+   time_hour           flight origin dest  carrier tailnum name                 
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;                
+ 1 2013-01-01 05:00:00   1545 EWR    IAH   UA      N14228  United Air Lines Inc.
+ 2 2013-01-01 05:00:00   1714 LGA    IAH   UA      N24211  United Air Lines Inc.
+ 3 2013-01-01 05:00:00   1141 JFK    MIA   AA      N619AA  American Airlines In…
+ 4 2013-01-01 05:00:00    725 JFK    BQN   B6      N804JB  JetBlue Airways      
+ 5 2013-01-01 06:00:00    461 LGA    ATL   DL      N668DN  Delta Air Lines Inc. 
+ 6 2013-01-01 05:00:00   1696 EWR    ORD   UA      N39463  United Air Lines Inc.
+ 7 2013-01-01 06:00:00    507 EWR    FLL   B6      N516JB  JetBlue Airways      
+ 8 2013-01-01 06:00:00   5708 LGA    IAD   EV      N829AS  ExpressJet Airlines …
+ 9 2013-01-01 06:00:00     79 JFK    MCO   B6      N593JB  JetBlue Airways      
+10 2013-01-01 06:00:00    301 LGA    ORD   AA      N3ALAA  American Airlines In…
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+<p>Das Ergebnis unseres <em>joins</em> sieht fast so aus wie <code>flights2</code>, aber nur fast. Tatsächlich wurde für jede Zeile aus <code>flights2</code> auf Basis des Schlüsselfeldes <code>carrier</code> (wie aus der Meldung abzulesen ist) ein passender Wert aus der Spalte <code>name</code>, die sich in <code>airlines</code> findet, eingefügt. Unsere Ursprungstabelle hat also eine <strong>zusätzliche Spalte</strong> dazugewonnen. Die beiden Tabellen wurden <strong>erfolgreich zusammengeführt</strong>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Explizite Angabe der Schlüsselfelder
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Im bisherigen Beispiel <code>left_join(flights2, airlines)</code> hat <strong>R das geeignete Schlüsselfeld</strong> (<code>carrier</code>) <strong>selbst erkannt</strong>. Was aber, wenn R einmal nicht die richtigen Felder erkennt? Oder wenn die Schlüsselfelder zwar vorhanden sind, aber nicht dieselbe Bezeichnung tragen? In diesem Fall nutzen wir den Parameter <strong><code>by</code></strong>, um mit einem Vektor <strong>Schlüsselfelder explizit anzugeben</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Um das obige Ergebnis mit eigenen Einstellungen zu erzielen, würden wir unseren Code wie folgt ergänzen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>flights2 <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airlines,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="st">"carrier"</span>) <span class="co"># Gleichnamiges Schlüsselfeld angeben</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 7
+   time_hour           flight origin dest  carrier tailnum name                 
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;                
+ 1 2013-01-01 05:00:00   1545 EWR    IAH   UA      N14228  United Air Lines Inc.
+ 2 2013-01-01 05:00:00   1714 LGA    IAH   UA      N24211  United Air Lines Inc.
+ 3 2013-01-01 05:00:00   1141 JFK    MIA   AA      N619AA  American Airlines In…
+ 4 2013-01-01 05:00:00    725 JFK    BQN   B6      N804JB  JetBlue Airways      
+ 5 2013-01-01 06:00:00    461 LGA    ATL   DL      N668DN  Delta Air Lines Inc. 
+ 6 2013-01-01 05:00:00   1696 EWR    ORD   UA      N39463  United Air Lines Inc.
+ 7 2013-01-01 06:00:00    507 EWR    FLL   B6      N516JB  JetBlue Airways      
+ 8 2013-01-01 06:00:00   5708 LGA    IAD   EV      N829AS  ExpressJet Airlines …
+ 9 2013-01-01 06:00:00     79 JFK    MCO   B6      N593JB  JetBlue Airways      
+10 2013-01-01 06:00:00    301 LGA    ORD   AA      N3ALAA  American Airlines In…
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+<p>Wenn das <strong>Schlüsselfeld in <code>x</code> oder <code>y</code></strong> einen anderen Namen hätte, würden wir diese Felder <strong>mithilfe von <code>by</code> “gleichsetzen”</strong>. In diesem Beispiel heißt das Schlüsselfeld in <code>airlines</code> <code>CARRIER</code>. Wenn wir einen <em>left join</em> ohne Nutzung von <code>by</code> probieren, erhalten wir eine Fehlermeldung.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>flights2 <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airlines <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">rename</span>(<span class="at">CARRIER =</span> carrier)) <span class="co"># Variable umbenennen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>R warnt uns, weil es keinen gemeinsamen Schlüssel finden kann: <code>Error in left_join(): ! by must be supplied when x and y have no common variables.</code> Um diesen Fehler zu korrigieren, geben wir mit <code>by = c("carrier" = "CARRIER")</code> an, dass das Schlüsselfeld in den Tabellen jeweils anders benannt ist. Dann glückt der <em>join</em> ohne Probleme.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flights2 <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(airlines <span class="sc">|&gt;</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">rename</span>(<span class="at">CARRIER =</span> carrier),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"carrier"</span> <span class="ot">=</span> <span class="st">"CARRIER"</span>)) <span class="co"># Ungleichnamige Schlüsselfelder angeben</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 7
+   time_hour           flight origin dest  carrier tailnum name                 
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;                
+ 1 2013-01-01 05:00:00   1545 EWR    IAH   UA      N14228  United Air Lines Inc.
+ 2 2013-01-01 05:00:00   1714 LGA    IAH   UA      N24211  United Air Lines Inc.
+ 3 2013-01-01 05:00:00   1141 JFK    MIA   AA      N619AA  American Airlines In…
+ 4 2013-01-01 05:00:00    725 JFK    BQN   B6      N804JB  JetBlue Airways      
+ 5 2013-01-01 06:00:00    461 LGA    ATL   DL      N668DN  Delta Air Lines Inc. 
+ 6 2013-01-01 05:00:00   1696 EWR    ORD   UA      N39463  United Air Lines Inc.
+ 7 2013-01-01 06:00:00    507 EWR    FLL   B6      N516JB  JetBlue Airways      
+ 8 2013-01-01 06:00:00   5708 LGA    IAD   EV      N829AS  ExpressJet Airlines …
+ 9 2013-01-01 06:00:00     79 JFK    MCO   B6      N593JB  JetBlue Airways      
+10 2013-01-01 06:00:00    301 LGA    ORD   AA      N3ALAA  American Airlines In…
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p>Ein <strong>weiteres Beispiel</strong> festigt unser Verständnis. Zunächst erzeugen wir eine Auswahl an <code>weather</code>-Variablen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>weather2 <span class="ot">&lt;-</span> weather <span class="sc">|&gt;</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(origin, time_hour, temp, wind_speed) <span class="co"># Vier Spalten auswählen</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>weather2</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 26,115 × 4
+   origin time_hour            temp wind_speed
+   &lt;chr&gt;  &lt;dttm&gt;              &lt;dbl&gt;      &lt;dbl&gt;
+ 1 EWR    2013-01-01 01:00:00  39.0      10.4 
+ 2 EWR    2013-01-01 02:00:00  39.0       8.06
+ 3 EWR    2013-01-01 03:00:00  39.0      11.5 
+ 4 EWR    2013-01-01 04:00:00  39.9      12.7 
+ 5 EWR    2013-01-01 05:00:00  39.0      12.7 
+ 6 EWR    2013-01-01 06:00:00  37.9      11.5 
+ 7 EWR    2013-01-01 07:00:00  39.0      15.0 
+ 8 EWR    2013-01-01 08:00:00  39.9      10.4 
+ 9 EWR    2013-01-01 09:00:00  39.9      15.0 
+10 EWR    2013-01-01 10:00:00  41        13.8 
+# ℹ 26,105 more rows</code></pre>
+</div>
+</div>
+<p>Um mehr über die <strong>Wetterlage unserer Flüge bei Abflug</strong> zu erfahren, möchten wir <code>flights2</code> jetzt durch alle Variablen in <code>weather2</code> ergänzen. Zuvor entfernen wir <code>dest</code> aus <code>flights2</code>, damit uns klar ist, dass sich die Informationen auf den Abflugsflughafen, also <code>origin</code> beziehen. Diesmal erfolgt der <em>left join</em>, wie uns R mitteilt, auf Basis eines <strong>zusammengesetzten Schlüssels</strong> aus <code>origin</code> und <code>time_hour</code>. Der <strong>neue <em>data frame</em></strong> hat durch die Zusammenführung <strong>zwei neue Spalten</strong>, nämlich <code>temp</code> und <code>windspeed</code>, hinzugewonnen, während alle Zeilen aus <code>flights2</code> erhalten bleiben</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>flights2 <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span> dest) <span class="sc">|&gt;</span> <span class="co"># Spalte dest entfernen</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(weather2) <span class="co"># Left join durchführen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 7
+   time_hour           flight origin carrier tailnum  temp wind_speed
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+ 1 2013-01-01 05:00:00   1545 EWR    UA      N14228   39.0       12.7
+ 2 2013-01-01 05:00:00   1714 LGA    UA      N24211   39.9       15.0
+ 3 2013-01-01 05:00:00   1141 JFK    AA      N619AA   39.0       15.0
+ 4 2013-01-01 05:00:00    725 JFK    B6      N804JB   39.0       15.0
+ 5 2013-01-01 06:00:00    461 LGA    DL      N668DN   39.9       16.1
+ 6 2013-01-01 05:00:00   1696 EWR    UA      N39463   39.0       12.7
+ 7 2013-01-01 06:00:00    507 EWR    B6      N516JB   37.9       11.5
+ 8 2013-01-01 06:00:00   5708 LGA    EV      N829AS   39.9       16.1
+ 9 2013-01-01 06:00:00     79 JFK    B6      N593JB   37.9       13.8
+10 2013-01-01 06:00:00    301 LGA    AA      N3ALAA   39.9       16.1
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="right-join" class="level4" data-number="8.3.1.2">
+<h4 data-number="8.3.1.2" class="anchored" data-anchor-id="right-join"><span class="header-section-number">8.3.1.2</span> Right Join</h4>
+<p>Nachdem wir verstanden haben, wie ein <em>left join</em> funktioniert, ist die Erklärung eines <em>right joins</em> mittels <strong><code>right_join()</code></strong> für uns leichter zu verstehen: in diesem Fall handelt es sich nämlich lediglich um eine <strong>umgekehrte Ausgabetabelle</strong>. Das heißt, <strong>jede Zeile von <code>y</code></strong> bleibt erhalten und wird lediglich <strong>um Variablen aus <code>x</code> ergänzt</strong>. Weil <code>y</code> die “rechte” Tabelle ist, handelt es sich um einen <em>right join</em>. Visuell sieht der Vorgang so aus:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/diagrams/join/right.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Die Logik eines <code>right_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Um einen <em>data frame</em> mit denselben Informationen wie im <strong>vorherigen Beispiel</strong> von <code>flights2</code> und <code>weather2</code> zu erzeugen, würden wir also <strong><code>x</code> und <code>y</code> einfach vertauschen</strong>. Das Ergebnis ist, bis auf die Reihenfolge der Spalten, gleich.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>weather2 <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(flights2 <span class="sc">|&gt;</span> <span class="co"># Right join durchführen</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>               <span class="fu">select</span>(<span class="sc">-</span> dest)) <span class="co"># Variable dest aus flights2 entfernen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 7
+   origin time_hour            temp wind_speed flight carrier tailnum
+   &lt;chr&gt;  &lt;dttm&gt;              &lt;dbl&gt;      &lt;dbl&gt;  &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;  
+ 1 EWR    2013-01-01 05:00:00  39.0       12.7   1545 UA      N14228 
+ 2 EWR    2013-01-01 05:00:00  39.0       12.7   1696 UA      N39463 
+ 3 EWR    2013-01-01 06:00:00  37.9       11.5    507 B6      N516JB 
+ 4 EWR    2013-01-01 06:00:00  37.9       11.5   1124 UA      N53441 
+ 5 EWR    2013-01-01 06:00:00  37.9       11.5   1187 UA      N76515 
+ 6 EWR    2013-01-01 06:00:00  37.9       11.5    343 B6      N644JB 
+ 7 EWR    2013-01-01 06:00:00  37.9       11.5   1895 AA      N633AA 
+ 8 EWR    2013-01-01 06:00:00  37.9       11.5   1077 UA      N53442 
+ 9 EWR    2013-01-01 06:00:00  37.9       11.5   3768 MQ      N9EAMQ 
+10 EWR    2013-01-01 06:00:00  37.9       11.5    575 DL      N326NB 
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="full-join" class="level4" data-number="8.3.1.3">
+<h4 data-number="8.3.1.3" class="anchored" data-anchor-id="full-join"><span class="header-section-number">8.3.1.3</span> Full Join</h4>
+<p>Wenn wir weder <em>nur</em> alle Beobachtungen von <code>x</code> noch <em>nur</em> alle Beobachtungen von <code>y</code> in unserer zusammengeführten Tabelle behalten möchten, sondern den <strong>vollen Umfang beider Tabellen erhalten</strong> möchten, nutzen wir einen <em>full join</em>. Visuell können wir uns einen <em>full join</em> so vorstellen:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/diagrams/join/full.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Die Logik eines <code>full_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Wenn wir beispielsweise mittels <strong><code>slice_sample()</code></strong><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> zwei <strong>Stichproben von <code>flights2</code> und <code>weather2</code></strong> mit je 1000 Beobachtungen erzeugen und <strong><code>full_join()</code></strong> zusammenfügen, hat die Ergebnistabelle nicht nur 1000 Beobachtungen (wie jeweils <code>x</code> und <code>y</code> haben), sondern mehr.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>flights2_sample <span class="ot">&lt;-</span> flights2 <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="co"># 1000 Fälle als Stichprobe ziehen</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>weather2_sample <span class="ot">&lt;-</span> weather2 <span class="sc">|&gt;</span> </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>) <span class="co"># 1000 Fälle als Stichprobe ziehen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>flights2_weather2_full_join <span class="ot">&lt;-</span> flights2_sample <span class="sc">|&gt;</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">full_join</span>(weather2_sample) <span class="co"># Full join durchführen</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>flights2_weather2_full_join</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,968 × 8
+   time_hour           flight origin dest  carrier tailnum  temp wind_speed
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+ 1 2013-06-17 10:00:00    244 EWR    LAS   UA      N447UA   NA         NA  
+ 2 2013-12-26 13:00:00   2455 LGA    MCO   DL      N373NW   NA         NA  
+ 3 2013-08-26 12:00:00   1623 EWR    SNA   UA      N38727   NA         NA  
+ 4 2013-08-17 16:00:00    543 EWR    PBI   B6      N558JB   NA         NA  
+ 5 2013-02-17 15:00:00   1753 EWR    CLT   US      &lt;NA&gt;     NA         NA  
+ 6 2013-06-30 09:00:00      5 EWR    FLL   B6      N807JB   NA         NA  
+ 7 2013-09-15 10:00:00   1131 LGA    DFW   AA      N3KMAA   NA         NA  
+ 8 2013-05-07 16:00:00   4411 EWR    MEM   EV      N14558   NA         NA  
+ 9 2013-03-14 06:00:00   1281 EWR    CLT   US      N169UW   NA         NA  
+10 2013-09-04 07:00:00     11 JFK    SFO   VX      N846VA   69.1       13.8
+# ℹ 1,958 more rows</code></pre>
+</div>
+</div>
+<p>Was ist passiert? Ein <em>full join</em> hat <strong>alle Beobachtungen aus <code>x</code> und <code>y</code> behalten</strong>. In 33 Fällen gab es übereinstimmende Beobachtungen in beiden Tabellen, sodass diese nicht als neue Beobachtungen angehängt wurden. Deshalb ist die <strong>Gesamtanzahl der Beobachtungen</strong> nicht gleich 2000 (= 1000 aus <code>x</code> + 1000 aus <code>y</code>), sondern etwas weniger, nämlich 1968.</p>
+</section>
+<section id="sec-datenzusammenfuehrung-arten-mutating-inner" class="level4" data-number="8.3.1.4">
+<h4 data-number="8.3.1.4" class="anchored" data-anchor-id="sec-datenzusammenfuehrung-arten-mutating-inner"><span class="header-section-number">8.3.1.4</span> Inner Join</h4>
+<p>Das Gegenstück zu einem <em>full join</em> ist ein <em>inner join</em>: ein solcher <em>join</em> erzeugt eine Tabelle, die ausschließlich solche <strong>Beobachtungen</strong> enthält, die <strong>sowohl in <code>x</code> als auch in <code>y</code> enthalten</strong> sind.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>flights2_weather2_inner_join <span class="ot">&lt;-</span> flights2_sample <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(weather2_sample) <span class="co"># Inner join durchführen</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>flights2_weather2_inner_join</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 33 × 8
+   time_hour           flight origin dest  carrier tailnum  temp wind_speed
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+ 1 2013-09-04 07:00:00     11 JFK    SFO   VX      N846VA   69.1      13.8 
+ 2 2013-06-17 10:00:00   1847 LGA    ATL   DL      N915DE   81.0       5.75
+ 3 2013-11-04 14:00:00   3231 JFK    PIT   MQ      N638MQ   46.9       8.06
+ 4 2013-09-04 07:00:00     23 JFK    LAX   B6      N806JB   69.1      13.8 
+ 5 2013-11-03 10:00:00   1529 JFK    LAS   DL      N394DA   48.9      17.3 
+ 6 2013-04-13 16:00:00   4367 EWR    GSO   EV      N15912   59        13.8 
+ 7 2013-04-05 16:00:00   4299 EWR    DCA   EV      N13566   63.0      16.1 
+ 8 2013-07-31 11:00:00   3074 LGA    DEN   WN      N946WN   79.0       3.45
+ 9 2013-03-10 18:00:00   1973 EWR    CLT   US      N536UW   39.0       9.21
+10 2013-02-14 13:00:00    117 JFK    LAX   AA      N335AA   44.1      12.7 
+# ℹ 23 more rows</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Check, check!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dass die vollständigen Beobachtungen eines <em>full join</em> gleich den Beobachtungen eines <em>inner join</em> sind, können wir in zwei Schritten <strong>überprüfen.</strong></p>
+<ol type="1">
+<li>Wir entfernen mit <code>drop_na()</code> alle Beobachtungen aus <code>flights2_weather2_full_join</code>, die in irgendeiner Variable fehlende Werte (<code>NA</code>s) aufweisen.</li>
+<li>Wir überprüfen mit <code>identical()</code><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, ob die <code>flights2_weather2_full_join</code> ohne fehlende Werte gleich <code>flights2_weather2_inner_join</code> ist.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(flights2_weather2_full_join <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">drop_na</span>(),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>          flights2_weather2_inner_join)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p>Abschließend lassen sich die vier Formen von <em>mutating joins</em> und damit die Schnittmengen zwischen <code>x</code> und <code>y</code> auch in Form eines sog. <strong>Venn-Diagramms</strong> darstellen.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/diagrams/join/venn.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Die Schnittmengen zweier <em>data frames</em> je nach <em>mutating join</em> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="filtering-joins" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="filtering-joins"><span class="header-section-number">8.3.2</span> Filtering Joins</h3>
+<p>Während <em>mutating joins</em> Tabellen ergänzen, werden <em>filtering joins</em> genutzt, um Beobachtungen in <code>x</code> auf Basis von dem (Nicht-)Vorhandensein von Beobachtungen in <code>y</code> zu filtern. Es werden also <strong>keine Beobachtungen ergänzt oder wiederholt</strong>.</p>
+<section id="semi-join" class="level4" data-number="8.3.2.1">
+<h4 data-number="8.3.2.1" class="anchored" data-anchor-id="semi-join"><span class="header-section-number">8.3.2.1</span> Semi Join</h4>
+<p>Ein <em>semi join</em> überprüft die Beobachtungen von <code>x</code> auf entsprechende Beobachtungen in <code>y</code>. <strong>Wird eine Übereinstimmung gefunden, wird die Beobachtung in die Ergebnistabelle übernommen; wird sie das nicht, wird die Beobachtung entfernt bzw. “fallengelassen”</strong> (<em>drop</em>). Visuell können wir uns einen <em>semi join</em> so vorstellen:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/diagrams/join/semi.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Die Logik eines <code>semi_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Wir können uns dieses Vorgehen anhand von <code>flights2_sample</code> und <code>weather2_sample</code> gut verständlich machen. Möchten wir <strong>nur die Beobachtungen in <code>flights2_sample</code> ausgeben, für die in <code>weather2_sample</code> Wetterinformationen vorhanden sind</strong>, dabei aber <strong>keine Variablen in <code>flights2_sample</code> ergänzen</strong>, nutzen wir <strong><code>semi_join()</code></strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>flights2_sample <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(weather2_sample) <span class="co"># Semi join durchführen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 33 × 6
+   time_hour           flight origin dest  carrier tailnum
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  
+ 1 2013-09-04 07:00:00     11 JFK    SFO   VX      N846VA 
+ 2 2013-06-17 10:00:00   1847 LGA    ATL   DL      N915DE 
+ 3 2013-11-04 14:00:00   3231 JFK    PIT   MQ      N638MQ 
+ 4 2013-09-04 07:00:00     23 JFK    LAX   B6      N806JB 
+ 5 2013-11-03 10:00:00   1529 JFK    LAS   DL      N394DA 
+ 6 2013-04-13 16:00:00   4367 EWR    GSO   EV      N15912 
+ 7 2013-04-05 16:00:00   4299 EWR    DCA   EV      N13566 
+ 8 2013-07-31 11:00:00   3074 LGA    DEN   WN      N946WN 
+ 9 2013-03-10 18:00:00   1973 EWR    CLT   US      N536UW 
+10 2013-02-14 13:00:00    117 JFK    LAX   AA      N335AA 
+# ℹ 23 more rows</code></pre>
+</div>
+</div>
+<p>Unsere Ergebnistabelle sieht dem Ergebnis eines <em>inner join</em> (<a href="#sec-datenzusammenfuehrung-arten-mutating-inner" class="quarto-xref"><span>Kapitel 8.3.1.4</span></a>) sehr ähnlich, beinhaltet aber nur die Variablen aus <code>flights2_sample</code>.</p>
+</section>
+<section id="anti-join" class="level4" data-number="8.3.2.2">
+<h4 data-number="8.3.2.2" class="anchored" data-anchor-id="anti-join"><span class="header-section-number">8.3.2.2</span> Anti Join</h4>
+<p>Ein <em>anti join</em> stellt das Gegenstück zu einem <em>semi join</em> dar. In diesem Fall werden <strong>nur Beobachtungen in <code>x</code> in die Ergebnistabelle übernommen, für die keine Übereinstimmung in <code>y</code> vorliegt</strong>. Wie zuvor werden aber keine Variablen ergänzt. Visuell sieht dieser Vorgang so aus:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/diagrams/join/anti.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Die Logik eines <code>anti_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Anhand von <code>flights2_sample</code> und <code>weather2_sample</code> werden also <strong>nur die Fälle in <code>flights2_sample</code> gefiltert, für die keine Wetterinformationen in <code>weather2_sample</code> vorliegen</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>flights2_sample <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(weather2_sample) <span class="co"># Anti join durchführen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 967 × 6
+   time_hour           flight origin dest  carrier tailnum
+   &lt;dttm&gt;               &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  
+ 1 2013-06-17 10:00:00    244 EWR    LAS   UA      N447UA 
+ 2 2013-12-26 13:00:00   2455 LGA    MCO   DL      N373NW 
+ 3 2013-08-26 12:00:00   1623 EWR    SNA   UA      N38727 
+ 4 2013-08-17 16:00:00    543 EWR    PBI   B6      N558JB 
+ 5 2013-02-17 15:00:00   1753 EWR    CLT   US      &lt;NA&gt;   
+ 6 2013-06-30 09:00:00      5 EWR    FLL   B6      N807JB 
+ 7 2013-09-15 10:00:00   1131 LGA    DFW   AA      N3KMAA 
+ 8 2013-05-07 16:00:00   4411 EWR    MEM   EV      N14558 
+ 9 2013-03-14 06:00:00   1281 EWR    CLT   US      N169UW 
+10 2013-07-31 08:00:00     15 JFK    SFO   B6      N536JB 
+# ℹ 957 more rows</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="weitere-arten-von-join" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="weitere-arten-von-join"><span class="header-section-number">8.3.3</span> Weitere Arten von Join</h3>
+<p>Mit den in diesem Kapitel vorgestellten Arten von <em>joins</em> ist bereits ein großer Bereich abgedeckt. Für weitere Anwendungen finden sich bei <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 19.5</a>)</span> noch fortgeschrittene Funktionen.</p>
+</section>
+</section>
+<section id="übungsaufgaben" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="übungsaufgaben"><span class="header-section-number">8.4</span> Übungsaufgaben</h2>
+<section id="a-long-time-ago-in-a-galaxy-far-far-away" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="a-long-time-ago-in-a-galaxy-far-far-away"><span class="header-section-number">8.4.1</span> <em>A long time ago in a galaxy far, far away…</em></h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzV6ZmhiM3hiOWthY2FtMWhwdno4dGp4dTQycXlxMHF4cjF1YjlqbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1HPUSulSOHDpe/200.webp" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption><em>Wird die Macht mit uns sein?</em> (<a href="https://giphy.com/gifs/darth-vader-dancing-star-wars-1HPUSulSOHDpe">GIPHY</a> 2024).</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Die folgenden Übungsaufgaben beziehen sich auf neun <em>data frames</em> aus dem Package <strong><code>starwarsdb</code></strong>. Wenn wir <code>starwarsdb</code> bereits installiert haben, müssen wir es nur noch mit <code>library(starwarsdb)</code> laden. Wenn wir <code>starwarsdb</code> noch nicht installiert haben (was einige Minuten dauert), können wir stattdessen <a href="https://github.com/ubt-r/starwars/raw/refs/heads/main/starwars.rdata">diese RDATA-Datei</a> herunterladen und sie dann mit mit <code>load()</code> laden:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"./files/starwars.rdata"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Die folgenden neun <em>data frames</em> stehen uns dann zur Verfügung, deren Inhalte wir mit <strong><code>glimpse()</code></strong> betrachten können:</p>
+<ul>
+<li><strong><code>films</code></strong>: Detaillierte Angaben zu Filmen.</li>
+<li><strong><code>films_people</code></strong>: Angaben zu Charakteren je nach Film.</li>
+<li><strong><code>films_planet</code></strong>: Angaben zu Planeten je nach Film.</li>
+<li><strong><code>films_vehicles</code></strong>: Angaben zu Vehikeln je nach Film.</li>
+<li><strong><code>people</code></strong>: Detaillierte Angaben zu Charakteren.</li>
+<li><strong><code>pilots</code></strong>: Angaben zu Piloten je nach Vehikel.</li>
+<li><strong><code>planets</code></strong>: Detaillierte Angaben zu Planeten.</li>
+<li><strong><code>species</code></strong>: Detallierte Angaben zu Spezien.</li>
+<li><strong><code>vehicles</code></strong>: Detaillierte Angaben zu Vehikeln.</li>
+</ul>
+<p>In den folgenden Aufgaben werden mindestens zwei <em>data frames</em> zusammengeführt. Hierfür müssen wir zunächst passende Schlüsselfelder (Primär- und Fremdschlüssel) identifizieren. Wichtig ist, dass diese Schlüssel <strong>nicht immer dieselbe Bezeichnung tragen</strong> – anders als in den Erläuterungen oben. <strong>Bei den meisten <em>joins</em> müssen wir also <code>by</code> nutzen.</strong></p>
+</section>
+<section id="left-join" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="left-join"><span class="header-section-number">8.4.2</span> Left Join</h3>
+<p>Führen Sie <code>films_planets</code> und <code>planets</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>films_planets <span class="sc">|&gt;</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(planets,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"planet"</span> <span class="ot">=</span> <span class="st">"name"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 33 × 10
+   title  planet rotation_period orbital_period diameter climate gravity terrain
+   &lt;chr&gt;  &lt;chr&gt;            &lt;dbl&gt;          &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  
+ 1 A New… Tatoo…              23            304    10465 arid    1 stan… desert 
+ 2 A New… Alder…              24            364    12500 temper… 1 stan… grassl…
+ 3 A New… Yavin…              24           4818    10200 temper… 1 stan… jungle…
+ 4 The E… Hoth                23            549     7200 frozen  1.1 st… tundra…
+ 5 The E… Dagob…              23            341     8900 murky   &lt;NA&gt;    swamp,…
+ 6 The E… Bespin              12           5110   118000 temper… 1.5 (s… gas gi…
+ 7 The E… Ord M…              26            334    14050 temper… 1 stan… plains…
+ 8 Retur… Tatoo…              23            304    10465 arid    1 stan… desert 
+ 9 Retur… Dagob…              23            341     8900 murky   &lt;NA&gt;    swamp,…
+10 Retur… Endor               18            402     4900 temper… 0.85 s… forest…
+# ℹ 23 more rows
+# ℹ 2 more variables: surface_water &lt;dbl&gt;, population &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Werten Sie die Tabelle mittels <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, in welchem Film die meisten unterschiedlichen Planeten vorkamen. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>films_planets <span class="sc">|&gt;</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(planets,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"planet"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+# Groups:   title [6]
+  title                       n
+  &lt;chr&gt;                   &lt;int&gt;
+1 Revenge of the Sith        13
+2 Attack of the Clones        5
+3 Return of the Jedi          5
+4 The Empire Strikes Back     4
+5 A New Hope                  3
+6 The Phantom Menace          3</code></pre>
+</div>
+</div>
+</section>
+<section id="right-join-1" class="level3" data-number="8.4.3">
+<h3 data-number="8.4.3" class="anchored" data-anchor-id="right-join-1"><span class="header-section-number">8.4.3</span> Right Join</h3>
+<p>Führen Sie <code>people</code> und <code>films_people</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>people <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(films_people,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 162 × 12
+   name           height  mass hair_color skin_color eye_color birth_year gender
+   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; 
+ 1 Luke Skywalker    172    77 blond      fair       blue              19 mascu…
+ 2 Luke Skywalker    172    77 blond      fair       blue              19 mascu…
+ 3 Luke Skywalker    172    77 blond      fair       blue              19 mascu…
+ 4 Luke Skywalker    172    77 blond      fair       blue              19 mascu…
+ 5 C-3PO             167    75 &lt;NA&gt;       gold       yellow           112 mascu…
+ 6 C-3PO             167    75 &lt;NA&gt;       gold       yellow           112 mascu…
+ 7 C-3PO             167    75 &lt;NA&gt;       gold       yellow           112 mascu…
+ 8 C-3PO             167    75 &lt;NA&gt;       gold       yellow           112 mascu…
+ 9 C-3PO             167    75 &lt;NA&gt;       gold       yellow           112 mascu…
+10 C-3PO             167    75 &lt;NA&gt;       gold       yellow           112 mascu…
+# ℹ 152 more rows
+# ℹ 4 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, sex &lt;chr&gt;, title &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Werten Sie die Tabelle mittels <code>filter()</code>, <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, in welchem Film die meisten Wookies (<code>species == "Wookie"</code>) vorkamen. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>people <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(films_people,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"character"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Wookie"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 2
+# Groups:   title [4]
+  title                       n
+  &lt;chr&gt;                   &lt;int&gt;
+1 Revenge of the Sith         2
+2 A New Hope                  1
+3 Return of the Jedi          1
+4 The Empire Strikes Back     1</code></pre>
+</div>
+</div>
+</section>
+<section id="full-join-1" class="level3" data-number="8.4.4">
+<h3 data-number="8.4.4" class="anchored" data-anchor-id="full-join-1"><span class="header-section-number">8.4.4</span> Full Join</h3>
+<p>Führen Sie <code>films_vehicles</code> und <code>vehicles</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>films_vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(vehicles,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vehicle"</span> <span class="ot">=</span> <span class="st">"name"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 104 × 15
+   title           vehicle type  class model manufacturer cost_in_credits length
+   &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 A New Hope      CR90 c… star… corv… CR90… Corellian E…         3500000 1.5 e2
+ 2 A New Hope      Star D… star… Star… Impe… Kuat Drive …       150000000 1.6 e3
+ 3 A New Hope      Sentin… star… land… Sent… Sienar Flee…          240000 3.8 e1
+ 4 A New Hope      Death … star… Deep… DS-1… Imperial De…   1000000000000 1.20e5
+ 5 A New Hope      Millen… star… Ligh… YT-1… Corellian E…          100000 3.44e1
+ 6 A New Hope      Y-wing  star… assa… BTL … Koensayr Ma…          134999 1.4 e1
+ 7 A New Hope      X-wing  star… Star… T-65… Incom Corpo…          149999 1.25e1
+ 8 A New Hope      TIE Ad… star… Star… Twin… Sienar Flee…              NA 9.2 e0
+ 9 The Empire Str… Star D… star… Star… Impe… Kuat Drive …       150000000 1.6 e3
+10 The Empire Str… Millen… star… Ligh… YT-1… Corellian E…          100000 3.44e1
+# ℹ 94 more rows
+# ℹ 7 more variables: max_atmosphering_speed &lt;dbl&gt;, crew &lt;chr&gt;,
+#   passengers &lt;dbl&gt;, cargo_capacity &lt;dbl&gt;, consumables &lt;chr&gt;,
+#   hyperdrive_rating &lt;dbl&gt;, MGLT &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Werten Sie die Tabelle mittels <code>filter()</code>, <code>group_by()</code> und <code>summarize()</code> so aus, dass Sie erfahren, in welchem Film die schnellsten (<code>mean(max_atmosphering_speed, na.rm = TRUE)</code>) Raumschiffe (<code>type == "starship"</code>) vorkamen. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>films_vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(vehicles,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vehicle"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(type <span class="sc">==</span> <span class="st">"starship"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_speed =</span> <span class="fu">mean</span>(max_atmosphering_speed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_speed))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  title                   mean_speed
+  &lt;chr&gt;                        &lt;dbl&gt;
+1 Attack of the Clones         2475 
+2 Revenge of the Sith          1182.
+3 A New Hope                   1032.
+4 The Phantom Menace           1025 
+5 Return of the Jedi            958.
+6 The Empire Strikes Back       922.</code></pre>
+</div>
+</div>
+</section>
+<section id="inner-join" class="level3" data-number="8.4.5">
+<h3 data-number="8.4.5" class="anchored" data-anchor-id="inner-join"><span class="header-section-number">8.4.5</span> Inner Join</h3>
+<p>Führen Sie <code>vehicles</code> und <code>pilots</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(pilots,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"vehicle"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 43 × 15
+   name              type     class    model manufacturer cost_in_credits length
+   &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Millennium Falcon starship Light f… YT-1… Corellian E…          100000   34.4
+ 2 Millennium Falcon starship Light f… YT-1… Corellian E…          100000   34.4
+ 3 Millennium Falcon starship Light f… YT-1… Corellian E…          100000   34.4
+ 4 Millennium Falcon starship Light f… YT-1… Corellian E…          100000   34.4
+ 5 X-wing            starship Starfig… T-65… Incom Corpo…          149999   12.5
+ 6 X-wing            starship Starfig… T-65… Incom Corpo…          149999   12.5
+ 7 X-wing            starship Starfig… T-65… Incom Corpo…          149999   12.5
+ 8 X-wing            starship Starfig… T-65… Incom Corpo…          149999   12.5
+ 9 TIE Advanced x1   starship Starfig… Twin… Sienar Flee…              NA    9.2
+10 Slave 1           starship Patrol … Fire… Kuat System…              NA   21.5
+# ℹ 33 more rows
+# ℹ 8 more variables: max_atmosphering_speed &lt;dbl&gt;, crew &lt;chr&gt;,
+#   passengers &lt;dbl&gt;, cargo_capacity &lt;dbl&gt;, consumables &lt;chr&gt;,
+#   hyperdrive_rating &lt;dbl&gt;, MGLT &lt;dbl&gt;, pilot &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Werten Sie die Tabelle mittels <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, welche Vehikel die meisten unterschiedlichen Pilot*innen hatten. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(pilots,</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"vehicle"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">|&gt;</span> </span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 25 × 2
+# Groups:   name [25]
+   name                         n
+   &lt;chr&gt;                    &lt;int&gt;
+ 1 Millennium Falcon            4
+ 2 X-wing                       4
+ 3 Imperial shuttle             3
+ 4 Naboo fighter                3
+ 5 Belbullab-22 starfighter     2
+ 6 Imperial Speeder Bike        2
+ 7 Jedi Interceptor             2
+ 8 Jedi starfighter             2
+ 9 Naboo star skiff             2
+10 Snowspeeder                  2
+# ℹ 15 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="semi-join-1" class="level3" data-number="8.4.6">
+<h3 data-number="8.4.6" class="anchored" data-anchor-id="semi-join-1"><span class="header-section-number">8.4.6</span> Semi Join</h3>
+<p>Fügen Sie zunächst <code>films_planets</code> und die Spalten <code>title</code> und <code>episode_id</code> aus <code>films</code> mit <code>left_join()</code> zusammen. Nutzen Sie dann <code>filter()</code>, um nur die ersten drei Episoden auszuwählen (<code>between(episode_id, 1, 3)</code>). Die Ergebnistabelle soll <code>planet_names_first_trilogy</code> heißen und so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>planet_names_first_trilogy <span class="ot">&lt;-</span> films_planets <span class="sc">|&gt;</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(films <span class="sc">|&gt;</span> </span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(title, episode_id)) <span class="sc">|&gt;</span> </span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(episode_id, <span class="dv">1</span>, <span class="dv">3</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(title)`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>planet_names_first_trilogy</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 21 × 3
+   title                planet    episode_id
+   &lt;chr&gt;                &lt;chr&gt;          &lt;int&gt;
+ 1 The Phantom Menace   Tatooine           1
+ 2 The Phantom Menace   Naboo              1
+ 3 The Phantom Menace   Coruscant          1
+ 4 Attack of the Clones Tatooine           2
+ 5 Attack of the Clones Naboo              2
+ 6 Attack of the Clones Coruscant          2
+ 7 Attack of the Clones Kamino             2
+ 8 Attack of the Clones Geonosis           2
+ 9 Revenge of the Sith  Tatooine           3
+10 Revenge of the Sith  Alderaan           3
+# ℹ 11 more rows</code></pre>
+</div>
+</div>
+<p>Führen Sie desweiteren <code>planets</code> und <code>planet_names_first_trilogy</code> mittels <code>semi_join()</code> zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen der ersten drei Episoden enthält. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>planets <span class="sc">|&gt;</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(planet_names_first_trilogy,</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"planet"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 9
+   name          rotation_period orbital_period diameter climate gravity terrain
+   &lt;chr&gt;                   &lt;dbl&gt;          &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  
+ 1 Tatooine                   23            304    10465 arid    1 stan… desert 
+ 2 Alderaan                   24            364    12500 temper… 1 stan… grassl…
+ 3 Dagobah                    23            341     8900 murky   &lt;NA&gt;    swamp,…
+ 4 Naboo                      26            312    12120 temper… 1 stan… grassy…
+ 5 Coruscant                  24            368    12240 temper… 1 stan… citysc…
+ 6 Kamino                     27            463    19720 temper… 1 stan… ocean  
+ 7 Geonosis                   30            256    11370 temper… 0.9 st… rock, …
+ 8 Utapau                     27            351    12900 temper… 1 stan… scrubl…
+ 9 Mustafar                   36            412     4200 hot     1 stan… volcan…
+10 Kashyyyk                   26            381    12765 tropic… 1 stan… jungle…
+11 Polis Massa                24            590        0 artifi… 0.56 s… airles…
+12 Mygeeto                    12            167    10088 frigid  1 stan… glacie…
+13 Felucia                    34            231     9100 hot, h… 0.75 s… fungus…
+14 Cato Neimoid…              25            278        0 temper… 1 stan… mounta…
+15 Saleucami                  26            392    14920 hot     &lt;NA&gt;    caves,…
+# ℹ 2 more variables: surface_water &lt;dbl&gt;, population &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="anti-join-1" class="level3" data-number="8.4.7">
+<h3 data-number="8.4.7" class="anchored" data-anchor-id="anti-join-1"><span class="header-section-number">8.4.7</span> Anti Join</h3>
+<p>Führen Sie <code>planets</code> und <code>planet_names_first_trilogy</code> zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen aller Planeten, die <em>nicht</em> in den ersten drei Episoden vorkommen, enthält. Die Ergebnistabelle soll so aussehen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>planets <span class="sc">|&gt;</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(planet_names_first_trilogy,</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"planet"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 44 × 9
+   name      rotation_period orbital_period diameter climate     gravity terrain
+   &lt;chr&gt;               &lt;dbl&gt;          &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;  
+ 1 Yavin IV               24           4818    10200 temperate,… 1 stan… jungle…
+ 2 Hoth                   23            549     7200 frozen      1.1 st… tundra…
+ 3 Bespin                 12           5110   118000 temperate   1.5 (s… gas gi…
+ 4 Endor                  18            402     4900 temperate   0.85 s… forest…
+ 5 Stewjon                NA             NA        0 temperate   1 stan… grass  
+ 6 Eriadu                 24            360    13490 polluted    1 stan… citysc…
+ 7 Corellia               25            329    11000 temperate   1 stan… plains…
+ 8 Rodia                  29            305     7549 hot         1 stan… jungle…
+ 9 Nal Hutta              87            413    12150 temperate   1 stan… urban,…
+10 Dantooine              25            378     9830 temperate   1 stan… oceans…
+# ℹ 34 more rows
+# ℹ 2 more variables: surface_water &lt;dbl&gt;, population &lt;dbl&gt;</code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-r4ds2023" class="csl-entry" role="listitem">
+Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for Data Science. Import, Tidy, Transform, Visualize and Model Data</em>. 2nd Aufl. Sebastopol: O’Reilly. <a href="https://r4ds.hadley.nz/">https://r4ds.hadley.nz/</a>.
+</div>
+</div>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Dieses Kapitel basiert auf <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 19</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Das <code>tidyverse</code> hat <em>joins</em> keineswegs erfunden. <em>Left joins</em>, <em>right joins</em>, <em>inner joins</em> und <em>full joins</em> sind auch im Rahmen von <em>base R</em> unter Nutzung der Funktion <code>merge()</code> möglich (siehe <code>?merge</code>).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Bei einem Schlüsselfeld genügt die Nennung als <code>character</code>. Bei zwei oder mehr Schlüsselfelder müssen diese mit <code>c()</code> angegeben werden.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Hierbei handelt es sich um eine weitere Spielart der uns bereits bekannte <code>slice_*()</code>-Funktionen (<a href="04-datentransformation.html#sec-datentransformation-zeilen-slicing" class="quarto-xref"><span>Kapitel 4.2.2</span></a>).<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Der Funktionsaufruf <code>set.seed(1234)</code> wird benötigt, um die Zufallsstichprobe nachvollziehbar zu machen, sodass der folgende <code>slice_sample()</code>-Aufruf auf jedem Computer dieselbe Stichprobe generiert. Eine Erläutering findet sich in <a href="https://r-coder.com/set-seed-r/">diesem Blogbeitrag</a>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p><code>identical()</code> gibt <code>TRUE</code> aus, wenn zwei Objekte einander gleichen und <code>FALSE</code>, wenn dies nicht der Fall ist.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Kopiert");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Kopiert");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./07-datenbereinigung.html" class="pagination-link" aria-label="Datenbereinigung">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Datenbereinigung</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./09-geodatenbearbeitung.html" class="pagination-link" aria-label="Geodatenbearbeitung">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Geodatenbearbeitung</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 31fac945-2cd7-4f1e-9779-9881c05adf80
+      url: 'https://tobias-klinge.quarto.pub/ubt-einfuehrung-in-r'

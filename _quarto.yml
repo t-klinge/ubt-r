@@ -1,0 +1,46 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Einführung in R"
+  author: "Tobias Klinge"
+  date: today
+  chapters:
+    - index.qmd
+    - 01-einfuehrung.qmd
+    - 02-workflow.qmd
+    - 03-grundlagen.qmd
+    - 04-datentransformation.qmd
+    - 05-datenvisualisierung.qmd
+    - 06-datenimport-und-export.qmd
+    - 07-datenbereinigung.qmd
+    - 08-datenzusammenführung.qmd
+    - 09-geodatenbearbeitung.qmd
+    - 99-lernressourcen.qmd
+    - references.qmd
+  reader-mode: true
+  sidebar:
+    search: true
+    logo: images/bayReuth-logo.png
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    lang: de
+    number-sections: true
+    toc: true
+    toc-depth: 4
+  # pdf:
+  #   documentclass: report
+  #   papersize: a4
+  #   lang: de
+  #   number-sections: true
+  #   toc: true
+  #   toc-depth: 3
+
+

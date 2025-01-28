@@ -1,0 +1,3 @@
+# Vorwort {.unnumbered}
+
+Dieses Skript dient als Begleitmaterial für den Kurs *Einführung in R* im Wintersemester 2024. Als solches ist nur für die Teilnehmer\*innen dieses Kurses gedacht und seine weitere Verbreitung ist nur mit **Zustimmung** zulässig.

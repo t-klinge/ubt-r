@@ -1,0 +1,785 @@
+# Geodatenbearbeitung {#sec-geodatenbearbeitung}
+
+Bis zu diesem Kapitel haben wir R hauptsächlich für Daten in Tabellenform genutzt. Doch R ist auch für viele andere Formate nutzbar, darunter auch Geodaten sowohl im Vektor- als auch im Rasterbereich, wodurch wir R als GIS (**G**eographisches **I**nformations**s**ystem) nutzen können. Mit einem Einstieg in diese Funktionalitäten endet diese Einführung in R.
+
+In diesem Kapitel lernen wir...
+
+-   ...wie wir Geodaten in R importieren und ihre Struktur verstehen.
+-   ...wie wir Geodaten bearbeiten.
+-   ...wie wir Geodaten visualisieren.
+
+Wir benötigen hierfür die folgenden Pakete:
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+library(crsuggest)
+library(geodata)
+library(ggspatial)
+library(sf)
+library(terra)
+library(tidyverse)
+library(viridis)
+```
+
+## Geodaten 101 {#sec-geodatenbearbeitung-geodaten}
+
+In diesem Kapitel setzen wir Grundkenntnisse, wie sie in einer Einführung in GIS vermittelt werden, weitgehend voraus und wiederholen deshalb lediglich in aller Kürze zentrale Konzepte, die für die weitere Anwendung von Bedeutung sind. Zunächst verstehen wir **Geodaten** als *Daten mit räumlichem Bezug*. Dieser räumliche Bezug basiert auf einem **geodätischen Bezugssystem** (*geodetic reference system*), das eine Annäherung an die Form der Erde darstellt. Wie räumliche Informationen, die sich auf ein dreidimensionales Objekt wie die Erde beziehen in zweidimensionalen Visualisierungen dargestellt werden, ist eine Frage der **Projektion**.
+
+Desweiteren liegen Geodaten zumeist in einem von zwei Arten von **Dateiformaten** vor. Während Geodaten im **Vektorformat** *Punkte*, *Linien* (offen verbundene Punkte) und *Flächen* (geschlossen verbundene Punkte) in Verbindung mit Informationen in Tabellenform (sog. **Attributtabellen**) darstellen können, nehmen Geodaten im **Rasterformat** die Form von *Pixeln* mit bestimmten Werten an. Wir werden in diesem Kapitel beide Arten von Geodaten einführend behandeln. 
+
+## R als GIS?
+
+Warum aber sollten wir R zur Auswertung von Geodaten heranziehen? Hierfür gibt es mehrere Gründe:
+
+-   Der **Umfang an Paketen zur Geodatenbearbeitung** ist in den letzten Jahren erheblich angestiegen.
+-   Im Vergleich zu verbreiteter Software wie ArcGIS oder QGIS können wir unsere Arbeit in R durch gute **Dokumentation** (@sec-workflow-dokumentation) leichter nachvollziehbar und teilbar machen.
+-   Wir können viele unserer **bisherigen Kenntnisse** auf die Arbeit mit Geodaten **übertragen**. Wir müssen also nicht mehrere Programme erlernen, sondern können unsere Fähigkeiten in einem Programm bzw. einer Programmiersprache erweitern und vertiefen. Zudem können wir alle Bearbeitungsschritte in **einer Umgebung**, nämlich RStudio, durchführen.
+
+## Vektordaten
+
+Für die Arbeit mit Vektordaten hat sich in den letzten Jahren das Paket **`sf`** als neuer Standard etabliert, der auch in aktuellen Lehrbüchern vermittelt wird [@lovelace2025].^[Auch für dieses Package liegt ein *cheatsheet* vor (@sec-workflow-hilfe-und-selbsthilfe-cheatsheets).] Die Abkürzung `sf` steht dabei für **s*****imple*** **f*****eatures*** (zu deutsch etwa "einfache Merkmale" oder "einfache Eigenschaften").^[Dieses Kapitel basiert auf @keyes2024 [Kapitel 4].] Ein *feature* bezeichnet ein oder mehrere zusammenhängende geometrische Objekte mit räumlichem Bezug. Dieses Paket beerbt damit **vorherige Pakete** wie `sp`, `rgeos` und `rgdal`, indem es auf ihnen aufbaut, aber nützliche Veränderungen vornimmt [@pebesma2018]. Ein großer Vorteil von `sf` ist, dass es Vektordaten in zahlreichen unterschiedlichen Formaten importieren, diese aber im Rahmen von R als **einheitliche Objekte**, eben als *simple features*, nutzen kann.^[Dieser Bedeutung von **st**andardisierten Objekten ist vermutlich zu verdanken, dass viele Funktionen mit `st_*()` benannt sind.] Desweiteren sind `sf`-Funktionen so verfasst, dass sie mit Paketen des `tidyverse` kompatibel sind.
+
+### `sf`-Objekte {#sec-geodatenbearbeitung-vektor-sf}
+
+Wie diese Objekte aussehen, schauen wir uns anhand eines **Beispiels** an.^[Die Geodaten für alle Beispiele in diesem Kurs stammen ursprünglich aus den Github-Datenbeständen [`deutschlandGeoJSON`](https://github.com/isellsoap/deutschlandGeoJSON) (vom Nutzer `isellsoap`) und [`map-of-europe`](https://github.com/idris-maps/map-of-europe/) (vom Nutzer `idris-maps`).] Hierfür importieren wir mit der Funktion **`read_sf()`** (*read simple features*) eine **GeoJSON-Datei** als `de_nation`, die die Gebietsgrenzen Deutschlands enthält.^[GeoJSON ist eine von zahlreichen Alternativen zum gängigen, aber teils unvorteilhaften SHP-Format, auch *shapefile* genannt. Die Nachteile von *shapefiles* werden auf [dieser](http://switchfromshapefile.org/) Website übersichtlich dargestellt.] Als einzigen Parameter nutzen wir `dsn` (*data source name*), dem wir eine URL nennen.
+
+```{r}
+de_nation <- read_sf(dsn = "https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_nation.geojson") # Einlesen von GEOJSON-Datei
+```
+
+Zunächst sehen wir, dass es sich bei `de_nation` nicht nur um eine *tibble* bzw. einen *data frame*, sondern auch um ein Objekt der **Klasse `sf`** handelt.
+
+```{r}
+class(de_nation) # Objektklasse abfragen
+```
+
+Wie aber sieht dieses Objekt aus? Rufen wir es einmal auf.
+
+```{r}
+de_nation
+```
+Zunächst einmal fällt auf, dass das Objekt **fünf Zeilen Metadaten** enthält. Aus diesen Informationen können wir bereits viel lernen:
+
+1.   `Simple feature collection with 1 feature and 3 fields`: `de_nation` besteht aus nur **einem Feature**, dessen dazugehörige Tabelle **drei Felder** hat.
+2.   `Geometry type`: Als Vektordatei können `sf`-Objekte sechs Arten von **Geometrien** enthalten. `de_nation` ist ein `MULTIPOLYGON`, besteht also aus mehreren einem aus mehreren Teilen bestehenden Polygon (zu den Kontinentalumrissen Deutschlands kommen schließlich noch mehrere Inseln dazu). Die anderen fünf Arten von möglichen `sf`-Geometrien sind:
+      - `POLYGON`: Alleinstehende *Polygone* mit je einer Zeile pro Polygon.
+      - `POINT`: Alleinstehende *Punkte* mit je einer Zeile pro Punkt.
+      - `MULTIPOINT`: Zusammenhängende *Punkte* mit je einer Zeile pro Gruppe an Punkten.
+      - `LINESTRING`: Alleinstehende *Linien* mit je einer Zeile pro Linie.
+      - `MULTILINESTRING`: Zusammenhängende *Linien* mit je einer Zeile pro Gruppe an Linien.
+3.  `Dimension`: Geodaten können bis zu vier **Dimensionen** abdecken. In diesem Fall bedeutet `XY` aber, dass jeweils nur `X`- und `Y`-Werte (sog. "Rechts-" bzw. "Hochwerte") für unsere *features* angegeben sind. Weitere mögliche Dimensionen wären `Z` und `M`.
+4.  `Bounding box`: Als "begrenzende Kiste" sind hier die **Koordinaten des kleinsten rechteckigen Raumausschnittes** angegeben, der alle *features* enthält.
+5.  `Geodetic CRS`: Diese Angabe gibt das **geodätische Referenzsystem** (@sec-geodatenbearbeitung-geodaten) an, auf dem die räumlichen Angaben basieren. In diesem Fall handelt es sich um `WGS 84`, ein [gängiges System](https://de.wikipedia.org/wiki/World_Geodetic_System_1984).
+
+Auf die Metadaten folgt, wie bei jeder Tabelle, eine Angabe der ersten (in diesem Fall der einzigen) Spalte(n). `de_nation` enthält **vier Spalten**: 
+
+- `ISO` enthält den dreistelligen Ländercode. 
+- `NAME_ENGLI` enthält den englischen Namen.
+- `NAME_LOCAL` enthält den Namen in der Landessprache. 
+- Besonders ist die Spalte **`geometry`**: Hierbei handelt es sich um die **gesamten geographischen Angaben** unseres Polygons.^[Siehe `de_nation$geometry`.] Anders ausgedrückt: es ist diese Spalte, die unser Objekt zu einem Geodatenobjekt macht!
+
+Die **große Bedeutung** von `geometry` wird auch darin deutlich, dass wir es nicht auf die uns bekannte Art entfernen können. Grundsätzlich sind viele der Funktionen zur Datentransformation (@sec-datentransformation) auf `sf`-Objekte anwendbar. Dabei soll `geometry` aber stets erhalten bleiben. Wenn wir mit `select()` etwa nur die Spalten 1 und 3 (`ISO` und `NAME_LOCAL`) auswählen wollen, wird **`geometry` automatisch mitausgewählt**.
+
+```{r}
+de_nation |> 
+  select(1, 3) # Nur Spalten 1 und 3 auswählen
+```
+
+### Von der Visualisierung...
+
+Um `de_nation` zu visualisieren, können wir unsere `ggplot2`-Kenntnisse nutzen. Möchten wir ein `sf`-Objekt zeichnen lassen, gehen wir wie bisher vor, zeichnen aber ein neues *geom*: **`geom_sf()`**. `ggplot2` zeichnet auf diesen Befehl hin eine simple **Karte**, die auf den Achsen **Längen- und Breitengrade** angibt.
+
+```{r}
+de_nation |> 
+  ggplot() +
+  geom_sf() # Simple features zeichnen
+```
+
+#### Geometriearten
+
+Mit `ggplot()` können wir nun **Beispiele** für die erwähnten Arten von **`Geometry`** (@sec-geodatenbearbeitung-vektor-sf) zeichnen. Hierfür lesen wir zunächst eine Reihe von GEOJSON-Dateien ein.
+
+```{r}
+#| eval: false
+#| echo: false
+# Prepare data for upload to GitHub
+# POLYGON: Sachsen
+read_sf("https://github.com/isellsoap/deutschlandGeoJSON/raw/refs/heads/main/2_bundeslaender/3_mittel.geo.json") |> 
+    filter(name == "Sachsen") |> 
+    st_cast("POLYGON") |> 
+    st_write("./files/sachsen.geojson")
+# MULTIPOLYGON: German states
+read_sf("https://github.com/isellsoap/deutschlandGeoJSON/raw/refs/heads/main/2_bundeslaender/3_mittel.geo.json") |> 
+    st_write("./files/de_states.geojson")
+# MULTIPOINT: German cities
+eu_cities <- read_sf("https://raw.githubusercontent.com/idris-maps/map-of-europe/refs/heads/master/data/cities.json")
+de_nation |> 
+  st_intersection(eu_cities) |> 
+  st_write("./files/de_cities.geojson")
+# POINT: Berlin
+eu_cities |>
+  filter(name == "Berlin") |> 
+  st_write("./files/berlin.geojson")
+# MULTILINESTRING: German roads
+eu_roads <- read_sf("https://raw.githubusercontent.com/idris-maps/map-of-europe/refs/heads/master/data/roadMajor.json")
+de_nation |> 
+  st_intersection(eu_roads) |> 
+  st_write("./files/de_roads.geojson")
+# LINESTRING: E41 near Worms
+de_roads |> 
+  slice_head(n = 1) |> 
+  st_write("./files/e41_worms.geojson")
+```
+
+```{r}
+#| warning: false
+# POLYGON: Sachsen
+sachsen <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/sachsen.geojson")
+# MULTIPOLYGON: Bundesländer
+de_states <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_states.geojson")
+# POINT: Berlin
+berlin <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/berlin.geojson") 
+# MULTIPOINT: Ausgewählte Städte
+de_cities <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_cities.geojson") 
+# LINESTRING: E41 nahe Worms
+e31_worms <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/e41_worms.geojson")
+# MULTILINESTRING: Ausgewählte Straßen
+de_roads <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_roads.geojson")
+```
+
+Nachdem wir `MULTIPOLYGON` bereits kennengelernt haben, ist **`sachsen`** ein Objekt für **`POLYGON`**, denn es enthält nur ein großes Flächenpolygon.
+
+```{r}
+sachsen
+sachsen |> 
+  ggplot() +
+  geom_sf()
+```
+
+Einen **`POINT`** hingegen stellt **`berlin`** dar, wobei es nur um den Stadtmittelpunkt geht.
+
+```{r}
+berlin
+berlin |> 
+  ggplot() +
+  geom_sf()
+```
+
+Mehrere Punkte in Form von **`MULTIPOINT`**s sind diese Punkte ausgewählter deutscher Großstädte namens **`de_cities`**.
+
+```{r}
+de_cities
+de_cities |> 
+  ggplot() +
+  geom_sf()
+```
+
+Sobald mehrere Punkte unabgeschlossen miteinander verbunden werden, handelt es sich um **`LINESTRING`**s wie in **`e31_worms`**, einem Abschnitt der Europastraße 31 nahe Worms in Rheinland-Pfalz.
+
+```{r}
+e31_worms
+e31_worms |> 
+  ggplot() + 
+  geom_sf()
+```
+
+Zuletzt können auch aus mehreren Linien zusammengesetzte **`MULTILINESTRING`**s wie im Falle von **`de_roads`**, einer Auswahl Deutschlands größter Straßen, genutzt werden.
+
+```{r}
+de_roads
+de_roads |> 
+  ggplot() +
+  geom_sf()
+```
+
+#### Transferwissen: `ggplot2`
+
+Bei der Nutzung von `sf`-Objekten mit `ggplot2` können wir auf **alle `ggplot`-Funktionalitäten zurückgreifen**, die wir zur Datenvisualisierung bereits kennengelernt haben (@sec-datenvisualisierung). Wir wollen diese nicht alle wiederholen, jedoch einige Beispiele geben.
+
+##### Kombination mehrerer Geoms {.unnumbered}
+
+Wie zuvor können wir unserem Verständnis der *grammar of graphics* nach **mehrere *geoms* kombinieren**, um sie als **Ebenen miteinander zu übereinanderlegen** (@sec-datenvisualisierung-verfeinern-kombinationen). In diesem Beispiel möchten wir die Flächen von `de_states` mit den Punkten von `de_cities` kombinieren.
+
+```{r}
+ggplot() +
+  geom_sf(data = de_states) + # Simple features zeichnen: de_states
+  geom_sf(data = de_cities) # Simple features zeichnen: de_cities
+```
+
+
+##### Ästhetiken {.unnumbered}
+
+Je nachdem, mit was für einem geometrischen Objekt wir es zu tun haben, können wir **Ästhetiken manuell verändern** (@sec-datenvisualisierung-ggplot2-aesthetiken und @sec-datenvisualisierung-visualisierungsarten-mengen-saeulendiagramm). In diesem Beispiel wissen wir, dass wir die Eigenschaften `color` (Umrissfarbe) und `fill` (Füllfarbe) nutzen können, um ein Polygon (wie zuvor etwa `geom_col()`) anders zu zeichnen.
+
+```{r}
+sachsen |> 
+  ggplot() +
+  geom_sf(color = "blue", # Linienfarbe: blue
+          fill = "lightblue") # Füllfarbe: lightblue
+```
+
+##### Facetting {.unnumbered}
+
+Wie zuvor können wir unterschiedliche Beobachtungen mittels ***facetting*** auch in kleinere Visualisierungen zerlegen (@sec-datenvisualisierung-verfeinern-facetting). In diesem Beispiel wollen wir die Umrisse von vier zufällig gewählten Bundesländern jeweils einzeln visualisieren.
+
+```{r}
+de_states |> 
+  slice_sample(n = 4) |> # Vier zufällige Bundesländer auswählen
+  ggplot() +
+  geom_sf() +
+  facet_wrap(~ name) # Facets zeichnen
+```
+
+### ...zur thematischen Karte
+
+Bis hierhin stellt die Arbeit mit Geodaten für uns keine Schwierigkeit dar. Sobald wir uns jedoch eine **konkrete kartographische Aufgabe** vornehmen, machen wir von neuen Funktionalitäten Gebrauch. In diesem Abschnitt möchten wir eine einfache **Choroplethenkarte zur Bevölkerungsentwicklung deutscher Bundesländer** erstellen. Dabei gehen wir folgende Schritte durch:
+
+1.  Auswählen einer **Projektion** für unsere Geodaten.
+2.  Einlesen einer **Tabelle** und **Zusammenführen** mit unseren Geodaten.
+3.  Erstellen einer **thematischen Karte** mit zusätzlichen **kartographischen Elementen**.
+
+#### Kartenprojektionen
+
+Im weiteren Verlauf arbeiten wir mit **`de_states`**. Einfach visualisiert sieht dieses Objekt derzeit so aus:
+
+```{r}
+de_states |> 
+  ggplot() +
+  geom_sf()
+```
+
+An den gerade verlaufenden Gitternetzlinien erkennen wir, dass hier eine **Standardprojektion** genutzt wird. In diesem Fall handelt es sich, wie wir mit **`st_crs()`** (*standardized simple features coordinate reference system*) abfragen können, um WGS 84. Jedes Koordinatensystem ist nach kartographischen Standards mit einem vier- bis fünfstelligen **EPSG-Zahlencode**^[[EPSG](https://en.wikipedia.org/wiki/EPSG_Geodetic_Parameter_Dataset) steht für ***E****uropean* ***P****etroleum* ***S****urvey* ***G****roup*, was einen Hinweis auf die Hintergründe moderner GIS-Systeme liefert.] benannt. Die letzte Zeile von `st_crs()` (`ID["EPSG",4326]`) gibt uns den Code des derzeitigen Koordinatensystems an. WGS 84 ein jedoch geodätisches, kein projiziertes Koordinatensystem. Für eine hochwertige Karte müssen wir also erst eine **Projektion auswählen**.
+
+```{r}
+de_states |> 
+  st_crs() # Informationen über Koordinatensystem anzeigen
+```
+
+Wenn wir nicht wissen, welche Projektion für unsere Geodaten geeignet ist, können wir auf Funktionen des Pakets **`crsuggest`** (*coordinate references suggest*) zurückgreifen. Mit der Funktion **`suggest_crs()`** (zu deutsch "Empfiehl Koordinatenbezugssystem") werden uns **zehn mögliche Projektionen** empfohlen:
+
+```{r}
+de_states |> 
+  suggest_crs() # Geeignete Projektionen vorschlagen
+```
+
+Wenn wir lediglich **eine einzige Empfehlung** erhalten möchten, nutzen wir **`suggest_top_crs()`**.
+
+```{r}
+de_states |> 
+  suggest_top_crs() # Geeignetste Projektion vorschlagen
+```
+
+Die Empfehlung lautet `32632`. Um unsere **Geodaten umzuprojizieren**, machen wir von der Funktion **`st_transform()`** (*transform standardized features*) Gebrauch, der wir lediglich den Wert nennen müssen. Das Ergebnis schreiben wir einem neuen Objekt `de_states_reprojected` zu. 
+
+```{r}
+#| message: false
+de_states_reprojected <- de_states |> 
+  st_transform(32632) # Geodaten umprojizieren
+```
+
+Mit `st_crs()` können wir überprüfen, ob unsere Projektion geglückt ist.
+
+```{r}
+de_states_reprojected |> 
+  st_crs()
+```
+
+Wenn wir `de_states_reprojected` nun zeichnen lassen, können wir bereits an den nunmehr **leicht gewölbten Gitternetzlinien** ablesen, dass sich die Projektion verändert hat.
+
+```{r}
+de_states_reprojected |> 
+  ggplot() +
+  geom_sf()
+```
+
+
+::: callout-note
+## Projektion verändern mit `ggplot2` und `sf`
+
+Der oben beschriebene Weg erklärt die einzelnen Schritte, um ein `sf`-Objekt umzuprojizieren. Wenn wir neues Objekt erzeugen wollen, können wir alternativ **direkt mit `coord_sf()` innerhalb eines `ggplot()`-Aufrufs eine neue Projektion vergeben**. Hierfür müssen wir nur dem Parameter `crs` eine `st_crs()`-Funktion mit dem entsprechenden EPSG-Code als Argument geben. Der folgende Code erzeugt **dasselbe Ergebnis wie zuvor**:
+
+```{r}
+de_states |> 
+  ggplot() +
+  geom_sf() +
+  coord_sf(crs = st_crs(32632)) # Geodaten umprojizieren
+```
+:::
+
+#### Thematische Daten hinzufügen
+
+Um eine thematische Karte zu gestalten, benötigen wir **weitere Daten**. In diesem Fall möchten wir Daten zum Bevölkerungsstand in allen Bundesländern zu unterschiedlichen Jahren nutzen. Hierfür importieren wir die Tabelle **`de_states_pop`**.^[Diese Tabelle basiert auf Tabelle [12411-0010](https://www-genesis.destatis.de/datenbank/online/statistic/12411/table/12411-0010) des Statistischen Bundesamtes und wurde mit R eingelesen und verändert.]
+
+```{r}
+#| eval: false
+#| echo: false
+de_states_pop <- read_csv2(file = "./files/12411-0010_de.csv", 
+                           skip = 5, 
+                           n_max = 16, 
+                           col_types =  paste0(c("cn", rep("_", 17), "n", "_"), 
+                                               collapse = "")) |> 
+  rename(name = `...1`,
+         pop_2014 = `31.12.2014`,
+         pop_2023 = `31.12.2023`)
+de_states_pop |> 
+  write_rds("de_states_pop.rds")
+```
+
+```{r}
+de_states_pop <- read_rds(file = "https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_states_pop.rds") # RDS-Datei einlesen
+```
+
+Um diese Daten mit unseren Geodaten zusammenzuführen, nutzen wir einen ***left join*** (@sec-datenzusammenfuehrung-arten-mutating-left). Da sowohl `de_states_reprojected` als auch `de_states_pop` ein identisch benanntes **Schlüsselfeld** namens `name` enthalten, müssen wir den Parameter `by` nicht explizit nutzen.
+
+```{r}
+de_states_reprojected |> 
+  left_join(de_states_pop) # Geodaten mit thematischer Tabelle zusammenführen
+```
+
+Da wir ein `sf`-Objekt wie einen *data frame* nutzen können, ist es für uns leicht, mit **`mutate()`** (@sec-datentransformation-spalten-mutating) eine **neue Variable** namens **`pop_trend`** (*population trend*, Bevölkerungsentwicklung) aus der prozentualen Differenz zwischen den Werten von 2023 und 2014 zum Jahr 2014 zu berechnen. Das Ergebnis schreiben wir einem Objekt namens `de_states_reprojected_pop` zu.
+
+```{r}
+#| message: false
+de_states_reprojected_pop <- de_states_reprojected |> 
+  left_join(de_states_pop) |> # Daten zusammenführen
+  mutate(pop_trend = (pop_2023 - pop_2014) / pop_2014 * 100) # Variable pop_trend berechnen
+de_states_reprojected_pop
+```
+
+#### Füllfarbe {#sec-geodatenbearbeitung-vektor-karte-fuellfarbe}
+
+Auf Basis von `de_states_reprojected_pop` können wir nun beginnen, unsere **thematische Karte** zu zeichnen. Hierfür beginnen wir mit dem vertrauten `ggplot()`-Aufruf. Damit die einzelnen Flächen der Polygone eingefärbt werden, nutzen wir die Ästhetik **`fill`** (@sec-datenvisualisierung-ggplot2-aesthetiken), um die Werte der Variable `pop_trend` darzustellen.
+
+```{r}
+de_states_reprojected_pop |> 
+  ggplot(mapping = aes(fill = pop_trend)) + # Füllfarbe: pop_trend
+  geom_sf()
+```
+
+Das Ergebnis sieht bereits mehr wie eine Karte aus. Allerdings sind **Werte überhalb oder unterhalb von 0**, also Zu- oder Abnahmen der Bevölkerung, **nicht unterscheidbar**. So sind Entwicklungen wie im Saarland oder in Sachsen schwer zu lesen. Um dies zu verbessern, müssen wir eine **andere Farbskala** bzw. **andere Klassengrenzen** wählen. Hierfür möchten wir **zwei Möglichkeiten** kennenlernen.
+
+Die *erste Möglichkeit* ist, Gebrauch von einer **`viridis`**-Funktion (@sec-datenvisualisierung-verfeinern-farbfehlsichtigkeit) zu machen. **`scale_fill_viridis_b()`** zeichnet automatisch klarere Klassengrenzen. Mit dunkelviolett als Farbe für alle Werte unterhalb von 0 ist der Kontrast zu den dunkelblauen Werten für alle Werte zwischen 0 und 3 deutlich lesbarer.
+
+```{r}
+de_states_reprojected_pop |> 
+  ggplot(mapping = aes(fill = pop_trend)) +
+  geom_sf() +
+  scale_fill_viridis_b() # viridis-Farbpalette nutzen
+```
+
+Die *zweite Möglichkeit* ist, eine von `ggplot2`s eingebauten `scale_*()`-Funktionen zu verwenden. In diesem Fall wäre **`scale_fill_gradient2()`** nützlich, denn wir können mit den Parametern `low`, `mid` und `high` jeweils eine Farbe angeben, die für **niedrige, mittlere und hohe Werte** stehen soll und mit dem Parameter `midpoint` angeben, was für uns ein guter **Trennwert** wäre, der die hohen und niedrigen Werte voneinander abgrenzt. Da `midpoint` standardmäßig auf 0 gesetzt ist, müssen wir ihn in diesem Fall nicht explizit angeben. Wir entscheiden uns für orange (`"orange"`) für negative und dunkelblau (`"darkblue"`) für positive Werte.
+
+```{r}
+de_states_reprojected_pop |> 
+  ggplot(mapping = aes(fill = pop_trend)) +
+  geom_sf() +
+  scale_fill_gradient2(low = "orange",
+                       high = "purple") # Gradient-Farbpalette verwenden
+```
+
+#### Beschriftungen {#sec-geodatenbearbeitung-vektor-karte-beschriftungen}
+
+Damit unsere Karte ihre Informationen effektiv kommunizieren kann benötigt sie unterschiedliche Beschriftungen (@sec-visualisierungen-verfeinern-beschriftungen). Mit der uns bekannten `labs()`-Funktion möchten wir als **Titel** `"Bevölkerungsentwicklung in Deutschland"`, als **Untertitel** `"Veränderung 2014-2023"` und als **Quellenangabe** `"Quelle: Statistisches Bundesamt\nTab. 12411-0010`^[Das `\n` steht für einen Zeilenumbruch.] angeben. Desweiteren möchten wir mit `name = "Prozent"` innerhalb von `scale_fill_gradient2` auch für die **Legende** eine Beschriftung angeben.
+
+```{r}
+de_states_reprojected_pop |> 
+  ggplot(mapping = aes(fill = pop_trend)) +
+  geom_sf() +
+  scale_fill_gradient2(name = "Prozent", # Legendenbeschriftung hinzufügen
+                       low = "orange",
+                       high = "darkblue") +
+  labs(title = "Bevölkerungsentwicklung in Deutschland",
+       subtitle = "Veränderung 2014-2023",
+       caption = "Quelle: Statistisches Bundesamt\nTab. 12411-0010") # Beschriftungen hinzufügen
+```
+
+#### Theme {#sec-geodatenbearbeitung-vektor-karte-theme}
+
+Bei der Erstellung einer thematischen Karte benötigen wir selten Gitternetzlinien. Indem wir ein *theme* (@sec-visualisierungen-verfeinern-themes) nutzen, das **auf alle visuellen Zusätze verzichtet**, können wir unsere Karte sauberer gestalten. Hierfür nutzen wir `theme_void()` (zu deutsch "leer").
+
+```{r}
+de_states_reprojected_pop |> 
+  ggplot(mapping = aes(fill = pop_trend)) +
+  geom_sf() +
+  scale_fill_gradient2(name = "Prozent",
+                       low = "orange",
+                       high = "darkblue") +
+  labs(title = "Bevölkerungsentwicklung in Deutschland",
+       subtitle = "Veränderung 2014-2023",
+       caption = "Quelle: Statistisches Bundesamt\nTab. 12411-0010") +
+  theme_void() # Leeres theme nutzen
+```
+
+#### Kartographische Symbole
+
+Zuletzt gibt es allerlei **Konventionen**, die bei Karten gerne genutzt werden. Zu diesen Konventionen gehört etwa die Regel, dass eine Karte eine **Maßstabsangabe** sowie einen **Nordpfeil** zu enthalten hat. Bei einer thematischen Karte wie unserer könnten wir zwar auch darauf verzichten. Doch es lohnt sich, zu wissen, dass das Paket `ggspatial` uns ermöglicht, beides hinzuzufügen. 
+
+Mit **`annotation_scale()`**^[Ein Blick in `?annotation_scale` verrät uns, dass wir die Leiste noch in vielerlei Hinsicht (z.B. Größe, Maßeinheit oder Farbkombination) anpassen können.] können wir eine einfache **Maßstabsleiste** hinzufügen. Innerhalb der Funktion können wir mit dem Parameter `location` einstellen, ob die Leiste unten links (`bl`, *bottom left*), unten rechts (`br`, *bottom right*), oben links (`tl`, *top left*) oder oben rechts (`tr`, *top right*) positioniert werden soll.
+
+```{r}
+de_states_reprojected_pop |> 
+  ggplot(mapping = aes(fill = pop_trend)) +
+  geom_sf() +
+  scale_fill_gradient2(name = "Prozent",
+                       low = "orange",
+                       high = "darkblue") +
+  labs(title = "Bevölkerungsentwicklung in Deutschland",
+       subtitle = "Veränderung 2014-2023",
+       caption = "Quelle: Statistisches Bundesamt\nTab. 12411-0010") +
+  theme_void() +
+  annotation_scale(location = "br") # Maßstabsleiste hinzufügen
+```
+
+Außerdem können wir mit **`annotation_north_arrow()`** einen **Nordpfeil** hinzufügen. Mit dem Parameter `style` können wir uns **einen von vier Nordpfeilen**^[Die Optionen sind `north_arrow_minimal()`, `north_arrow_nautical()`, `north_arrow_orienteering()` oder `north_arrow_fancy_orienteering()`, siehe `?annotate_north_arrow`.] aussuchen und mit `location` wie zuvor seine **Position** bestimmen.
+
+```{r}
+de_states_reprojected_pop |> 
+  ggplot(mapping = aes(fill = pop_trend)) +
+  geom_sf() +
+  scale_fill_gradient2(name = "Prozent",
+                       low = "orange",
+                       high = "darkblue") +
+  labs(title = "Bevölkerungsentwicklung in Deutschland",
+       subtitle = "Veränderung 2014-2023",
+       caption = "Quelle: Statistisches Bundesamt\nTab. 12411-0010") +
+  theme_void() +
+  annotation_scale(location = "br") +
+  annotation_north_arrow(style = north_arrow_minimal(), 
+                         location = "bl") # Nordpfeil hinzufügen
+```
+
+### Übungsaufgabe
+
+Das Ziel dieser Übungsaufgabe ist, alle nötigen Schritte zur Erstellung einer thematischen Karte zu durchlaufen. Das Thema der Karte wird **Kinderarmut in Bayern sein**. Unsere Geodaten stammen vom [Bundesamt für Kartographie und Geodäsie](https://gdz.bkg.bund.de/index.php/default/open-data/verwaltungsgebiete-1-2-500-000-stand-31-12-vg2500-12-31.html), die thematischen Daten von der [Bundesagentur für Arbeit](https://statistik.arbeitsagentur.de/Statistikdaten/Detail/202406/iiia7/kinder/kinder-dwolk-0-202406-xlsm.xlsm).
+
+::: callout-note
+## Was ist Armut?
+Als Annäherung an Kinderarmut soll uns in dieser Übung der **Anteil junger Menschen unter 18 Jahren**, die in **Haushalten mit Bezug von Sozialleistungen nach SGB II** (früher umgangssprachlich "Hartz IV" genannt, inzwischen in "Bürgergeld" umgetauft) leben, dienen. Dabei ist uns bewusst, dass es sich hierbei um eine **Unterschätzung** handelt, denn diese Statistik erfasst z.B. nur solche Familien, die auch tatsächlich Leistungen beantragen und vernachlässigt damit “unsichtbare Armut”. 
+
+Darüber hinaus ist umstritten, ob **Armut** nicht bereits **deutlich früher beginnt** als mit der Beziehung von spezifischen Sozialleistungen, sondern bereits in zahlreichen Familien mit niedrigen Einkommen besteht. Wer mangels finanzieller Möglichkeiten in seiner persönlichen Entwicklung und an der gesellschaftlichen Teilhabe gehemmt wird, ist demnach arm, unabhängig davon, ob dieser Mensch knapp über oder unter einer statistischen sog. Armutsgrenze lebt.
+:::
+
+```{r}
+#| eval: false
+#| echo: false
+# Prepare geodata
+st_read("./files/vg2500_12-31.utm32s.gpkg/vg2500/DE_VG2500.gpkg", layer ="vg2500_krs") |> 
+  st_write("./files/de_districts.geojson")
+# Prepare thematic data
+readxl::read_excel(path = "./files/kinder-dwolk-0-202406-xlsm.xlsm",
+           sheet = "4.1", 
+           range = "A42:C444",
+           col_names = c("name", "ags", "sgb2_u18_prozent"), # Vergabe neuer Namen für den resultierenden Data Frame,
+           col_types = c("text", "text", "numeric")) |> 
+    filter(str_length(ags) == 8) |> 
+    mutate(ags = str_sub(ags, start = 1, end = 5)) |> 
+  write_rds("./files/de_kreise_sgb2_u18.rds")
+```
+
+Nehmen Sie die folgenden Arbeitsschritte vor, um Ihre eigene Choroplethenkarte zu erstellen.
+
+1. Laden Sie die [Geodaten](https://github.com/ubt-r/geodatenbearbeitung/blob/main/de_districts.geojson) aller deutschen Kreise und kreisfreien Städte im GeoJSON-Format herunter. Importieren Sie die Geodaten mit `read_sf()` in Ihre R-Sitzung und weisen Sie den Inhalt einem Objekt namens `de_districts` zu. Zeichnen Sie die Geodaten mit `ggplot()`.
+2. Filtern Sie aus den Geodaten nur die bayerischen Kreise und kreisfreien Städte heraus und erstellen ein Objekt namens `de_districts_bay`. Hierfür beschränken Sie die Auswahl aller Zeilen auf `SN_L == "09"`.^[Der [Dokumentation](https://sg.geodatenzentrum.de/web_public/gdz/dokumentation/deu/vg2500.pdf) (ab S. 9) entnehmen wir, dass das Attribut `SN_L` einen String aus zwei Ziffern für die jeweiligen Länder enthält und die Attribute `ARS`, `AGS` und weitere Felder unterschiedliche Regionalschlüssel darstellen.] Überprüfen Sie Ihre Aktion, in dem Sie die Geodaten abermals zeichnen.
+3. Laden Sie die [thematischen Daten](https://github.com/ubt-r/geodatenbearbeitung/blob/main/de_kreise_sgb2_u18.rds) herunter und importieren Sie sie mit `read_rds()`.
+4. Führen Sie die Geodaten und die thematischen Daten mittels `left_join()` zusammen, indem Sie `AGS` bzw. `ags` als Schlüsselfelder nutzen. 
+5. Zeichnen Sie eine thematische Karte, die die folgenden Elemente enthält:
+    - Füllfarbe: Werte von `sgb2_u18_prozent`
+    - eigens gewählte Farbskala
+    - passende Beschriftungen
+    - keine Gitternetzlinien
+    - Maßstabsleiste
+    - Nordpfeil
+    
+Ihr Ergebnis könnte so aussehen:
+
+```{r}
+#| echo: false
+read_sf(dsn = "./files/de_districts.geojson") |> 
+  filter(SN_L == "09") |> 
+  left_join(read_rds("./files/de_kreise_sgb2_u18.rds"),
+            by = c("AGS" = "ags")) |> 
+  ggplot(mapping = aes(fill = sgb2_u18_prozent)) +
+  geom_sf() +
+  scale_fill_viridis_b(name = "Prozent",
+                       option = "inferno", 
+                       direction = -1) +
+  labs(title = "Kinderarmut in Bayern",
+       subtitle = "Anteil Minderjähriger in SGB II-Bedarfsgemeinschaften",
+       caption = "Quelle: Bundesagentur für Arbeit, Juni 2024") +
+  theme_void() +
+  annotation_scale(location = "br") +
+  annotation_north_arrow(style = north_arrow_orienteering(),
+                         location = "bl")
+```
+
+## Rasterdaten
+
+Wie Vektordaten existieren Rasterdaten ebenfalls in unterschiedlichen Datenformaten. Entsprechend können auch sie auf unterschiedliche Weise eingelesen und als Objekte in einer R-Sitzung erzeugt werden. Abermals möchten wir den Umgang mit Rasterdaten anhand eines Beispiels lernen. Hierfür werden wir **Klimadaten** für Deutschland herunterladen und auf ihrer Grundlage eine **Karte** erzeugen.
+
+### Daten herunterladen
+
+#### Verzeichnis anlegen
+
+Für häufig genutzte Rasterdaten, wie Klimadaten es sind, stehen in R Pakete bereit, um diese ohne Umwege herunterzuladen. Ein solches Paket ist **`geodata`**. Um unseren Download vorzubereiten, möchten wir jedoch zunächst einen **Ordner in unserem Arbeitsverzeichnis anlegen**, in dem die Daten abgelegt werden sollen. Ein solches Verzeichnis können wir mit **`dir.create()`** (*create directory*) anlegen. In diesem Beispiel möchten wir die Daten innerhalb unseres Arbeitsverzeichnisses^[Wo wir uns befinden, können wir jederzeit mit `getwd()` (*get working directory*) erfahren.] in einen Ordner `files/de_precipitation` herunterladen. Wir legen einen entsprechend Ordner also erst einmal an.
+
+```{r}
+#| warning: false
+dir.create(path = "./files/de_precipitation") # Neuen Ordner im Verzeichnis anlegen
+```
+
+Ob dieser Schritt erfolgreich war, können wir mit **`file.exists()`** überprüfen, das uns mit `TRUE` bzw. `FALSE` (nicht) bestätigt, ob ein derartiges Verzeichnis besteht.
+
+```{r}
+file.exists("./files/de_precipitation/")
+```
+
+#### `geodata` {#sec-geodatenbearbeitung-rasterdaten-herunterladen-geodata}
+
+Ein populäres Paket, das **ausgewählte Geodaten für die gesamte Welt** bereitstellt, ist `geodata`^[Siehe [Anleitung](https://cran.r-project.org/web/packages/geodata/geodata.pdf).]. Neben Angaben zu Landnutzungsarten, Geländehöhen oder Bodentypen, stellt es mit der Funktionsfamilie **`worldclim_*()`** eine einfache Möglichkeit bereit, unterschiedliche **Klimadaten** in R zu importieren. `worldclim_country()` ist dabei die Funktion, um anhand der Ausmaße eines Landes diese Daten zu beschaffen. Die Funktion benötigt folgende Parameter:
+
+- **`country`**: Für welches *Land* möchten wir Klimadaten herunterladen? Diese Angabe müssen wir anhand eines zweistelligen Ländercodes machen.^[Eine Übersicht der Ländercodes können wir mit `country_codes()` aufrufen.]
+- **`var`** (*variable*): Welche *Art von Klimadaten* möchten wir herunterladen? Hier haben wir die Wahl zwischen `tmin` (*temperature minimum*, in °C), `tmax` (*temperature maximum*, in °C), `tavg` (*temperature average*, in °C), `prec` (*precipitation*, in mm), `srad` (*incident solar radiation*, in kJ\*m⁻²\*day⁻¹), `wind` (*wind speed*, in m\*s⁻1) oder `vapr` (*vapor pressure*, in kPa).
+- **`res`** (*resolution*): In welcher *Auflösung* möchten wir die Rasterdaten herunterladen? Mögliche Auflösungen sind 10, 5, 2,5 und 0,5 Minuten eines Grades.
+- **`path`**: In welches Verzeichnis möchten wir Klimadaten herunterladen?
+
+Unser Ziel ist, **Niederschlagsdaten** für **Deutschland** in einer **Auflösung von 10 Minuten** eines Grades in unser zuvor erstelltes Verzeichnis herunterzuladen. Die Rasterdaten möchten wir einem Objekt `de_precipitation` zuschreiben.
+
+```{r}
+de_precipitation <- worldclim_country(country = "DE", # Country: DE
+                                      var = "prec", # Variable: precipitation
+                                      res = 10, # Resolution: 10 minutes of a degree
+                                      path = "./files/de_precipitation") # Path: files/de_precipitation
+```
+
+Das erzeugte Objekt hat die Klasse **`SpatRaster`**, welche dem Paket `terra` entspringt.
+
+```{r}
+class(de_precipitation) # Objektklasse abfragen
+```
+
+### Überblick verschaffen
+
+Wie sieht dieses Objekt aus? Um dies zu erfahren, rufen wir es auf.
+
+```{r}
+de_precipitation # Objekt aufrufen
+```
+
+Aus diesen Angaben werden wir noch nicht gänzlich schlau, denn unter der Angabe `dimensions` tauchen nicht nur Zeilen- (`nrow`) und Spaltenangaben (`ncol`) auf, sondern auch noch eine für uns neue Angabe namens **`nlyr`**. Hierbei handelt es sich um die Anzahl an Schichten (*layers*). Bei 12 *layers* besteht unser Objekt augenscheinlich aus zwölf unterschiedlichen Datenschichten: nämlich einer für jeden **Monat** des Jahres. Dass dem so ist, wird deutlich, wenn wir mit der *base R*-Funktion **`plot()`** einmal das Geodatenobjekt zeichnen lassen.
+
+```{r}
+plot(de_precipitation) # Gesamtes Objekt zeichnen
+```
+
+Einen einzigen dieser *layer* können wir mit der **Indexschreibweise** (@sec-grundlagen-datenstrukturen-vektor-indizes) auswählen und separat darstellen.
+
+```{r}
+plot(de_precipitation[[1]]) # Ersten layer zeichnen
+```
+
+Die einzelnen Eigenschaften jedes *layers* können wir auch durch eine `summary()` des Objektes erfragen.
+
+```{r}
+summary(de_precipitation) # Zusammenfassung drucken
+```
+
+### Projektion verändern
+
+Wie auch im Falle unserer Vektordaten stellt sich bei unseren Niederschlagsdaten ebenfalls die Frage nach der **richtigen Projektion**. Diese können wir erneut mit **`suggest_top_crs()`** erfragen.
+
+```{r}
+#| message: false
+suggest_top_crs(de_precipitation)
+```
+
+Wenig überraschend lautet die Empfehlung abermals EPSG: 32632. Allerdings benötigen wir zum Umprojizieren eine andere Funktion als `st_transform()`, denn diese kann nicht auf Rasterdaten angewendet werden. Stattdessen können wir **`project()`** (zu deutsch "projizieren") nutzen, um mit der Angabe unseres passenden EPSG-Codes die Rasterdaten in eine andere Projektion zu überführen. Unser neues Objekt, `de_precipitation_reprojected`, lassen wir dann erneut mit `plot()` zeichnen, um zu schauen, ob sich die Projektion merklich verändert hat.
+
+```{r}
+de_precipitation_reprojected <- project(de_precipitation, "epsg:32632")
+plot(de_precipitation_reprojected)
+```
+
+Durch die keilförmigen "leeren" Zellen am Bildrand können wir feststellen, dass die Umprojektion tatsächlich **geglückt** ist.
+
+### Maskieren
+
+Um aus dem bisherigen Raster nur solche Zellen auszuschneiden, die sich innerhalb der Grenzen Deutschlands befinden, müssen wir ein Flächenpolygon (wie `de_states`) heranziehen und es als "Maske" nutzen, indem wir das Polygon über unsere Rasterzellen legen.^[Wenn wir nicht bereits einen *layer* wie `de_nation` in unserer Sitzung hätten, könnten wir die `geodata`-Funktion `gadm()` (*get administrative boundaries*, zu deutsch "Verwaltungsgrenzen herunterladen") nutzen. Als Parameter benötigt `gadm` lediglich eine `country`-Angabe (z.B. `"DE"`) und lädt dann ein `SpatVector`-Objekt herunter (siehe `?gadm`). In der Anwendung mit `mask()` würde sich ein solches Objekt genauso wie ein `sf`-Objekt verhalten.] Wichtig ist hier, dass **beide *layer* dasselbe Koordinatensystem haben müssen**. Wenn wir mit `de_states` den zweiten *layer* nicht entsprechend umprojizieren würden, würde dieser Schritt nicht funktionieren und uns eine Fehlermeldung auf die entsprechenden Gründe hinweisen. Deshalb nutzen wir unsere zuvor umprojizierten Vektordaten `de_states_reprojected`. Das Ergebnis unserer Operation weisen wir einem Objekt namens `de_precipitation_reprojected_masked` zu.
+
+```{r}
+de_precipitation_reprojected_masked <- de_precipitation_reprojected |> 
+    mask(de_states_reprojected) # Rasterzellen innerhalb von de_states_reprojected auswählen
+```
+
+Dass dieses "Maskieren" funktioniert hat, zeigt eine erneute Visualisierung.
+
+```{r}
+plot(de_precipitation_reprojected_masked) # Gesamtes Objekt zeichnen
+```
+
+### Mit Rasterzellen rechnen
+
+Statt einzelne *layer* unserer Rasterdaten zu zeichnen, können wir auch mit mehreren von ihnen rechnen. Häufige Anwendungen sind dabei das **Berechnen von Summen, Mittelwerten oder anderen statistischen Maßen**. Wenn wir auf alle Zellen eines `SpatRaster`s eine Berechnung, also eine Formel, anwenden (*apply*) möchten, können wir dies mithilfe von **`app()`** tun. Neben einem `SpatRaster`-Objekt benötigt `app()` lediglich eine Angabe für den Parameter `fun` (*function*). Mit `"sum"` kann auf die Summenfunktion zurückgegriffen werden, ähnlich wie mit `"mean"` auf die Mittelwertfunktion und verwandten Funktionen (@sec-grundlagen-datenstrukturen-vektor-rechnen). In unserem Fall möchten wir mit `"sum"` die jährliche Niederschlagsmenge für jede Rasterzelle berechnen und einem Objekt namens `de_precipitation_reprojected_masked_annual` zuweisen.
+
+```{r}
+de_precipitation_reprojected_masked_annual <- app(de_precipitation_reprojected_masked, fun = "sum") # Summe aller layer für jede Zelle berechnen
+plot(de_precipitation_reprojected_masked_annual) # Ergebnis zeichnen
+```
+
+### Kartenerstellung
+
+#### Von `SpatRaster` zu `data frame`
+
+Um unsere Rasterdaten `de_precipitation_reprojected_masked_annual` mit `ggplot2` zu visualisieren, müssen wir sie zuvor in ein Format umwandeln, dass `ggplot()` kennt. Bekanntermaßen sind hierfür *data frames* unsere erste Wahl. Mit der entsprechenden Funktion **`as.data.frame()`** (@sec-grundlagen-datentypen-arbeiten-transformieren) können wir diesen Schritt vornehmen und ein Objekt `de_precipitation_reprojected_masked_annual_df`. Hierbei müssen wir mit der Einstellung **`xy = TRUE`** angeben, dass wir für unsere Koordinaten jeweils eine Spalte erzeugen wollen. 
+
+```{r}
+de_precipitation_reprojected_masked_annual_df <- as.data.frame(de_precipitation_reprojected_masked_annual, xy = TRUE)
+de_precipitation_reprojected_masked_annual_df
+```
+
+Unser Ergebnis hat **`r nrow(de_precipitation_reprojected_masked_annual_df)` Zeilen** und **`r ncol(de_precipitation_reprojected_masked_annual_df)` Spalten**: `x` und `y` stehen für die Koordinaten der Rasterzellen und `sum` für den zuvor berechneten jährlichen Niederschlag. Mit diesen Daten können wir unsere Kartenerstellung beginnen.
+
+#### Geom? `raster`!
+
+Um Rasterdaten darzustellen, lernen wir ein weiteres neues *geom* kennen: **`geom_raster()`**. Dieses *geom* benötigt als Ästhetiken mindestens `x`- und `y`-Angaben sowie `fill`-Werte, nach denen es die Rasterzellen einfärben kann. Für letztere möchten wir unsere `sum`-Werte auswählen.
+
+```{r}
+de_precipitation_reprojected_masked_annual_df |> 
+  ggplot(mapping = aes(x = x, # X-Achse: x
+                       y = y, # Y-Achse: y
+                       fill = sum)) + # Füllfarbe: sum
+  geom_raster() # Raster zeichnen
+```
+
+#### Bekannte Verfeinerungen
+
+Wie zuvor bei der Erstellung unserer thematischen Karte möchten wir zunächst einige Verfeinerungen vornehmen. Da uns diese inzwischen gut bekannt sind, erledigen wir sie in einem Zug:
+
+-   `scale_fill_viridis()`: `viridis`-**Farbpalette** nutzen, wobei wir die Richtung mit `direction = -1` umdrehen, damit hohe Niederschlagswerte blau erscheinen. Außerdem die Legende mit `"Millimeter"` benennen (@sec-geodatenbearbeitung-vektor-karte-fuellfarbe).
+-   `labs()`: Passende **Beschriftungen** verwenden (@sec-geodatenbearbeitung-vektor-karte-beschriftungen).
+-   `theme_void()`: Leeres ***theme*** verwenden (@sec-geodatenbearbeitung-vektor-karte-theme).
+-   `annotation_north_arrow()`: **Nordpfeil** hinzufügen.
+-   `annotation_scale()`: **Maßstabsleiste** hinzufügen.
+
+```{r}
+#| message: false
+de_precipitation_reprojected_masked_annual_df |> 
+  ggplot(mapping = aes(x = x,
+                       y = y,
+                       fill = sum)) +
+  geom_raster() +
+  scale_fill_viridis(name = "Millimeter", 
+                     option = "viridis",
+                     direction = -1) +
+  labs(title = "Jährliche Niederschlagsmenge",
+       caption = "Quelle: WorldClim") + # Beschriftungen hinzufügen
+  theme_void() + # Leeres theme nutzen
+  annotation_north_arrow(style = north_arrow_fancy_orienteering(),
+                         location = "bl") + # Nordpfeil hinzufügen
+  annotation_scale(location = "br") # Maßstabsleiste hinzufügen
+```
+
+#### Ergänzung um Vektordaten
+
+Unsere Karte sieht bereits sehr gut aus. Wir möchten nur noch eine abschließende Verfeinerung vornehmen, indem wir die **Umrisse der Bundesländer hinzufügen**. Hierfür können wir unsere bekannten Vektordaten `de_states_reprojected` nutzen und `geom_sf()` nutzen. Wenn wir jedoch **mehrere *geoms* mit jeweils unterschiedlichen Objekten als Datengrundlage** nutzen möchten, müssen wir die **Zuschreibung der Ästhetiken *innerhalb* der jeweiligen *geom_()*-Funktion**, nicht innerhalb von `ggplot()` vornehmen. Wir verschieben also unsere `mapping = aes(x = x, y = y, fill = sum))`-Angaben zunächst hinein in `geom_raster()`. Das Ergebnis ist dieselbe Karte wie zuvor.
+
+```{r}
+de_precipitation_reprojected_masked_annual_df |> 
+  ggplot() +
+  geom_raster(mapping = aes(x = x, 
+                       y = y,
+                       fill = sum)) + # Zuschreibung von Ästhetiken für nur ein geom
+  scale_fill_viridis(name = "Millimeter", 
+                     option = "viridis",
+                     direction = -1) +
+  labs(title = "Jährliche Niederschlagsmenge",
+       caption = "Quelle: WorldClim") +
+  theme_void() + 
+  annotation_north_arrow(style = north_arrow_fancy_orienteering(),
+                         location = "bl") + 
+  annotation_scale(location = "br")
+```
+
+Jetzt können wir mit **`geom_sf(data = de_states_reprojected)`** die Umrisse der Bundesländer hinzufügen.
+
+```{r}
+de_precipitation_reprojected_masked_annual_df |> 
+  ggplot() +
+  geom_raster(mapping = aes(x = x, 
+                       y = y,
+                       fill = sum)) +
+  scale_fill_viridis(name = "Millimeter", 
+                     option = "viridis",
+                     direction = -1) +
+  labs(title = "Jährliche Niederschlagsmenge",
+       caption = "Quelle: WorldClim") + 
+  theme_void() + 
+  annotation_north_arrow(style = north_arrow_fancy_orienteering(),
+                         location = "bl") + 
+  annotation_scale(location = "br") +
+  geom_sf(data = de_states_reprojected) # Angabe von Daten für einzelnes geom
+```
+
+Damit die Flächen unserer Bundesländer die Rasterzellen nicht überlagern, müssen wir mit `fill = NA` einstellen, dass **keine Füllfarbe** genutzt werden soll.
+
+```{r}
+de_precipitation_reprojected_masked_annual_df |> 
+  ggplot() +
+  geom_raster(mapping = aes(x = x, 
+                       y = y,
+                       fill = sum)) +
+  scale_fill_viridis(name = "Millimeter", 
+                     option = "viridis",
+                     direction = -1) +
+  labs(title = "Jährliche Niederschlagsmenge",
+       caption = "Quelle: WorldClim") + 
+  theme_void() + 
+  annotation_north_arrow(style = north_arrow_fancy_orienteering(),
+                         location = "bl") + 
+  annotation_scale(location = "br") +
+  geom_sf(data = de_states_reprojected, 
+          fill = NA) # Füllfarbe: keine
+```
+
+Im letzten Schritt lassen wir die **Umrisse noch deutlicher**, nämlich mit `color = "black"` zeichnen. Danach ist unsere Rasterdatenauswertung samt Visualisierung abgeschlossen.
+
+```{r}
+de_precipitation_reprojected_masked_annual_df |> 
+  ggplot() +
+  geom_raster(mapping = aes(x = x, 
+                       y = y,
+                       fill = sum)) +
+  scale_fill_viridis(name = "Millimeter", 
+                     option = "viridis",
+                     direction = -1) +
+  labs(title = "Jährliche Niederschlagsmenge",
+       caption = "Quelle: WorldClim") + 
+  theme_void() + 
+  annotation_north_arrow(style = north_arrow_fancy_orienteering(),
+                         location = "bl") + 
+  annotation_scale(location = "br") +
+  geom_sf(data = de_states_reprojected,
+          fill = NA,
+          color = "black") # Farbe: schwarz
+```
+
+### Übungsaufgabe
+
+Um die dargestellten Schritte zu wiederholen, ist Ihre Aufgabe, eine **eigene Rasterdatenauswertung samt Visualisierung auf Basis von `geodata`-Daten für Deutschland** vorzunehmen.
+
+Nehmen Sie die folgenden Arbeitsschritte vor, um Ihre eigene Klimadatenkarte zu erstellen.
+
+1. Entscheiden Sie sich, welche Klimadaten Sie für Deutschland herunterladen möchten und tun Sie dies (@sec-geodatenbearbeitung-rasterdaten-herunterladen-geodata).
+2. Projizieren Sie die Klimadaten passend um.
+3. Maskieren Sie die Klimadaten mit den Grenzen Deutschlands.
+4. Berechnen Sie ein statistisches Maß für die jeweiligen Daten für das gesamte Jahr.
+5. Zeichnen Sie eine entsprechende Karte, die die folgenden Elemente enthält:
+    - eigens gewählte Farbskala
+    - passende Beschriftungen
+    - keine Koordinatenangaben
+    - Maßstabsleiste
+    - Nordpfeil
+    - Bundesländerumrisse Deutschlands
+    
+Wenn Ihnen diese Aufgabe zu leicht oder wiederholend erscheint, können Sie alternativ **Klimadaten für ein Land und einen Monat Ihrer Wahl visualisieren**. Machen Sie sich hierbei mit `gadm()` vertraut^[Siehe vorherige Fußnote.], um die Gebietsgrenzen des von Ihnen gewählten Landes herunterzuladen.

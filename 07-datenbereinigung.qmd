@@ -1,0 +1,383 @@
+# Datenbereinigung {#sec-datenbereinigung}
+
+Nachdem wir gelernt haben, eigens gewählte Daten zu importieren, ist es notwendig, in einem nächsten Schritt zu lernen, wie wir derartige Daten in ein Format überführen können, das wir mittels der uns bekannten Funktionen auswerten und visualisieren können. Hierfür werden wir zunächst ein Verständnis einheitlicher Datenformate gewinnen, bevor wir Funktionen kennenlernen, um vorhandene Tabellen umzugestalten.^[Dieses Kapitel basiert auf @r4ds2023 [Kapitel 5].]
+
+In diesem Kapitel lernen wir...
+
+-   ...was innerhalb des `tidyverse` als "ordentliche" Daten (*tidy data*) verstanden wird.
+-   ...wie wir eine Variable in mehrere Variablen trennen oder mehrere Variablen zu einer einzigen Variablen zusammenfügen.
+-   ...was "lange" und "breite" Tabellenformate sind und wie wir vorhandene Tabellenformate verändern können.
+
+Wir benötigen hierfür das folgende Paket:
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+```
+
+## *Tidy data* {#sec-datenbereinigung-tidy-data}
+
+### Definition
+
+Nachdem wir bereits viele Pakete des `tidyverse` kennengelernt haben, ist die Frage angebracht, weshalb diese Kombination von Paketen das Wort *tidy* (zu deutsch "ordentlich" oder "aufgeräumt") im Namen trägt. Tatsächlich verbirgt sich hinter dieser Bezeichnung eine präzise Vorstellung davon, wie Daten idealerweise für die Weitervera**R**beitung in einer Tabelle angeordnet sein sollten. Laut @r4ds2023 [Kapitel 5.2] sind Daten dann *tidy*, wenn **drei Prinzipien** erfüllt sind:
+
+1.  Jede **Variable** ist eine **Spalte**; jede Spalte ist eine Variable.
+2.  Jede **Beobachtung** ist eine **Zeile**; jede Zeile ist eine Beobachtung.
+3.  Jeder **Wert** ist eine **Zelle**; jede Zelle ist ein Wert.
+
+Diese drei Prinzipien lassen sich **visuell** leicht darstellen.
+
+```{r} 
+#| echo: false
+#| out.width: "100%"
+#| fig-align: "center"
+#| fig-cap: "Die Prinzipien ordentlicher Daten [@r4ds2023, Kapitel 5.2]."
+knitr::include_graphics("https://r4ds.hadley.nz/images/tidy-1.png")
+```
+
+Diese drei Prinzipien erscheinen einfach und intuitiv, dennoch sind **Tabellen oftmals anders aufgebaut**. Die Gründe hierfür sind, dass die Organisation einer Tabelle oft eher die **Eingabe**, nicht die Auswertung, widerspiegelt und dass die meisten **Nutzer\*innen** von Tabellen mit den Prinzipien von *tidy data* **nicht vertraut** sind. Sobald wir aber professionelle Datenauswertung betreiben möchten, lohnt es sich, diese Prinzipien zu erlernen und umzusetzen.
+
+### Beispiele
+
+Betrachten wir drei **Beispiele**, um unser Verständnis zu schärfen. Handelt es sich bei **`table2`** um *tidy data*?^[Bei `table1` bis `table5` wie auch bei `who` und `who2` handelt es sich um Beispieltabellen, die im Paket `tidyr` vorhanden sind. Sie beziehen sich auf Bevölkerungsangaben und von der Weltgesundheitsorganisation dokumentierte Tuberkulose-Fälle (siehe `?table1`).]
+
+```{r}
+table2
+```
+
+**Nein**, das tut es nicht. Die Spalten `type` und `count` folgen nicht der Logik von *tidy data*, denn die **Werte von `count` beziehen sich jeweils auf eine in der Spalte `type` angegebene Variable**. Wollten wir zum Beispiel die Bevölkerungswerte mit `mutate()` ein eine andere Dimension umrechnen, müssten wir alle Werte in der Spalte `count` umrechnen, was die Werte der Lebenserwartung verzerren würde.
+
+Wie steht es mit **`table3`**, handelt es sich hierbei um *tidy data*?
+
+```{r}
+table3
+```
+
+**Nein**, auch diese Tabelle ist nicht *tidy*. Die Variable **`rate`** ist ein `character`-String, der augenscheinlich **zwei Variablen** beinhaltet, nämlich einen Zähler (die `cases`-Angabe) und einen Nenner (die `population`-Angabe). In einer aufgeräumten Tabelle würden sich diese Variablen in separaten Spalten befinden, sodass wir etwa aus ihnen eine dritte Variable mit `mutate()` berechnen könnten.
+
+Wie sieht es zuletzt mit `table1` aus, ist diese Tabelle *tidy*?
+
+```{r}
+table1
+```
+
+**Ja**, in diesem Fall sind **alle drei Prinzipien erfüllt**.
+
+### Vorteile
+
+Auf den ersten Blick mögen die vorangegangenen Beispiele wenig bedeutsam wirken. Wie aber die Hinweise bereits andeuteten, hat *tidy data* zwei wichtige Vorteile:
+
+1.  **Konsistenz**: Sobald wir einmal lernen, mit einem einheitlichen Tabellenformat zu arbeiten, können wir uns besser darauf konzentrieren, diesem Format entsprechende Funktionen zu erlernen.
+2.  **Funktionalität**: Weil R besonders auf die Arbeit mit Vektoren ausgerichtet ist (@sec-grundlagen-datenstrukturen-vektor), erleichtert es die Arbeit erheblich, wenn Variablen in Spalten angeordnet sind. Alle Funktionen aus `dplyr` und `ggplot2`, die wir bislang kennengelernt haben, funktionieren mit *tidy data* am besten.
+
+::: callout-note
+## *Messy data*?
+
+Die Bezeichnung *tidy data* soll im Umkehrschluss **nicht** bedeuten, dass Daten in jedem anderen möglichen Format "schlecht" sind. Viele Tabellenformate haben gewisse Vorteile für bestimmte Anwendungsbereiche. Die Vorteile von *tidy data* gelten insbesondere für R und sind deshalb nicht uneingeschränkt universalisierbar.
+:::
+
+### `tidyr`
+
+Das `tidyverse`-Paket, dessen Aufgabe die Bereinigung von Tabellen ist, nennt sich `tidyr`.^[Auch für dieses Package liegt ein *cheatsheet* vor (@sec-workflow-hilfe-und-selbsthilfe-cheatsheets). In der aktuellsten Version wurde die Funktion `separate()` jedoch durch neuere Varianten (`separate_wider_position()` und `separate_wider_delim()`) ersetzt. Weil `separate()` in der älteren Form jedoch nach wie vor sehr verbreitet und seine Logik sich ohne Mühe auf die Nachfolgefunktionen übertragen lässt, nutzen wir in diesem Kapitel nach wie vor `separate()`.] Dieses Paket bietet eine Reihe an Funktionen, wir beschränken uns jedoch auf **zwei Anwendungsbereiche**: den Umgang mit Variablen und die Organisation von Tabellen.
+
+## Variablen
+
+### Trennen
+
+Ein Problem, dem wir regelmäßig begegnen, ist, dass **eine Spalte mehrere Variablen** beinhaltet. Dies war der Fall bei `table3`. 
+
+```{r}
+table3
+```
+
+Wie bereits erklärt, beinhaltet `rate` tatsächlich **zwei Variablen**, wobei die erste Zahl für die Fallzahl (`cases`) und die zweite Zahl für die Bevölkerung (`population`) steht. Um eine solche Variable in zwei (oder mehr) separate Variablen zu trennen, nutzen wir **`separate()`**. Diese Funktion benötigt Angaben zu mindestens vier Parametern:
+
+- **`data`**: Der Inhalt welcher Tabelle soll bereinigt werden?
+- **`col`**: Welche Spalte (*column*) soll getrennt werden?
+- **`into`**: In welche Spalten sollen in die Inhalte der Spalte getrennt werden?
+- **`sep`**: Durch welches Trennzeichen (*separator*) sind die Inhalte der Spalte voneinander getrennt?
+
+In diesem Fall möchten wir die Spalte `rate` (`col`) von `table3` (`data`) in zwei neue Variablen namens `cases` und `population` (`into`) trennen, wobei wir als Trennzeichen (`sep`) den Ausdruck `"/"` nutzen möchten.
+
+```{r}
+table3 |> 
+  separate(col = rate, # Spalte trennen
+           into = c("cases", "population"), # Neue Variablen erstellen
+           sep = "/") # Trennzeichen angeben
+```
+
+Die Trennung war erfolgreich: `rate` haben wir in `cases` und `population` getrennt. Wichtig ist, dass bei der Trennung die **ursprüngliche Variable entfernt** wurde, weil standardmäßig der Parameter `remove` auf `TRUE` gesetzt ist. Wollen wir die ursprüngliche Variable behalten, ändern wir diese Einstellung.^[Siehe `?separate`. Dasselbe Vorgehen gilt für `unite()`.]
+
+```{r}
+table3 |> 
+  separate(col = rate,
+           into = c("cases", "population"),
+           sep = "/",
+           remove = FALSE) # Ursprüngliche Variable behalten
+```
+
+Uns fällt jedoch auf, dass die beiden neuen Variablen vom Datentyp `character` (@sec-grundlagen-datentypen) sind. Tatsächlich handelt es sich jedoch um Zahlen. `separate()` verfügt glücklicherweise über weitere optionale Parameter neben `remove`, darunter auch `convert` (zu deutsch "konvertieren"). Setzen wir diesen Parameter auf `TRUE`, versucht `tidyr`, die neuen Variablen automatisch in einen passenden Datentyp umzuwandeln.
+
+```{r}
+table3 |> 
+  separate(col = rate,
+           into = c("cases", "population"),
+           sep = "/",
+           convert = TRUE) # Variablentypen umwandeln
+```
+
+### Zusammenführen
+
+Wo wir etwas trennen können, können wir es auch zusammenführen. Nehmen wir an, wir würden uns mit der Tabelle `kurs` beschäftigen.
+
+```{r}
+#| echo: false
+kurs <- tribble(~ vorname, ~ nachname, ~ kurs, ~ semester,
+        "Juliane", "Außendorf", "Einf. in R", "2024/25",
+        "Finn", "Bianga", "Einf. in R", "2024/25",
+        "Rangin", "Dalu", "Einf. in R", "2024/25",
+        "Jakob", "Feuerer", "Einf. in R", "2024/25",
+        "Leander", "Förster", "Einf. in R", "2024/25",
+        "Tobias", NA_character_, "Einf. in R", "2024/25",)
+```
+
+```{r}
+kurs
+```
+
+Hierfür können wir das Gegenstück zu `separate()` namens **`unite()`** (zu deutsch "vereinigen") nutzen. Als Informationen benötigt `unite()`:
+
+- **`data`**: Der Inhalt welcher Tabelle soll zusammengeführt werden?
+- **`...`**: Die Inhalte welcher Spalten (*column*) sollen zusammengeführt werden?
+- **`col`**: Wie soll die neue Variable heißen?
+- **`sep`**: Durch welches Trennzeichen (*separator*) sollen die Inhalte der Spalten miteinander verbunden werden?
+
+In diesem Fall möchten wir die Spalten `vorname` und `nachname` (`...`) der Tabelle `kurs` (`data`) in eine neue Variable namens `name` (`sep`) zusammenführen, wobei wir als Trennzeichen (`sep`) ein Leerzeichen (`" "`) nutzen möchten.
+
+```{r}
+kurs |> 
+  unite(vorname, nachname, # Spalten zusammenführen
+        col = "name", # Neue Variable erstellen
+        sep = " ") # Trennzeichen angeben
+```
+
+Auch dieser Schritt ist uns geglückt. Allerdings hat R den Platzhalter für einen **fehlenden Nachnamen** (`NA`, @sec-grundlagen-sorge-na) als Text behandelt. Abermals hilft ein Blick in die optionalen Parameter von `unite()`^[Siehe `?unite`.], um zu erfahren, dass wir mit `na.rm = TRUE` ein derartiges Vorgehen unterbinden können.
+
+```{r}
+kurs |> 
+  unite(vorname, nachname, 
+        col = "name",
+        sep = " ", 
+        na.rm = TRUE) # Fehlende Werte entfernen
+```
+
+## Tabellenorganisation
+
+Neben den unordentlichen Inhalten bestimmter Variablen besteht ein weiteres Problem von importierten Tabellen darin, dass sich die **Werte einer Variablen nicht in einer, sondern in mehreren Spalten befinden** und die **Bezeichnung der Spalten wiederum selbst eine Variable enthält**. Das klingt kompliziert, wird aber anhand eines Beispiels deutlich.
+
+```{r}
+table4b
+```
+
+Diese Tabelle stellt die **Bevölkerungszahl** nicht in einer, sondern in **zwei Spalten** dar. Die Bezeichnung der Spalten (`1999` und `2000`) wiederum enthält eigentlich keine Variablenbezeichnung, sondern die Werte einer weiteren Variable: nämlich des Jahres. Die Tabelle befindet sich damit in einem sog. **breiten** (*wide*) **Format**. Demgegenüber stehen Tabellen in einem sog. **langen** (*long*) **Format**, wie dieses Schema illustriert:
+
+```{r} 
+#| echo: false
+#| out.width: "60%"
+#| fig-align: "center"
+#| fig-cap: "Breite und lange Tabellenformate [@wang2024]."
+knitr::include_graphics("https://bookdown.org/wangminjie/R4DS/images/tidyr-fig.png")
+```
+
+### Verlängern
+
+Bevor wir mit ihnen arbeiten können, müssen wir regelmäßig breite Tabellen so bearbeiten, dass ihr Inhalt als lange Tabelle dargestellt wird. Hierbei sprechen wir vom **"Drehen"** (*pivoting*) einer Tabelle. Die zuständigen Funktionen heißen entsprechend `pivot_*()`. Um eine breite Tabelle zu "verlängern", bedienen wir uns **`pivot_longer()`**. Folgende **Parameter** benötigt die Funktion:
+
+- **`data`**: Der Inhalt welcher Tabelle soll gedreht werden?
+- **`cols`**: Der Inhalt welcher Spalten (*column*) soll gedreht werden?
+- **`names_to`**: Wie soll die neue Spalte heißen, in der die Namen der bisherigen Spalten erfasst werden sollen?
+- **`values_to`**: Wie soll die neue Spalte heißen, in der die Werte der bisherigen Spalten erfasst werden sollen?
+
+In unserem Beispiel wollen wir die Inhalte der Spalten `1999` und `2000` (`cols`) aus der Tabelle `table4b` (`data`) so drehen, dass die bisherigen Namen in einer neuen Spalte `year` (`names_to`) und die bisherigen Werte in einer neuen Spalte `pop` (`values_to`) festgehalten werden.
+
+```{r}
+table4b |> 
+  pivot_longer(cols = c(`1999`, `2000`), # Spalten auswählen
+               names_to = "year", # Variable für Namen
+               values_to = "pop") # Variable für Werte
+```
+
+Sollte es sich um mehrere Spalten handeln, die wir nicht manuell angeben möchten, können wir auch die Spalten anhand ihrer **Position** auswählen. Außerdem könnten wir, wie in Verwendung von `select()` gelernt, auch **Hilfsfunktionen** verwenden (@sec-datentransformation-spalten-selecting-bereiche).
+
+```{r}
+table4b_long <- table4b |> 
+  pivot_longer(cols = 2:3, # Spalten anhand der Position auswählen
+               names_to = "year",
+               values_to = "pop")
+table4b_long
+```
+
+In diesem Format können wir auf einfachste Art mit `ggplot2` eine Visualisierung erstellen. Mit der Ursprungstabelle wäre dies nicht möglich gewesen.
+
+```{r}
+table4b_long |> 
+  ggplot(mapping = aes(x = year,
+                       y = pop)) +
+  geom_col() +
+  facet_wrap(~ country)
+```
+
+Oft enthalten die **Spaltennamen** in breiten Tabellen neben Variablen auch noch **Präfixe**, also vorangestellte Worte. In dieser veränderten Tabelle steht in letzten beiden Spalten neben der Jahresabgabe noch `year_`.
+
+```{r}
+table4b_prefix <- table4b |> 
+  rename(year_1999 = `1999`,
+         year_2000 = `2000`)
+table4b_prefix
+```
+
+Wenn wir beim Verlängern dieser Tabelle solche **einheitliche Präfixe weglassen** möchten, können wir mit dem Parameter **`names_prefix`** einstellen, dass diese vor dem Verlängern entfernt werden sollen.
+
+```{r}
+table4b_prefix |> 
+    pivot_longer(cols = 2:3,
+               names_to = "year",
+               names_prefix = "year_", # Präfix entfernen
+               values_to = "pop")
+```
+
+### Verbreitern
+
+Vergleichbar mit `separate()` und `unite()` gibt es zu `pivot_longer()` auch ein Gegenstück: **`pivot_wider()`**. Mit dieser Funktion können wir eine bestehende Tabelle "verbreitern". Folgende **Parameter** benötigt die Funktion:
+
+- **`data`**: Der Inhalt welcher Tabelle soll gedreht werden?
+- **`names_from`**: In welcher Spalte befinden sich die Werte, die als neue Spaltennamen genutzt werden sollen?
+- **`values_from`**: In welcher Spalte befinden sich die Werte, die als neue Werte für mehrere Spalten genutzt werden sollen?
+
+Wenn wir unsere verlängerte Tabelle `table4b_long` (`data`) also wieder in ihr Ursprungsformat verwandeln möchten, müssen wir lediglich angeben, dass die Namen der zu erzeugenden Spalten (`names_from`) aus der Spalte `year` und die Werte (`values_from`) aus der Spalte `pop` entnommen werden sollen.
+
+```{r}
+table4b_wide <- table4b_long |> 
+  pivot_wider(names_from = year,
+              values_from = pop)
+table4b_wide
+```
+
+**Sowohl lange als auch breite Tabellen haben nützliche Eigenschaften.** Mit `table4b` bzw. `table4b_wide` könnten wir zwar weniger leicht ein einfaches Diagramm zeichnen, dafür aber leicht eine Veränderungsrate als neue Variable berechnen.^[Im langen Tabellenformat hätten wir für diese Berechnung `group_by()`, `mutate()` und die Hilfsfunktion `lag()` nutzen müssen: `table4b_long |> group_by(country) |> mutate(change_percent = (pop - lag(pop)) / pop * 100)`.]
+
+```{r}
+table4b_wide |> 
+  mutate(change_percent = (`2000` - `1999`) / `1999` * 100)
+```
+
+## Übungsaufgaben
+
+### Variablen
+
+#### Trennen
+
+Betrachten Sie die durch `tidyr` mitgelieferte Tabelle **`billboard`**, welche US-Chartpositionen aus dem Jahr 2000 enthält. Stellen Sie sich die folgenden Fragen:
+
+- Welches Format hat die Tabelle? Ist sie weit oder lang?
+- Welche Prinzipien von *tidy data* werden (nicht) befolgt?
+
+In einem weiteren Schritt trennen Sie die Variable `date.entered` in drei separate Variablen (`year`, `month` und `day`). Ihr Ergebnis (ohne die `wk`-Spalten) sollte so aussehen (beachten Sie auch die Variablentypen!):
+
+```{r}
+#| echo: true
+billboard |> 
+    select(1:3) |> 
+    separate(col = date.entered,
+             into = c("y", "m", "d"),
+             sep = "-",
+             convert = TRUE)
+```
+
+#### Verbinden
+
+Betrachten Sie die durch `tidyr` mitgelieferte Tabelle **`table5`**. Verbinden Sie die Spalten `century` und `year` zu einer neuen Spalte `year`, die eine korrekte, vierstellige Jahresangabe beinhaltet. Nutzen Sie außerdem ein weiteres `dplyr`-Verb, um die Variable in den richtigen Datentyp zu transformieren (@sec-grundlagen-datentypen-arbeiten-transformieren). Ihr Ergebnis sollte so aussehen:
+
+```{r}
+#| echo: true
+table5 |> 
+  unite(year, 
+        century, year, 
+        sep = "") |> 
+  mutate(year = as.numeric(year))
+```
+
+### Tabellenorganisation
+
+#### `billboard`
+
+Verlängern Sie `billboard` so, dass die Wochenangaben in einer Variable `week` und die Platzierungen in einer Variable `rank` dargestellt werden. Ihr Ergebnis sollte so aussehen:
+ 
+```{r}
+#| echo: true
+billboard |> 
+    pivot_longer(cols = starts_with("wk"), # or !1:2
+                 names_to = "week",
+                 values_to = "rank",
+                 names_prefix = "wk", # or parse_number afterwards
+                 values_drop_na = TRUE)
+```
+
+#### `who2`
+
+Betrachten Sie die Tabelle **`who2`**. Stellen Sie sich erneut die folgenden Fragen:
+
+- Welches Format hat die Tabelle? Ist sie weit oder lang?
+- Welche Prinzipien von *tidy data* werden (nicht) befolgt?
+
+Nachdem wie in Erfahrung gebracht haben, wofür die Spaltennamen stehen^[Siehe `?who2`.], verlängern Sie die Tabelle so, dass die einzelnen Informationen in drei verschiedene Variablen `diagnosis`, `gender` und `age_group` sowie die Fallzahlen in einer Variable `count` dargestellt werden. Ihr Ergebnis sollte so aussehen:
+
+```{r}
+#| echo: true
+who2 |> 
+    pivot_longer(cols = !1:2,
+                 names_to = c("diagnosis", "gender", "age_group"), 
+                 names_sep = "_",
+                 values_to = "count")
+```
+
+#### `geburten`
+
+Erzeugen und betrachten Sie die Tabelle `geburten`, die wir in der letzten Sitzung eingelesen haben (@sec-datenimport-uebungsaufgaben-csv).
+
+```{r}
+geburten <- tibble(jahr = c(2013, 2014, 2015, 2016, 2017, 2018, 2019, 
+                            2020, 2021, 2022, 2023), 
+                   geburten_insgesamt = c(109562, 113935, 
+                                          118228, 125689, 126191, 127616, 128227, 128764, 134321, 124897, 
+                                          116505), 
+                   geburten_maennlich = c(55913, 58695, 60511, 64503, 64294, 
+                                          65272, 65760, 65932, 68881, 64000, 59917), 
+                   geburten_weiblich = c(53649, 
+                                         55240, 57717, 61186, 61897, 62344, 62467, 62832, 65440, 60897, 
+                                         56588))
+geburten
+```
+
+Verlängern Sie diese Tabelle so, dass die Geschlechtsangabe und die Anzahl der Geburten in eigenen Variablen vorliegen. Ihr Ergebnis sollte so aussehen:
+
+```{r}
+#| echo: true
+geburten |> 
+  pivot_longer(cols = starts_with("geburten"),
+               names_to = "geschlecht",
+               names_prefix = "geburten_",
+               values_to = "geburten")
+```
+
+Diese Tabelle ist aufgeräumt, aber für manche Zwecke ungeeignet. Was, wenn wir den Anteil an Geburten je nach Geschlecht und Jahr berechnen wollen? Eine Möglichkeit, dies zu tun, wäre die folgende: Verlängern Sie `geburten` statt wie zuvor so, dass nur die Spalten `geburten_maennlich` und `geburten_weiblich` herangezogen werden. Die Spalten `geburten_insgesamt` soll hingegen erhalten bleiben. In einem weiteren Schritt nutzen Sie `mutate()`, um den jeweiligen Anteil zu berechnen. Ihr Ergebnis sollte so aussehen:
+
+```{r}
+#| echo: true
+geburten |> 
+  pivot_longer(cols = c(geburten_maennlich, geburten_weiblich),
+               names_to = "geschlecht",
+               names_prefix = "geburten_",
+               values_to = "geburten") |> 
+  mutate(anteil = round(geburten / geburten_insgesamt * 100, digits = 1))
+```

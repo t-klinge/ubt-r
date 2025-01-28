@@ -1,0 +1,629 @@
+  # Datenimport und -export {#sec-datenimport}
+
+In Zeiten fortschreitender Digitalisierung wächst der Bestand an frei zur Verfügung stehenden Daten in unterschiedlichsten Formaten mit jedem Moment. Nachdem wir bislang nur mit vorgefertigten Datensätzen gearbeitet haben, möchten wir als nächstes lernen, eigens ausgewählte Daten in unsere R-Sitzung zu laden und sie nach getaner Arbeit abzuspeichern. Dabei werden wir uns auf die gängige Tabellenformate beschränken, bevor wir später (@sec-geodatenbearbeitung) Geodaten zu importieren lernen.
+
+In diesem Kapitel lernen wir...
+
+-   ...wie wir Tabellen im Text- und Excel-Format importieren.
+-   ...wie wir angeben, welche Teile einer Tabelle zu importieren sind, welche Datentypen unsere Tabellen enthalten und wie wir fehlende Werte kennzeichnen.
+-   ...wie wir veränderte Tabellen in den Ursprungsformaten, aber auch in R-eigenen Formaten, exportieren.
+
+Wir benötigen hierfür die folgenden Pakete:
+
+```{r}
+#| message: false
+#| warning: false
+library(janitor)
+library(readxl)
+library(tidyverse)
+```
+
+## Allgemeiner Ablauf
+
+Sobald wir eine Tabelle importieren wollen, müssen wir uns meist eine Reihe an Fragen stellen.
+
+-   Welches **Dateiformat** liegt vor?
+-   An welchem **Ort** befindet sich die Datei?
+-   Liegt eine **Kopfzeile** (*header*) vor? Wenn ja, welche Namen enthält sie?
+-   Welche **Datentypen** (@sec-grundlagen-datentypen) haben die einzelnen Spalten?
+-   Durch welches **Trennzeichen** sind die einzelnen Zellen voneinander getrennt (*delimited*)?
+-   Liegen **fehlende Werte** vor? Wenn ja, wodurch sind sie gekennzeichnet?
+
+Wenn wir über diese Informationen verfügen, können wir mit geeigneten Funktionen die Daten wie gewünscht importieren und mit ihnen als *data frame* weiterarbeiten. Indem wir unseren Code dabei angemessen dokumentieren (@sec-workflow-dokumentation), gehen wir sicher, dass wir unsere Daten immer akkurat importieren können, wenn sich eine Ursprungsdatei verändert. Zudem können wir mit Kommiliton\*innen und Kolleg\*innen unseren Code teilen, sodass wir die Daten stets auf dieselbe Art und Weise "sehen".
+
+::: callout-note
+## *base R* oder `tidyverse`?
+
+In den folgenden Ausführungen nutzen wir Funktionen aus den Paketen `readr`^[Auch für dieses Package liegt ein *cheatsheet* vor (@sec-workflow-hilfe-und-selbsthilfe-cheatsheets).] (das Teil des `tidyverse` ist, siehe [@r4ds2023, Kapitel 7] und `readxl`. Das bedeutet jedoch nicht, dass nicht bereits *base R* viele Möglichkeiten böte. Tatsächlich sind auch "jüngere" Funktionen oft auf Basis von *base R* geschrieben worden. Deshalb lohnt es sich immer, auch diese kennenzlernen. Eine gute Einführung liefern @douglas2024 [Kapitel 3.3 und 3.6].
+:::
+
+## CSV
+
+### Erste Ansicht
+
+Das wohl einfachste Tabellenformat ist **CSV**. Dieses Kürzel steht für **c***omma* **s***eparated* **v***alues*, also "durch Kommata getrennte Werte". Als Beispiel möchten wir uns die Tabelle [`students.csv`](https://pos.it/r4ds-students-csv) näher anschauen [@r4ds2023, Kapitel 7.2]. Hierfür öffnen wir die Datei zunächst in ihrer "Rohform", indem wir einen Browser oder einen Texteditor (wie *Notepad* unter Windows oder *TextEdit* unter macOS) heranziehen.
+
+```{r}
+#| echo: false
+#| message: false
+#| tbl-cap: "students.csv in der Texteditor-Ansicht."
+read_lines("https://raw.githubusercontent.com/hadley/r4ds/main/data/students.csv") |> 
+  cat(sep = "\n")
+```
+
+Die erste Zeile (`Student ID,Full Name,favourite.food,mealPlan,AGE`) gibt dabei die **Spaltennamen** an. Desweiteren sehen wir, dass die einzelnen **Zellen durch Kommata getrennt** sind. Diese Ansicht ist bei der ersten Betrachtung aber ungewohnt. In der Tabellenansicht sähe `students.csv` gleich verständlicher aus.
+
+```{r}
+#| echo: false
+#| message: false
+#| tbl-cap: "`students.csv` in der Tabellen-Ansicht."
+#| tbl-cap-location: "bottom"
+read_csv("https://raw.githubusercontent.com/hadley/r4ds/main/data/students.csv") |>
+  knitr::kable()
+```
+
+### Importieren
+
+Um eine derartige CSV-Datei zu importieren, nutzen wir die Funktion **`read_csv()`**^[Die *base R*-Grundfunktion heißt `read.csv()`.]. Deren wichtigster Parameter ist **`file`**, der als Argument einen **Dateipfad** benötigt. Dieser Dateipfad kann auf eine **lokale Datei** (eine Datei, die sich auf unserem Rechner befindet) verweisen. Wenn wir `students.csv` in einem Ordner namens `files` in unserem Projekt gespeichert haben, würden wir die Datei mit dem folgenden Code einlesen und einem Objekt namens `students` zuschreiben.
+
+```{r}
+students <- read_csv(file = "./files/students.csv")
+```
+
+Alternativ können wir die CSV-Datei über Ihre **Internetadresse** importieren, wobei wir die Internetadresse in Anführungszeichen setzen müssen.
+
+```{r}
+students <- read_csv(file = "https://pos.it/r4ds-students-csv")
+```
+
+Einmal ausgeführt, liefert uns `read_csv()` bereits wichtige **Hinweise** darauf, was die Funktion getan hat:
+
+-   `Delimiter: ","`: Kommata wurden korrekterweise als Trennzeichnen genutzt.
+-   `chr (4): Full Name, favourite.food, mealPlan, AGE`: Vier Spalten wurden als Text (*character*) importiert.
+-   `dbl (1): Student ID`: Eine Spalte wurde als ganze Zahl (*double*) importiert.
+
+Um zu überprüfen, ob dieser Import damit erfolgreich abgeschlossen ist, schauen wir uns `students.csv` nochmals an.
+
+```{r}
+students
+```
+
+Auf Anhieb erkennen wir mehrere **Probleme**, die wir angehen möchten:
+
+1. Die **Variablennamen** sind uneinheitlich und deshalb schwer lesbar. Besser wäre es, wenn alle Namen eine ähnliche Struktur hätten.
+2. In der Spalte `favourite.food` ist mit `N/A` ein "Wert" enthalten, der eigentlich für einen **fehlenden Wert** steht. Besser wäre es, wenn dieser Wert von R als `NA` erkannt würde. 
+3. Die Werte der Spalte `mealPlan` sind **als `character`-Werte eingelesen**, beinhalten aber tatsächlich nur zwei Ausprägungen. Besser wäre es, wenn sie als `factor` eingelesen würden.
+4. In der Spalte `AGE` befindet sich mit `"five"` keine Zahl, sondern ein Text, weshalb die gesamte **Spalte fälschlicherweise als `character` eingelesen** wurden.
+
+#### Einheitliche Spaltennamen {#sec-datenimport-csv-importieren-spaltennamen}
+
+Um die Spaltennamen anzupassen, können wir beim Import auf eine nützliche Funktion namens **`clean_names()`** aus dem **`janitor`**-Paket zugreifen. `clean_names()` "säubert" die Namen eines *data frames* so, dass sie alle der Schreibweise `snake_case` folgen (@sec-grundlagen-eingabe-rechtschreibung). Sobald wir `janitor` geladen haben, können wir die `clean_names()` einfach mittels der *pipe* mit `read_csv()` verbinden.
+
+```{r}
+#| message: false
+students <- read_csv(file = "https://pos.it/r4ds-students-csv") |> 
+  clean_names() # Spaltennamen: snake_case
+students
+```
+
+#### Angabe fehlender Werte {#sec-datenimport-csv-import-na}
+
+Es kommt immer wieder vor, dass in Tabellen fehlende Werte auf unterschiedliche Weise kenntlich gemacht werden. Standardmäßig hält `read_csv()` jedoch nur leere Zellen (`""`) für wirklich fehlende Werte und übersieht damit Angaben wie `"`N/A`"`. Um dies zu ändern, nutzen wir den Parameter **`na`**, dem wir einen **Vektor mit all jenen Werten als Argument geben, die für fehlende Werte stehen**. Zusätzlich zu `""` möchten wir also mit `na = c("", "N/A")` auch noch `"N/A"` explizit angeben.
+
+```{r}
+#| message: false
+students <- read_csv(file = "https://pos.it/r4ds-students-csv",
+                     na = c("", "N/A")) |> # NA-Werte: "" und "N/A"
+  clean_names()
+students
+```
+
+#### Datentypen für Spalten angeben {#sec-datenimport-csv-importieren-datentypen}
+
+Standardmäßig **"rät" `readr`** bei jeder Spalte, um welchen Datentypen es sich handelt [@r4ds2023, Kapitel 7.3.1]. Nicht immer ist `readr`s Vermutung dabei richtig. Wenn wir möchten, dass `meal_plan` statt als `character` als `factor` eingelesen wird, können wir hierfür den Parameter `col_types` (*column types*) nutzen, um **für jede Spalte einen eigenen Datentyp anzugeben**. `col_types` benötigt dabei eine Funktion namens `cols`, innerhalb derer wir für jede Spalte, bei der wir von `readr`s Rat abweichen wollen angeben, eine der folgenden Funktionen nutzen:^[Siehe `?readr::cols`.]
+
+- **`col_logical()`**: Die Variable soll als `logical` eingelesen werden.
+- **`col_integer()`**: Die Variable soll als `integer` eingelesen werden.
+- **`col_double()`**: Die Variable soll als `double` eingelesen werden.
+- **`col_character()`**: Die Variable soll als `character` eingelesen werden.
+- **`col_factor()`**: Die Variable soll als `factor` eingelesen werden.
+- **`col_date()`**: Die Variable soll als `date` eingelesen werden.
+- **`col_datetime()`**: Die Variable soll als `datetime` eingelesen werden.
+- **`col_skip()`**: Die Variable soll übersprungen (*skip*) werden.
+
+Mit `col_types = cols(mealPlan = col_factor(levels = c("Lunch only", "Breakfast and lunch")))` geben wir also innerhalb von `read_csv()` an, dass **`mealPlan` als `factor` eingelesen** werden soll und dabei die zwei vorhandenen **Ausprägungen** (`"Lunch only"` und `"Breakfast and lunch"`) als *levels* genutzt werden sollen.
+
+```{r}
+#| message: false
+students <- read_csv("https://pos.it/r4ds-students-csv",
+                     na = c("", "N/A"),
+                     col_types = cols(mealPlan = col_factor(levels = c("Lunch only", "Breakfast and lunch"))) ) |> # Spaltentypen: mealPlan als factor
+  clean_names()
+students
+```
+
+Möchten wir den Datentyp einer **weiteren Variable** ändern und zum Beispiel `Student ID` als `integer` einlesen, ergänzen wir unseren `cols()`-Aufruf nur geringfügig.
+
+```{r}
+#| message: false
+students <- read_csv("https://pos.it/r4ds-students-csv",
+                     na = c("", "N/A"),
+                     col_types = cols(mealPlan = col_factor(levels = c("Lunch only", "Breakfast and lunch")),
+                                      `Student ID` = col_integer()) ) |> # Spaltentypen: mealPlan als factor, `Student ID` als integer
+  clean_names()
+students
+```
+
+::: callout-note
+## Anpassungen nach dem Import
+
+Tatsächlich handelt es sich bei **`age`** aber nicht um eine Variablem vom Typ Text, sondern vom Typ **Zahl**. Wenn wir im Rahmen von `col_types` dies aber mit `col_integer()` oder `col_double()` angäben, würde `read_csv()` den Wert **`five` ignorieren und als `NA` behandeln**, weil es einen `character`-Wert nicht in eine Zahl umwandeln kann.
+
+```{r}
+#| warning: false
+students <- read_csv("https://pos.it/r4ds-students-csv",
+                     na = c("", "N/A"),
+                     col_types = cols(mealPlan = col_factor(levels = c("Lunch only", "Breakfast and lunch")),
+                                      `Student ID` = col_integer(),
+                                      AGE = col_double())) |> # Spaltentypen: mealPlan als factor, `Student ID` als integer, AGE als double
+  clean_names()
+students
+```
+
+Ein solcher Fall ist nicht durch eine Angabe von Datentypen zu lösen. Stattdessen entscheiden wir uns dafür, **erst die Tabelle einzulesen** und sie **dann zu verändern**. Wir greifen hierfür zunächst auf unseren Code von @sec-datenimport-csv-importieren-datentypen zurück. 
+
+```{r}
+#| message: false
+students <- read_csv("https://pos.it/r4ds-students-csv",
+                     na = c("", "N/A"),
+                     col_types = cols(mealPlan = col_factor(levels = c("Lunch only", "Breakfast and lunch")),
+                                      `Student ID` = col_integer()) ) |>
+  clean_names()
+students
+```
+
+Um Spalten einer bestehenden Tabelle zu verändern, nutzen wir **`mutate()`** (@sec-datentransformation-spalten-mutating). Um die `age`-Angabe `"five"` zu korrigieren, nutzen wir innerhalb von `mutate()` eine **`parse_*()`-Hilfsfunktion** (zu deutsch etwa "bestimmen" oder "analysieren"). Weil wir den Inhalt von `age` als Zahl erfassen möchten, schreiben wir `age = parse_number(age)`.
+
+```{r}
+students <- read_csv("https://pos.it/r4ds-students-csv",
+                     na = c("", "N/A"),
+                     col_types = cols(mealPlan = col_factor(levels = c("Lunch only", "Breakfast and lunch")),
+                                      `Student ID` = col_integer()) ) |>
+  clean_names() |>
+  mutate(age = parse_number(age)) # age: number
+students
+```
+
+Daraufhin liefert uns `readr` eine **Warnung**, dass es in einem Falle eine Zahl erwartet, aber ein Wort (`five`) erhalten hat, das es nicht als Zahl "lesen" kann. Deshalb müssen wir angeben, dass in diesem Fall ein Text (`"5"`) verwendet werden soll, der sehr wohl in eine Zahl umgewandelt werden kann. Weil es sich um eine Wenn-Dann-Situation handelt, nutzen wir eine **Bedingung** (@sec-datentransformation-spalten-mutating-bedingungen). 
+
+Mit `mutate(age = parse_number(if_else(age == "five", "5", age))` bewerkstelligen wir folgendes ^[Es hilft, den Code von innen nach außen zu lesen, um ihn zu verstehen.]:
+
+1. Wenn die Spalte `age` den Wert `"five"` aufweist, dann wird er durch den Wert `"5` ersetzt. Ansonsten wird der jeweilige `age`-Wert unverändert übernommen.
+2. Im nächsten Schritt werden die Textwerte von `age` als Zahlen "geparst", also gelesen. 
+3. Die Ergebnisse diese Lesevorgangs überschreiben die bisherigen `age`-Werte.  
+
+```{r}
+#| message: false
+students <- read_csv("https://pos.it/r4ds-students-csv",
+                     na = c("", "N/A"),
+                     col_types = cols(mealPlan = col_factor(levels = c("Lunch only", "Breakfast and lunch")),
+                                      `Student ID` = col_integer()) ) |>
+  clean_names() |>
+  mutate(age = parse_number(if_else(age == "five", "5", age))) # age: number
+students
+```
+:::
+
+#### Zeilen überspringen
+
+Nicht immer enthalten Dateien ausnahmslos Informationen, die uns interessieren. Nehmen wir an, wir hätten es mit einer Datei zu tun, die in den ersten Zeilen wichtige Informationen in Form sog. *metadata* enthält. Die **eigentlichen Daten beginnen erst in der zweiten Zeile**.
+
+```{r}
+#| echo: false
+read_lines("# Wichtige Informationen
+         Var_1,Var_2,Var_3
+         1,2,3
+         4,5,6") |> 
+  cat(sep = "\n")
+```
+
+Um die erste **Zeile zu überspringen**, setzen wir den Parameter **`skip`** auf `1`. `readr` beginnt dann erst ab der zweiten Zeile mit dem Einlesen der Daten.
+
+```{r}
+#| message: false
+read_csv("# Wichtige Informationen
+         Var_1,Var_2,Var_3
+         1,2,3
+         4,5,6",
+         skip = 1) # Erste Zeile überspringen
+```
+
+Mit `skip` können wir also Zeilen "von oben" überspringen. Nicht selten weisen Tabellen aber auch **Fußzeilen** auf, die uns ebensowenig interessieren. In diesem Fall möchten wir angeben, dass nur eine **bestimmte Anzahl an Zeilen eingelesen** werden soll. Hierzu dient der Parameter **`n_max`**. Möchten wir in unserem Beispiel die ergänzte Fußzeile ignorieren, geben wir mit `n_max = 2` an, dass nur zwei Zeilen eingelesen werden sollen.
+
+```{r}
+#| message: false
+#| warning: false
+read_csv("# Wichtige Informationen
+         Var_1,Var_2,Var_3
+         1,2,3
+         4,5,6,
+         # Nochmal wichtige Informationen",
+         skip = 1,
+         n_max = 2) # Maximal drei Zeilen einlesen
+```
+
+#### Keine Spaltennamen nutzen
+
+Manchmal kommt es vor, dass eine Datei keine Spaltenbeschriftungen aufweist. Wenn wir dies nicht wüssten, würden die Werte der ersten Zeile standardmäßig von `readr` als Beschriftungen genutzt werden.
+
+```{r}
+#| message: false
+read_csv("1,2,3
+         4,5,6")
+```
+
+Um dieses (ansonsten nützliche) Verhalten zu unterdrücken und **keine Spaltennamen einzulesen**, können wir den Parameter **`col_names`** auf `FALSE` setzen. In einem solchen Fall vergibt R **automatisch fortlaufende Variablennamen** wie `X1`, `X2`, `X3` usw.
+
+```{r}
+#| message: false
+read_csv("1,2,3
+         4,5,6",
+         col_names = FALSE) # Keine Spaltennamen
+```
+
+#### Eigene Spaltennamen angeben
+
+Wenn wir eine Tabelle mit automatisch erzeugten Variablennamen vermeiden wollen, können wir auch beim Einlesen dem Parameter `col_names` einen **Vektor mit entsprechenden Namen** geben.
+
+```{r}
+#| message: false
+read_csv("1,2,3
+         4,5,6",
+         col_names = c("Variable_1", "Variable_2", "Variable_3")) # Eigene Spaltennamen vergeben
+```
+
+### Exportieren
+
+Um eine einmal importierte Tabelle wieder als CSV zu exportieren können wir das Gegenstück zu `read_csv()` nutzen, welches passenderweise **`write_csv()`** heißt.^[Die *base R*-Grundfunktion heißt `write.csv()`.] Wir möchten unseren sauber importierten *data frame* `students` exportieren.
+
+```{r}
+students
+```
+
+Um dies zu tun, müssen wir eine **Tabelle** (`x`) auswählen und zudem einen **Dateinamen** bzw. Dateipfad (`file`) angeben, der auf `.csv` endet. Für weitere Funktionalitäten lohnt sich ein Blick in die Dokumentation (`?write_csv`).
+
+```{r}
+write_csv(x = students,
+          file = "./files/students_exported.csv")
+```
+
+Wie wir sehen, wird die neu erzeugte Datei `students_exported.csv` auch ohne weiteres wieder korrekt eingelesen.
+
+```{r}
+read_csv(file = "./files/students_exported.csv")
+```
+
+### Verwandte Funktionen {#sec-datenimport-csv-verwandte-funktionen}
+
+Sobald wir einmal die Logik von `read_csv()` verstanden haben, können wir diese Wissen leicht auf **verwandte Funktionen** übertragen. Tatsächlich finden sich im CSV-Format nämlich unterschiedliche Arten, welche Trennzeichen für Zellenwerte oder welche Dezimalzeichen verwendet werden. Neben `read_csv()` sind u.a die folgenden Funktionen entsprechend gut zu kennen [@r4ds2023, Kapitel 7.2.3]:
+
+-   **`read_csv2()`**: Diese Funktion verwendet Semikola (`;`) als Trennzeichen und Kommata (`,`) als Dezimalzeichen. Dieser Standard außerhalb des englischsprachigen Raums geläufig.
+-   **`read_tsv()`**: Diese Funktion verwendet Einschübe (*tabs*) als Trennzeichen.
+-   **`read_delim()`**: Diese Funktion kann Tabellen mit jedem möglichen Trennzeichen einlesen, sofern man es angibt. Viele andere `read_*()`-Funktionen basieren auf ihr.
+
+**Für jede `read_*()`-Funktion existiert zudem eine ergänzende `write_*()`-Funktion.**
+
+## XLSX und XLS
+
+### Erste Ansicht
+
+Aufgrund der Verbreitung von Microsoft Office-Produkten sind die Dateiformate XLS bzw. XLSX oftmals **unumgänglich**. Deshalb liegen gleich mehrere Pakete vor, um Daten in diesem Formaten in R zu importieren. In diesem Abschnitt möchten wir das Paket **`readxl`** kennenlernen. Als **Beispieldatensatz** dient uns [`sample.xlsx`](https://docs.google.com/spreadsheets/d/1pWA4NGtTfqK_pQG2b8BdrIuUrMJsGHbE/edit?gid=1805851187#gid=1805851187). Dieser Datensatz beinhaltet zwei Tabellenblätter (*sheets*). Das erste Tabellenblatt, `bank-full`, ist eine Tabelle mit 45211 Zeilen und 17 Spalten, die Informationen zu Bankkunden enthält.^[`bank-full` ist ein umfangreicher Datensatz einer portugiesischen Finanzinstitution, der als Lehrmaterial für fortgeschrittene Modellierungen dient (für weitere Informationen siehe [kaggle](https://www.kaggle.com/datasets/krantiswalke/bankfullcsv)).]
+
+```{r}
+#| echo: false
+#| out-width: "100%"
+#| fig-align: "center"
+#| fig-cap: "Das Tabellenblatt `bank-full` in `sample.xlsx` [@chugh2023]."
+knitr::include_graphics("https://images.datacamp.com/image/upload/v1678464038/Screenshot_2023_03_08_at_9_05_49_PM_f7a261b840.png")
+```
+
+Das zweite Tabellenblatt, `iris`, enthält eine Tabelle mit 150 Zeilen und 6 Spalten, die Informationen zu Merkmalen unterschiedlicher Blumen, nämlich Schwertlilien, enthält.^[`iris` ist einer der meistgenutzten Übungsdatensätze Bereich *data science* [@cui2020].] 
+
+```{r}
+#| echo: false
+#| out-width: "75%"
+#| fig-align: "center"
+#| fig-cap: "Das Tabellenblatt `iris` in `sample.xlsx` [@chugh2023]."
+knitr::include_graphics("https://images.datacamp.com/image/upload/v1678464098/Screenshot_2023_03_08_at_9_08_53_PM_07208c64b8.png")
+```
+
+### Importieren
+
+Die Funktion, um den Inhalt einer Excel-Datei (XLS oder XLSX) einzulesen, heißt **`read_excel()`**. Der Parameter **`path`** benötigt (ebenso wie `file` in `read_csv()`) einen lokalen **Dateipfad** oder eine **Internetadresse.** Wenn wir nichts weiter einlesen, importiert R den Inhalt des ersten Tabellenblattes als *tibble*.
+
+```{r}
+bank_full <- read_excel(path = "./files/sample.xlsx") # Angabe des Dateipfads
+bank_full
+```
+
+#### Auswahl eines bestimmten Tabellenblattes
+
+Wenn wir nicht das erste, sondern das zweite Tabellenblatt (`iris`) importieren möchten, nutzen wir den Parameter **`sheet`**. Wir können ihm entweder den **Namen** des Tabellenblattes...
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris") # Auswahl des Tabellenblatts anhand des Namens
+iris
+```
+
+...oder dessen **Position** angeben, um die jeweilige Tabelle zu importieren.
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = 2) # Auswahl des Tabellenblatts anhand der Position
+iris
+```
+
+#### Auswahl eines Tabellenbereichs
+
+Selten beinhaltet eine Excel-Datei ausschließlich Daten, die wir benötigen. Regelmäßig enthalten derartige Dateien etwa mehrere (mehr oder weniger nützliche) Überschriften, Fußnoten oder Diagramme. Deshalb können wir mit dem Parameter **`range`** einen **Bereich** im Tabellenblatt angeben, dessen Daten wir importieren möchten. Nehmen wir an, wir würden gerne die neun hier ausgewählten Zellenwerte importieren:
+
+```{r}
+#| echo: false
+#| out-width: "90%"
+#| fig-align: "center"
+#| fig-cap: "Eine Auswahl innerhalb des Tabellenblatts `iris` in `sample.xlsx` [@chugh2023]."
+knitr::include_graphics("./images/spreadsheet-range.png")
+```
+
+Um nur diese Werte zu importieren, müssen wir die **oberste linke Zeile** sowie die **unterste rechte Zeile** angeben. Diese beiden Angaben begrenzen den Bereich, den wir importieren möchten. Diese Angabe können wir auf **zwei Arten** vornehmen:
+
+-   **Excel-Schreibweise**: Excel benennt Spalten mit Buchstaben und Zeilen mit Nummern. Der ausgewählte Bereich "beginnt" also bei **B2** und "endet" bei **D4**. Unser Bereich lautet dieser Schreibweise nach **B2:D4** (gelesen als "Spalte D, Zeile 2 bis Spalte D, Zeile 4").
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris",
+                   range = "B2:D4") # Auswahl des Bereichs
+iris
+```
+
+-   **Zeilen/Spalten-Schreibweise**: Viele andere Programme, darunter auch R, beginnen Angaben mit der Angabe der Zeile **R** (*row*) sowie der Spalte **C** (*column*), gefolgt jeweils von einer Nummer. Unser Bereich lautet dieser Schreibweise nach **R2C2:R4C4** (gelesen als "Zeile 2, Spalte 2 bis Zeile 4, Spalte 4").
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris",
+                   range = "R2C2:R4C4") # Auswahl des Bereichs
+iris
+```
+
+Um zu verhindern, dass die Werte der ersten eingelesenen Zeile als **Spaltennamen** importiert werden, müssen wir in solchen Fällen jedoch weitere Parameter heranziehen (@sec-datenimport-excel-import-keine-spaltennamen).
+
+#### Einheitliche Spaltennamen
+
+Anders als `bank-full` enthält `iris` Spaltennamen im sog. *camel case* (@sec-grundlagen-eingabe-rechtschreibung). Um diese in *snake case* zu verwandeln, können wir wie zuvor **`clean_names()`** nutzen (@sec-datenimport-csv-importieren-spaltennamen).
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = 2) |> 
+  clean_names() # Spaltennamen: snake_case
+iris
+```
+
+#### Angabe fehlender Werte
+
+Die Angabe von Werten, die als fehlende Werte (`NA`) erkannt werden sollen, erfolgt analog zu `read_csv()` mittels des **`na`**-Parameters (@sec-datenimport-csv-import-na).
+
+#### Datentypen für Spalten angeben
+
+Standardmäßig **"rät" `read_excel()`** bei jeder Spalte, um welchen Datentypen es sich handelt, ebenso wie `read_csv()`. Nicht immer ist `read_excel()`s Vermutung dabei richtig. 
+Wenn wir deshalb Datentypen selbst angeben wollen, nutzen wir eine ähnliche, nicht aber die gleiche Schreibweise wie bei `read_csv()`. 
+
+Stattdessen benötigt der Parameter **`col_types`** einen **Vektor**, der soviele Werte enthält, wie Spalten eingelesen werden sollen. Wir können hierbei aus uns bekannten Werten wie `"logical"`, `"numeric"`, `"date"`, `"text"`, `"list"`, `"skip"` oder `"guess"` wählen^[Siehe `?read_excel`.]. `"skip"` überspringt dabei eine Spalte und liest den Inhalt nicht ein (ebenso wie `col_skip()` es bei `read_csv()` tut, @sec-datenimport-csv-importieren-datentypen). Glücklicherweise sind die von uns bisher eingelesenen Tabellen `bank_full` und `iris` aber fehlerfrei.
+
+#### Zeilen überspringen
+
+Auch bei `read_excel()` gibt es die Möglichkeit, mithilfe des Parameters **`skip`** anzugeben, ob -- und wenn ja, wieviele -- Zeilen übersprungen werden sollen. Anders als bei `read_csv()` gilt diese Angabe bei `read_excel()` jedoch auch für die **Kopfzeile**, die oft die Spaltennamen enthält. Dadurch werden die *Werte der ersten Zeile** ohne weitere Angaben **als Spaltennamen verwendet**.
+
+```{r}
+#| message: false
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris",
+                   skip = 2) # Erste zwei Zeilen überspringen
+iris
+```
+
+#### Keine Spaltennamen nutzen {#sec-datenimport-excel-import-keine-spaltennamen}
+
+Um das **Problem falscher Spaltennamen** zu beheben, kann -- wie im Falle von `read_csv()` -- innerhalb von `read_excel()` mit dem Parameter **`col_names`** mit `FALSE` angegeben werden, dass **keine Spaltennamen** eingelesen werden.
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris",
+                   col_names = FALSE) # Keine Spaltennamen einlesen
+iris
+```
+
+Damit eventuell vorhandene Spaltennamen aber nicht fälschlicherweise als erste Datenwerte eingelesen werden und deshalb die gesamten Spalten als `character` erkannt werden, muss in solchen Fällen mit `skip = 1` dafür gesorgt werden, die **erste Zeile zu überspringen**. `readxl` vergibt dann **automatisch fortlaufende Variablennamen** wie `...1`, `...2`, `...3` usw.
+
+```{r}
+#| message: false
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris",
+                   col_names = FALSE, # Keine Spaltennamen einlesen
+                   skip = 1) # Erste Zeile überspringen
+iris
+```
+
+#### Eigene Spaltennamen angeben
+
+Wenn wir eine Tabelle mit automatisch erzeugten Variablennamen vermeiden wollen, können wir -- genau wie zuvor bei der Nutzung von `read_csv()` -- auch beim Einlesen dem Parameter `col_names` einen **Vektor mit eigenen Namen** geben.
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris",
+                   col_names = c("id", "sepal_length", "sepal_width", "petal_length", "petal_width", "species_name"), # Eigene Spaltennamen angeben
+                   skip = 1)
+iris
+```
+
+### Exportieren
+
+Wie der Name des Pakets es bereits andeutet, sind die Funktionen von `readxl` ausschließlich zum Importieren von Excel-Dateien gedacht. Mit der Funktion **`write_xlsx()`** aus dem gleichnamigen Package [`writexl`](https://docs.ropensci.org/writexl/) liegt jedoch eine Erweiterung zum Exportieren eines *data frames* im Excel-Format vor.  
+
+## R-Datenformate
+
+### RDS
+
+Um Daten zwischen Nutzer\*innen von R zu teilen, kommt einem bestimmten Dateiformat eine besondere Bedeutung zu. Dieses Format ist RDS (***R*** ***D*****ata** ***S*****tructure**). In diesem Format können wir **einzelne Objekte exportieren**, zum Beispiel *data frames*. Der **Vorteil gegenüber anderen Exportformaten** wie CSV oder XLSX liegt darin, dass das spezielle R-Format alle **Metadaten** mit exportiert. Das heißt, dass etwa alle **Datentypen** genauso erhalten bleiben, wie wir sie in unserer bisherigen R-Sitzung festgelegt haben. Beim Importieren einer zuvor erzeugten RDS-Datei müssen wir keine weiteren Angaben vornehmen.
+
+Zum **Exportieren** eines R-Objekts nutzen wir die Funktion **`write_rds()`**^[Diese Funktion basiert auf der *base R*-Funktion `saveRDS()`.], der wir als Input `x` ein **Objekt** (hier unsere importierte `iris`-Tabelle) und als **Dateipfad** `file` einen Dateinamen mit der Endung `.rds` angeben. Auf diese Weise wird in unserem angegebenen Verzeichnis eine neue Datei `iris.rds` erzeugt.
+
+```{r}
+iris <- read_excel(path = "./files/sample.xlsx",
+                   sheet = "iris")
+write_rds(x = iris,
+          file = "./files/iris.rds")
+```
+
+Um dieselbe Datei zu **importieren**, nutzen wir **`read_rds()`**^[Diese Funktion basiert auf der *base R*-Funktion `readRDS()`.].
+
+```{r}
+iris <- read_rds(file = "./files/iris.rds")
+iris
+```
+
+### RDATA
+
+Über RDS hinaus bietet R mit RDATA noch ein weiteres Datenformat zum Austausch von Daten einer R-Sitzung an.
+
+#### Mehrere Objekte
+
+Mit der Funktion **`save()`** können wir ein oder mehrere Objekte zugleich in einer Datei exportieren. Dafür nennen wir der Funktion die Objekte und geben mit `file` wiederum einen Dateipfad an, der auf **`.rdata`** endet.
+
+```{r}
+bank_full <- read_excel(path = "./files/sample.xlsx",
+                        sheet = "bank-full")
+iris <- read_excel(path = "./files/sample.xlsx",
+                        sheet = "iris")
+save(bank_full, iris, file = "./files/banks_and_iris.rdata") # bank_full und iris gemeinsam als RDATA exportieren
+```
+
+Nachdem wir unseren *workspace* komplett leeren (hierfür nutzen wir `rm(list = ls())`, @sec-grundlagen-objekte-ueberschreiben-entfernen) und mit `ls()` überprüfen, dass wir wirklich keine Objekte mehr in unserer Sitzung geladen haben, können wir **`load()`** nutzen, um `banks_and_iris.rdata` erneut zu importieren. 
+
+```{r}
+rm(list = ls()) # Workspace leeren
+ls() # Überprüfen, ob Workspace leer ist
+load(file = "./files/banks_and_iris.rdata") # banks_and_iris.rdata importieren
+ls() # Überprüfen, ob beide Objekte importiert wurden
+```
+
+#### Workspace
+
+Wenn wir mit vielen Objekten arbeiten, kann es sinnvoll sein, den **gesamten *workspace* abzuspeichern** (dies jedoch immer zu tun, wie RStudio es vorschlägt, ist nicht empfehlenswert; @sec-workflow-sitzungen). Um dies zu tun, können wir die Funktion **`save.image()`** nutzen.
+
+```{r}
+save.image(file = "./files/my_workspace.rdata")
+```
+
+Um einen gesamten *workspace* zu importieren, können wir wiederum auf **`load()`** zurückgreifen.
+
+```{r}
+load(file = "./files/my_workspace.rdata")
+```
+
+Sollten wir bereits **Objekte mit identischen Namen** in unserem aktuellen *workspace* haben, werden diese mit den Objekten aus der RDATA-Datei **überschrieben**. Entsprechend ist es ratsam, einen gesamten *workspace* nur in einer neuen Sitzung zu importieren.
+
+## Übungsaufgaben
+
+Für diese Übungsaufgaben nutzen wir unterschiedliche Datensätze des Bayerischen Landesamtes für Statistik, die wir über [Genesis-Online](https://www.statistikdaten.bayern.de/genesis/online) beziehen können.
+
+### CSV {#sec-datenimport-uebungsaufgaben-csv}
+
+1. Laden Sie die Tabelle [12612-003z: Lebendgeborene: Gemeinde, Geschlecht, Jahre](https://www.statistikdaten.bayern.de/genesis/online?operation=result&code=12612-003z) im CSV-Format herunter. Importieren Sie dann den Inhalt als `geburten_bayern` in R.
+    * Betrachten Sie die Datei zunächst in einem Texteditor, um den Inhalt zu verstehen. Welches Trennzeichen wir verwendet? Welche Zeilen enthalten Daten? Wie sind die Spalten benannt?
+    * Welche `read_*()`-Funktion Sie müssen Sie verwenden (@sec-datenimport-csv-verwandte-funktionen)?
+    * Welche Zeilen müssen Sie überspringen (`skip`)?
+    * Wieviele Zeilen sollen eingelesen werden (`n_max`)?
+    * Wie müssen die Spalten benannt werden (`col_names`)?
+    
+Ihre Tabelle könnte so aussehen:
+    
+```{r}
+#| echo: true
+#| message: false
+geburten <- read_csv2(file = "./files/12612-003z.csv",
+          skip = 7,
+          n_max = 11,
+          col_names = c("jahr", "geburten_insgesamt", "geburten_maennlich", "geburten_weiblich"))
+geburten
+```
+
+2. Laden Sie die Tabelle [33111-001z: Fläche: Gemeinde, Fläche (ALKIS), Art der tatsächlichen Nutzung (nach ALKIS-Nutzungsarten), Jahre (ab 2014)](https://www.statistikdaten.bayern.de/genesis//online?operation=table&code=33111-001z&bypass=true&levelindex=0&levelid=1734102234271) im CSV-Format herunter. Wählen Sie beim Herunterladen die unten angegebenen Einstellungen aus. Importieren Sie dann den Inhalt als `flaechen_bayern` in R.
+    * Betrachten Sie die Datei zunächst in einem Texteditor, um den Inhalt zu verstehen. Welches Trennzeichen wir verwendet? Welche Zeilen enthalten Daten? Wie sind die Spalten benannt?
+    * Welche `read_*()`-Funktion Sie müssen Sie verwenden (@sec-datenimport-csv-verwandte-funktionen)?
+    * Welche Zeilen müssen Sie überspringen (`skip`)?
+    * Wieviele Zeilen sollen eingelesen werden (`n_max`)?
+    * Wie müssen die Spalten benannt werden (`col_names`)?
+    * **Hinweis**: Mit `locale = locale(encoding ="ISO-8859-1")` innerhalb von `read_*()` können Sie Umlaute richtig einlesen.
+
+```{r}
+#| echo: false
+#| out-width: "100%"
+#| fig-align: "center"
+#| fig-cap: "Ausgewählte Einstellungen der Tabelle 33111-001z."
+knitr::include_graphics("./images/genesis-area-type.png")
+```
+
+Ihre Tabelle könnte so aussehen:
+
+```{r}
+#| echo: true
+#| message: false
+read_csv2(file = "./files/33111-001z.csv",
+          skip = 11,
+          n_max = 5,
+          col_names = c("code", "beschreibung", 2014:2023),
+          locale = locale(encoding = "ISO-8859-1"))
+```
+
+### XLSX und XLS
+
+1. Laden Sie die Tabelle [61111-311z: Verbraucherpreisindex (2020=100): Bayern, Index für Erdgas, Jahre (ab 2010)](https://www.statistikdaten.bayern.de/genesis/online?operation=abruftabelleBearbeiten&levelindex=1&levelid=1734104471087&auswahloperation=abruftabelleAuspraegungAuswaehlen&auswahlverzeichnis=ordnungsstruktur&auswahlziel=werteabruf&code=61111-311z&auswahltext=&werteabruf=starten#abreadcrumb) im XLSX-Format herunter. Importieren Sie nur die Spalten für Jahr (Spalte B) und den Verbraucherpreisindex (Spalte D) den Inhalt als `gaspreise_bayern` in R.
+    * Welchen Datenbereich soll eingelesen werden (`range`)?
+    * Welche Spalten sollen übersprungen werden? Welchen Datentypen sollen die verbleibenden Spalten haben (`col_types`)?
+    * Wie sollen die verbleibenden Spalten benannt werden (`col_names`)?
+
+Ihre Tabelle könnte so aussehen:
+
+```{r}
+#| echo: true
+#| warning: false
+gaspreise_bayern <- read_excel(path = "./files/61111-311z.xlsx",
+                               range = "B7:D20",
+                               col_types = c("numeric", "skip", "numeric"),
+                               col_names = c("jahr", "verbraucherpreisindex_gas"))
+gaspreise_bayern
+```
+
+2. Laden Sie die Tabelle [61511-111z: Bauland: Gemeinde, Veräußerungsfälle, veräußerte Fläche, Kaufpreis, durchschnittliche Kaufwerte (EUR/qm), Baulandarten, Jahre (ab 2010)](https://www.statistikdaten.bayern.de/genesis/online?operation=abruftabelleBearbeiten&levelindex=2&levelid=1734102323951&auswahloperation=abruftabelleAuspraegungAuswaehlen&auswahlverzeichnis=ordnungsstruktur&auswahlziel=werteabruf&code=61511-111z&auswahltext=&werteabruf=starten&nummer=2&variable=2&name=DLAND#abreadcrumb) im XLSX-Format herunter. Importieren Sie dann nur die Spalten für die Angaben Jahr (Spalte A), die Veräußerungsfälle für Bauland (Spalte B) und baureifes Land (Spalte C) sowie die durchschnittlichen Kaufwerte (Spalten H und I) als `kaufpreise_bauland_bayern` in R.
+    * Welchen Datenbereich soll eingelesen werden (`range`)?
+    * Welche Spalten sollen übersprungen werden? Welchen Datentypen sollen die verbleibenden Spalten haben (`col_types`)?
+    * Wie sollen die verbleibenden Spalten benannt werden (`col_names`)?
+    
+Ihre Tabelle könnte so aussehen:
+    
+```{r}
+#| echo: true
+#| warning: false
+kaufpreise_bauland_bayern <- read_excel(path = "./files/61511-111z.xlsx",
+           range = "A7:I17",
+           col_types = c("numeric", rep("skip", 4), rep("numeric", 4)),
+           col_names = c("jahr", "faelle_bauland_anzahl", "faelle_baureifes_land_anzahl", "kaufwert_bauland_qm", "kaufwert_baureifes_land_qm"))
+kaufpreise_bauland_bayern
+```
+
+### R
+
+1.    Exportieren Sie `geburten` als `geburten.rds`.
+2.    Exportieren Sie `geburten` und `flaechen` als `meine_daten.rdata`.
+3.    Exportieren Sie alle Objekte in Ihrem *workspace* als `mein_workspace.rdata`.

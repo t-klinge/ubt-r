@@ -1,0 +1,1130 @@
+# Datentransformation {#sec-datentransformation}
+
+Bei der Arbeit mit Daten stehen wir fortwährend vor der Aufgabe, vorhandene Daten zu bearbeiten, um Fragen zu beantworten oder sie für weitere Auswertungsschritte vorzubereiten. Wir benötigen dabei Fähigkeiten, Daten zu transformieren, sie also unseren Erfordernissen entsprechend zu verändern. Hierfür stehen in R viele unterschiedliche Möglichkeiten zur Verfügung, von denen wir einige besonders beliebte und verbreitete kennenlernen möchten. Dabei werden wir lernen, dass die Arbeit mit Daten -- in diesem Fall Tabellen -- in R einfacher und nachvollziehbarer abläuft als etwa in Tabellenkalkulationssoftware.
+
+In diesem Kapitel lernen wir...
+
+-   ...was das `tidyverse` ist.
+-   ...wie wir die Zeilen und Spalten von Tabellen verändern.
+-   ...wie wir gruppenweise Operationen durchführen.
+
+Wir benötigen hierfür die folgenden Pakete:
+
+```{r}
+#| message: false
+library(gapminder)
+library(nycflights13)
+library(tidyverse)
+```
+
+## Was ist das `tidyverse`?
+
+Ausgerüstet mit den wichtigsten Prinzipien und Begriffen rund um R, möchten wir in diesem Kapitel den Einstieg ins `tidyverse` wagen. Was aber genau ist das `tidyverse` eigentlich? Einen Hinweis bekommen wir, wenn wir das entsprechende Paket laden.
+
+```{r}
+#| message: false
+library(tidyverse)
+```
+
+```{r}
+#| echo: false
+#| out-width: "75%"
+#| fig-align: "center"
+#| fig-cap: "Der *output* beim Laden des `tidyverse`-Pakets."
+knitr::include_graphics("./images/tidyverse-packages.png")
+```
+
+"Das" `tidyverse` ist eine **Sammlung unterschiedlicher *packages***, die ihrerseits eine Reihe wichtiger Funktionen zur Datenauswertung anbieten. Angestoßen durch den Programmierer Hadley Wickham, stehen hinter diesen Paketen viele Autor\*innen, die der Wunsch eint, Funktionen mit einheitlichem **Syntax** (Reihenfolge von Argumenten, wichtig für die Nutzung der Pipe `|>`), konsistenten und einprägsamen **Namen** und einem hohen Grad an **Kompatibilität** (Objektklassen von *input* und *output*) untereinander zu entwickeln. Zu den Schwerpunkten der `tidyverse`-Pakete gehören:
+
+- **`dplyr`**: Bearbeiten von *data frames* bzw. *tibbles*
+- **`forcats`**: Arbeiten mit `factor`s
+- **`ggplot2`**: Visualisieren unterschiedlichster Daten
+- **`lubridate`**: Arbeiten mit `Date`s
+- **`purrr`**: Funktionales Programmieren
+- **`readr`**: Einlesen und Schreiben von Daten unterschiedlicher Formate
+- **`stringr`**: Arbeiten mit `characters`s
+- **`tibble`**: Erstellen und konvertieren von *tibbles*
+- **`tidyr`**: Bereinigen von *data frames* bzw. *tibbles*
+
+All diese Pakete werden auf einmal geladen, sobald wir `library(tidyverse)` ausführen.[^04-datentransformation-1] Dabei gibt es aber zwei **Konflikte**: in den Fällen der Funktionen `filter()` und `lag()` überschreiben `dplyr`-Funktionen nunmehr die gleichnamigen *base R*-Varianten aus dem Paket `stats`. Das heißt, wenn wir ab sofort `filter()` eingeben, wird die `dplyr`-Variante ausgeführt. Sollten wir doch die `stats`-Variante ausführen wollen, können wir das mit `stats::filter()`^[Diese Bezugnahme auf eine Funktion haben wir bereits in @sec-grundlagen-datenstrukturen-tibble gesehen.] tun.
+
+[^04-datentransformation-1]:  Natürlich könnten wir aber auch jedes einzeln laden, aber sobald wir auch nur zwei *packages* benötigen, können wir uns so eine Zeile Code sparen.
+
+Nicht alles, was die `tidyverse`-Pakete bieten, ist dabei neu. In vielen Fällen handelt es sich eher um veränderte Funktionen von *base R*, die nichtsdestotrotz die Anwendung eleganter und, insbesondere für R-Einsteiger\*innen, zugänglicher gestalten.
+
+### `dplyr` {#sec-datentransformation-tidyverse-dplyr}
+
+In diesem Abschnitt lernen wir die grundlegenden **Verben** von `dplyr` lernen, die zu den häufigsten genutzten Funktionen aller R-Nutzer\*innen zählen. Dabei nutzen wir von nun an die Pipe (`|>`), um Objekte und Funktionen zu verknüpfen. Desweiteren ist es nützlich, das entsprechende Cheatsheet (@sec-workflow-hilfe-und-selbsthilfe-cheatsheets) als Hilfsmittel zur Hand zu haben.
+
+Für die meisten `dplyr`-Funktionen gelten dabei folgende Regeln:
+
+-   Daten müssen in einem ***tidy*** ("aufgeräumten") **Format** vorliegen. Das bedeutet, dass jede Variable in einer eigenen Spalte und jede Beobachtung in einer eigenen Zeile.[^04-datentransformation-2]
+-   Der **erste Parameter** einer Funktion, `.data`, benötigt als Argument immer einen *data frame* bzw. eine *tibble*.
+-   Die weiteren Argumente beschreiben typischerweise, mit welchen Spalten etwas gemacht werden soll. Hierfür werden die **Spaltennamen ohne Anführungszeichen** angegeben.
+-   Der *output* ist immer ein neuer ein neuer *data frame* bzw. eine neue *tibble*.
+
+[^04-datentransformation-2]: Dieses Konzept wird später in @sec-datenbereinigung-tidy-data erläutert.
+
+Der Einfachheit halber werden die meisten sogenannten `dplyr`-"Verben"^[Die Bezeichnung stammt daher, dass tatsächliche englische Verben als Funktionsnamen gewählt wurden.] danach geordnet, ob sie Zeilen (*rows*), Spalten (*columns*), Gruppen (*groups*) oder Tabellen (*tables*) bearbeiten.
+
+### Der `gapminder`-Datensatz
+
+Als *data frame* dient uns `gapminder`. Bei `gapminder` handelt es sich um einen **Datensatz mit sozio-ökonomischen Daten** von `r length(unique(gapminder$country))` Ländern zwischen den Jahren `r min(gapminder$year)` bis `r max(gapminder$year)`. Über einen uns unbekannten *data frame* wie `gapminder` können wir uns gleich auf mehrere Arten einen **Überblick verschaffen**.
+
+Mit **`glimpse()**` erfahren wir direkt, dass `gapminder` 1704 Zeilen und 6 Spalten hat, welche Datentypen diese Spalten haben und wie die ersten Werte aussehen.
+
+```{r}
+glimpse(gapminder) # Erster Blick auf gapminder
+```
+
+Mit **`str()`** erfahren wir desweiteren noch wieviele unterschiedliche Ausprägungen (*levels*) die Variablen `country` und `continent` haben.
+
+```{r}
+str(gapminder) # Struktur von gapminder anzeigen
+```
+
+Desweiteren können wir uns mit `summary()` eine Art **statistische Zusammenfassung** der einzelnen Variablen anzeigen lassen.
+
+```{r}
+summary(gapminder) # Zusammenfassung von gapminder anzeigen
+```
+
+Mit `?gapminder` können wir schließlich mehr über die einzelnen Variablen erfahren:
+
+- **`country`**: Ein `factor`-Vektor mit 142 *levels*, also Ländernamen
+- **`continent`**: Ein `factor`-Vektor mit 5 *levels*, also Kontinentnamen
+- **`year`**: ein `integer`-Vektor mit Jahresangaben in 5-Jahres-Schritten
+- **`lifeExp`**: ein `numeric`-Vektor mit der Lebenserwartung bei Geburt in Jahren
+- **`pop`**: ein `integer`-Vektor mit der absoluten Bevölkerungszahl
+- **`gdpPercap`**: ein `numeric`-Vektor mit dem Bruttoinlandsprodukt (BIP, ***g****ross* ***d****omestic* ***p****roduct*) in inflationsbereinigten US-Dollar
+
+::: callout-note
+## Piping
+
+In allen folgenden Beispielen beginnen wir, **mehrere Arbeitsschritte mit der *pipe* zu verbinden** (@sec-grundlagen-r-funktionen). Dabei empfiehlt sich, nach Eingabe der Pipe mit <kbd>Shift+Enter</kbd> eine neue Zeile zu beginnen. Auf diese Weise können wir unseren Code immer in folgender Form lesen und verstehen: *Mach erst dies, dann das.*
+:::
+
+## Zeilen
+
+### Filtering
+
+Oft möchten wir nicht mit einem gesamten Datensatz arbeiten, sondern nur mit einer bestimmten Auswahl. Oder wir möchten lediglich wissen, wieviele Beobachtungen mit bestimmten Eigenschaften in unserem größeren Datensatz stecken. In diesen und ähnlichen Fällen möchten wir einen Datensatz **filtern**, also anhand **logischer Ausdrücke** mit den uns bekannten Operatoren (@sec-grundlagen-datentypen-mit-datentypen-arbeiten) Bedingungen formulieren, anhand derer Zeilen ausgewählt oder fallengelassen (*drop*) werden.
+
+Ein naheliegendes Beispiel ist, nur die Beobachtungen (Zeilen) für Deutschland auszuwählen. Hier ist unsere Bedingung, dass `country` dem Wert `Germany` entspricht, also **gleich** ist; folglich nutzen wir den **`==`**-Operator.
+
+```{r}
+gapminder |> 
+  filter(country == "Germany")
+```
+
+Die uns ausgegebene *tibble* hat nun also nicht mehr `r nrow(gapminder)`, sondern nur noch `r nrow(filter(gapminder, country == "Germany"))` Zeilen. Mit **`!=`** könnten wir hingegen alle Beobachtungen, die sich **nicht** auf Deutschland beziehen, auswählen und so einen neuen *data frame* mit `r nrow(filter(gapminder, country != "Germany"))` Zeilen erzeugen.
+
+```{r}
+gapminder |> 
+  filter(country != "Germany")
+```
+
+Mit einem weiteren Operator, **`%in%`**, können wir **mehrere Werte auswählen**, nach deren Beobachtungen wir filtern möchten.
+
+```{r}
+gapminder |> 
+  filter(country %in% c("Belgium", "France", "Germany"))
+```
+
+Bei numerischen Variablen können wir zudem mit den entsprechenden Operatoren gleichermaßen unsere Auswahl einschränken. Möchten wir nur Fälle seit 1990 auswählen, geben wir die Anweisung, dass `year` **größer-gleich** (**`>=`**) 1990 sein soll.
+
+```{r}
+gapminder |> 
+  filter(year >= 1990)
+```
+
+Wenn wir den Zeitraum nicht nur nach unten, sondern auch nach oben begrenzen möchten, können wir mithilfe des **`&`**-Operators einfach zwei Bedingungen angeben, zum Beispiel dass `year` **größer-gleich** (**`>=`**) 1990 und zugleich **kleiner-gleich** (**`<=`**) 2000 sein soll.
+
+```{r}
+gapminder |> 
+  filter(year >= 1990 & year <= 2000)
+```
+
+Um einfacheren Code hinsichtlich einer solchen **Spanne** numerischer Werte zu schreiben, können wir die Hilfsfunktion **`between()`** nutzen. Sie kommt innerhalb von `filter()` zum Einsatz und benötigt lediglich den Namen der Variable, nach der wir filtern möchten, sowie den niedrigsten und höchsten gewünschten Wert. Das Ergebnis ist dasselbe wie jenes der zwei mittels `&` verknüpften Bedingungen.
+
+```{r}
+gapminder |> 
+  filter(between(year, 1990, 2000))
+```
+
+#### Verknüpfte Bedingungen
+
+Bislang haben wir nur Bedingungen mit Hinblick auf eine Variable verwendet. Wirklich nützlich wird `filter()` aber, wenn wir **mehrere Bedingungen** zusammen nutzen. Hierfür stehen uns mit `&` (beide Bedingungen müssen erfüllt sein) und **`|`** (mind. eine Bedingung muss erfüllt sein) die entsprechenden Werkzeuge bereit. Möchten wir etwa nur die sich auf Deutschland beziehenden Beobachtungen **und** auf Jahre seit 1990 auswählen, nutzen wir **`&`**.
+
+```{r}
+gapminder |> 
+  filter(country == "Germany" & year >= 1990)
+```
+
+Eine andere Art, dasselbe Ergebnis zu erzielen, ist, die beiden Bedingungen einfach durch ein **Komma** (`,`) zu trennen. Auch in diesem Fall liest R es als ein `&`.
+
+```{r}
+gapminder |> 
+  filter(country == "Germany", year >= 1990)
+```
+
+Mit `|` wird die Tabelle hingegen entsprechend länger, denn nun werden alle Zeilen ausgewählt, die Deutschland repräsentieren **oder** deren Jahr mindestens 1990 beträgt.
+
+```{r}
+gapminder |> 
+  filter(country == "Germany" | year >= 1990)
+```
+
+#### Duplikate
+
+Es ist nie ausgeschlossen, dass Datensätze Duplikate enthalten, die die weitere Auswertung beeinflussen würden. Um diese **Duplikate zu entfernen**, können wir eine bestimmte Filterfunktion namens **`distinct()`** ("eindeutig") heranziehen. In der folgenden *tibble* sind die Zeilen 1 und 2 Duplikate.
+
+```{r}
+my_tibble <- tibble(x = c(1, 1, 2, 3), # Zahlen-Vektor erzeugen
+                    y = rep("a", 
+                            times = 4)) # Character-Vektor erzeugen
+my_tibble
+```
+
+Sobald wir `distinct()` auf `my_tibble` anwenden, bleibt nur eine der beiden identischen Zeilen bestehen.
+
+```{r}
+my_tibble |> 
+  distinct()
+```
+
+Doch darin erschöpft sich die Nützlichkeit von `distinct()` nicht. Nennen wir der Funktion weitere Spalten, gibt sie uns alle **einmaligen Kombinationen** aus.
+
+```{r}
+gapminder |> 
+  distinct(country, continent) |> # Alle eindeutigen Kombinationen der zwei Spalten ausgeben
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+::: callout-note
+## Filtering mit *base R*
+
+Nachdem wir ein Gespür dafür entwickelt haben, wie einfach das Filtern mit der `dplyr`-Variante von `filter()` ist, möchten wir wenigstens noch erwähnen, wie das gleiche Ergebnis mit *base R* erzielt werden könnte. Um auf diese Weise aus `gapminder` nur alle Zeilen auszugeben, bei denen `country == "Germany"` gilt, müssen wir die **Indexschreibweise** (@sec-grundlagen-datenstrukturen-vektor) in Kombination mit dem **`$`-Operator** (@sec-grundlagen-datenstrukturen-data-frame) nutzen. Wir tun dies in zwei Schritten tun:
+
+1.  Mit `gapminder$country == "Germany"` erzeugen wir einen Vektor logischer Werte, der soviele Elemente (nämlich `r length(gapminder$country == "Germany")`) wie `gapminder` Zeilen hat.
+2.  Diesen Vektor wenden wir mit der Indexschreibweise auf `gapminder` an, indem wir ihn als Zeilenangabe `r` in `[r, c]` nutzen.
+
+```{r}
+gapminder[gapminder$country == "Germany", ] # Der zweite Index bleibt leer, weil wir alle Spalten auswählen möchten
+```
+
+Möchten wir zwei Bedingungen anwenden, können wir innerhalb der Indexangabe die uns bekannten Operatoren nutzen.
+
+```{r}
+gapminder[gapminder$country == "Germany" & gapminder$year >= 1990, ] # Nur die Beobachtungen Deutschlands ab dem Jahr 1990 ausgeben
+```
+
+Mit dieser Schreibweise ist nichts falsch und sie wird uns immer wieder beim Stöbern nach Lösungen für eigenen R-Arbeiten begegnen. Dennoch sollte ersichtlich sein, dass die `dplyr`-Variante deutlich leichter zu lesen und zu verstehen ist.
+
+**Im weiteren Verlauf werden wir deshalb nur selten *base R* heranziehen, sondern uns auf `tidyverse`-Varianten konzentrieren.**
+:::
+
+### Slicing {#sec-datentransformation-zeilen-slicing}
+
+Eine nützliche Erweiterung von `filter()` sind die **`slice_*()`**-Funktionen. Weil *data frames* durchnummeriert sind, können wir mit **`slice()`** **eine bestimmte Zeile** anzeigen lassen.
+
+```{r}
+gapminder |> 
+  slice(2) # Nur die zweite Zeile auswählen
+```
+
+Gleichermaßen können wir einen **Bereich** an Zeilen auswählen.
+
+```{r}
+gapminder |> 
+  slice(2:5) # Nur die Zeilen 2 bis 5 auswählen
+```
+
+Analog zu den uns bereits bekannten `head()` und `tail()` (@sec-grundlagen-datenstrukturen-data-frame) können wir mit **`slice_head()`** und **`slice_tail()`** auch eine **bestimmte Anzahl der obersten oder untersten Zeilen** ausgeben.
+
+```{r}
+gapminder |> 
+  slice_head(n = 2) # Nur die obersten zwei Zeilen auswählen
+```
+
+```{r}
+gapminder |> 
+  slice_tail(n = 2) # Nur die untersten zwei Zeilen auswählen
+```
+
+Regelmäßig sind wir aber besonders an den **höchsten oder niedrigsten Werten einer Variable** interessiert. Mit **`slice_min(x, n)`** und **`slice_max(x, n)`** können wir die `n`[^04-datentransformation-3] Zeilen mit den niedrigsten bzw. höchsten Werten[^04-datentransformation-4] einer Variable `x` ausgeben lassen.
+
+[^04-datentransformation-3]: Geben wir `n` nicht an, wird laut der Dokumentation (`?slice_min`) jeweils `n = 1` verwendet.
+
+[^04-datentransformation-4]: Ist `x` ein `character`-Vektor, gilt der Buchstabe A als der "niedrigste" und der Buchstabe Z als der "höchste" Wert.
+
+```{r}
+gapminder |> 
+  slice_min(gdpPercap, n = 5) # Nur die fünf Zeilen mit den niedrigsten Pro-Kopf-BIP-Werten ausgeben
+```
+
+```{r}
+gapminder |> 
+  slice_max(gdpPercap, n = 5) # Nur die fünf Zeilen mit den höchsten Pro-Kopf-BIP-Werten ausgeben
+```
+
+### Arranging {#sec-datentransformation-zeilen-arranging}
+
+Wenn wir Tabellen begegnen, deren Zeilen für uns nicht nachvollziehbar geordnet sind, möchten wir deren **Anordnung verändern**. Mit **`arrange()`** können wir unsere Tabelle nach den Werten einer oder mehrerer Spalten ordnen, indem wir die Variablennamen angeben. Standardmäßig ordnet `arrange()` dabei die Werte **aufsteigend**.[^04-datentransformation-5]
+
+[^04-datentransformation-5]: Die geringste Lebenserwartung im Datensatz in Höhe von bloß von 23,6 Jahren wies Ruanda im Jahr 1992 auf, als es zu einem [genozidalen Bürgerkrieg](https://de.wikipedia.org/wiki/V%C3%B6lkermord_in_Ruanda) kam.
+
+```{r}
+gapminder |> 
+  arrange(lifeExp) |> # Ordnen nach lifeExp, aufsteigend
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Um die Werte **absteigend** zu ordnen, müssen wir den Variablennamen einfach in die Funktion **`desc()`** (*descending*) schreiben.
+
+```{r}
+gapminder |> 
+  arrange(desc(lifeExp)) |> # Ordnen nach lifeExp, absteigend
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+## Spalten
+
+### Counting {#sec-datentransformation-spalten-counting}
+
+Um die Inhalte von Spalten besser kennenzulernen, können wir gerade zu Beginn einer Auswertung auf einfache Berechnungen zurückgreifen. Zum Beispiel möchten wir wissen, wieviele Male jede Ausprägung einer bestimmte `factor`- oder `character`-**Variable** in einer Tabelle enthalten ist. Für derartiges **Zählen** nutzen wir **`count()`** und müssen lediglich den Namen einer Variable angeben. Um etwa zu erfahren, wieviele Male jeder `continent` vertreten ist, genügt folgender Code.
+
+```{r}
+gapminder |> 
+  count(continent) # Zählen der Anzahl von continent-Ausprägungen
+```
+
+Gerade bei solchen Übersichten ist es ratsam, die Ergebnistabelle zu ordnen. Hierfür liegt mit **`sort`** ein Parameter vor, der mit dem Argument `TRUE` eine absteigende Anordnung bewirkt.^[Siehe `?count`.]
+
+```{r}
+gapminder |> 
+  count(continent, sort = TRUE) # Zählen der Anzahl von continent-Ausprägungen, absteigend
+```
+
+### Selecting
+
+Ähnlich wie `filter()` für das Auswählen von Zeilen verantwortlich ist, kümmert sich **`select()`** um das Auswählen von **Spalten**. Als Parameter benötigt `select()` entweder die **Position** oder die **Bezeichnung** der Spalte(n), die ausgewählt werden sollen.
+
+#### Einzelne Spalten auswählen
+
+Möchten wir die Position angeben, genügt eine Aufzählung der jeweiligen Spalten, getrennt durch ein `,`.
+
+```{r}
+gapminder |> 
+  select(1) |> # Auswahl von einer Spalten nach Position: country
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+```{r}
+gapminder |> 
+  select(1,3,5) |> # Auswahl von drei Spalten nach Position: country, year, pop
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Wenn wir Spalten nach ihren Bezeichnungen angeben wollen, verfahren wir gleichermaßen.
+
+```{r}
+gapminder |> 
+  select(country) |> # Auswahl von einer Spalten: country
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+```{r}
+gapminder |> 
+  select(country, year) |> # Auswahl von zwei Spalten: country, year
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Bei der Auswahl einer Spalte durch ihren Namen können wir sie auch **umbenennen**, indem wir einer neuen Spaltenbezeichnung die Werte der alten Spaltenbezeichnung zuweisen.
+
+```{r}
+gapminder |> 
+  select(nation = country) |> # Auswahl und Umbennung der Spalte country
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+#### Spaltenbereiche auswählen {#sec-datentransformation-spalten-selecting-bereiche}
+
+Möchten wir eine **Reihe aufeinander folgender Spalten** auswählen, können wir uns dem uns bereits bekannten **`:`**-Operator bedienen.
+
+```{r}
+gapminder |> 
+  select(1:3) |> # Auswahl von drei Spalten nach Positionsbereich: country, continent, year
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Neu ist, dass wir `:` auch mit den Spaltenbezeichnungen verwenden können.
+
+```{r}
+gapminder |> 
+  select(country:year) |> # Auswahl von drei Spalten nach Bezeichnungsbereich: country, continent, year
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Neben `:` bietet `select()` mehrere **Hilfsfunktionen** (*helper functions*) an, die Spalten aufgrund bestimmter enthaltener Buchstabenkombinationen oder Zahlenbereiche[^04-datentransformation-6] auswählen. Eine unvollständige Auswahl lautet wie folgt:
+
+[^04-datentransformation-6]: Siehe `?num_range()`.
+
+-   **`contains()`** ("enthält"): Mit `gapminder |> select(contains("co"))` werden alle Spalten ausgewählt, die in ihrer Bezeichnung die Buchstabenkombination `co` tragen, in diesem Fall `country` und `continent`.
+-   **`starts_with()`** ("beginnt mit"): Mit `gapminder |> select(starts_with("c"))` werden alle Spalten ausgewählt, deren Bezeichnung mit `c` beginnt, in diesem Fall abermals `country` und `continent`.
+-   **`ends_with()`** ("endet auf"): Mit `gapminder |> select(ends_with("p"))` werden alle Spalten ausgewählt, deren Bezeichnung auf `p` endet, in diesem Fall `lifeExp`, `pop` und `gdpPercap`.
+
+#### Spalten entfernen
+
+Mit einem **`!`** können wir die Wirkung von `select()` umdrehen.[^04-datentransformation-7] Statt eine Spalte auszuwählen, wird in der neuen Tabelle die entsprechende Spalte **entfernt**.
+
+[^04-datentransformation-7]: Dieselbe Wirkung lässt sich mit `-` erzielen, für das Beispiel also `gapminder |> select(-1)`.
+
+```{r}
+gapminder |> 
+  select(!1) |> # Entfernen einer Spalte nach Position: country
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+#### Spalten verschieben
+
+Durch die Auswahl bestimmter Spalten können wir eine neue Tabelle erzeugen, in der wir die **Reihenfolge der Ursprungstabelle ändern**. Möchten wir anstelle der Reihenfolge `country`, `continent`, `year` die Spalte `year` zuvorderst positionieren, müssen wir diese Spalten nur in unserem Befehl verändern.
+
+```{r}
+gapminder |> 
+  select(year, country, continent) |> # Auswahl von drei Spalten sowie Verändern der Reihenfolge
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Wenn wir nur eine Spalte nach vorne ziehen, den Rest aber unverändert lassen möchten, können wir uns mit dem *helper* **`everything()`** die Angabe aller restlichen Spalten sparen.
+
+```{r}
+gapminder |> 
+  select(year, everything()) |> # Nur Verändern der Reihenfolge
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+### Renaming
+
+Bis hierhin haben wir gesehen, wie wir **Spalten** mit `select()` **umbenennen** können. Dieser Schritt geht aber nur, wenn wir zugleich auch diese Spalte auswählen möchten. Wollen wir eine Spalte umbenennen und die **Tabelle ansonsten nicht verändern**, verwenden wir **`rename()`** und geben eine neue Spaltenbezeichnung an, der wir den Inhalt einer bestehenden Spalte zuweisen.[^04-datentransformation-8]
+
+[^04-datentransformation-8]: Dieser Schritt ist identisch mit `select()`, nur das Ergebnis ist ein anderes.
+
+```{r}
+gapminder |> 
+  rename(nation = country) |> # Umbennung der Spalte country
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+  
+```
+
+### Relocating
+
+Ähnlich simpel wie `rename()` ist **`relocate()`** gestrickt. Mit dieser Funktion können wir einzelne **Spalten verschieben**, diesmal ohne den Rest der Tabelle zu verändern. Standardmäßig wird dabei die ausgewählte Spalte nach ganz vorn gezogen.
+
+```{r}
+gapminder |> 
+  relocate(year) |> # Verschieben der Spalte year
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Wollen wir eine Spalte an eine bestimmte Position verschieben, können wir die Argumente **`.before`** bzw. **`.after`** verändern nutzen.
+
+```{r}
+gapminder |> 
+  relocate(year, .before = continent) |> # Verschieben der Spalte year hinter die Spalte continent
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+```{r}
+gapminder |> 
+  relocate(year, .after = gdpPercap) |> # Verschieben der Spalte year hinter die Spalte country
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+### Mutating {#sec-datentransformation-spalten-mutating}
+
+#### Manuell eingeben
+
+Selten enthält eine Tabelle alle Informationen so, wie wir sie benötigen. Mit **`mutate()`** (zu deutsch "verwandeln") können wir **neue Variablen erzeugen** und unserer Tabelle anhängen. Der einfachste Fall ist dabei, einem Variablennamen einen Vektor (idealerweise mit derselben Länge wie der Tabelle) zuzuweisen. Möchten wir unsere Tabelle `my_data_frame` (@sec-grundlagen-datenstrukturen-data-frame) also um eine neue Variable namens `number` ergänzen, nennen wir `mutate()` einfach den Namen und einen neuen Vektor.
+
+```{r}
+my_data_frame <- data.frame(name = rep(c("A", "B"), times = 5), # Character-Vektor erzeugen
+                            number = rnorm(10), # Zufallszahlen erzeugen
+                            stringsAsFactors = TRUE) # Strings als factors behandeln
+my_data_frame
+my_data_frame |> 
+  mutate(number_2 = rnorm(10)) # Erzeugen einer neuen Variable number_2 mit 10 Zufallszahlen
+```
+
+#### Mit Konstanten rechnen
+
+Oft ist es nötig, dass wir die **Werte bestimmter Variablen transformieren** möchten, zum Beispiel um andere Maßeinheiten zu nutzen. Wie bei der Arbeit mit Vektoren (@sec-grundlagen-datenstrukturen-vektor) können wir innerhalb von `mutate()` dafür Konstanten nutzen. Möchten wir in der `gapminder`-Tabelle etwa eine neue Variable (`pop_mn`) auf Basis einer bestehenden Variable (`pop`) berechnen, die die Bevölkerung in Millionen angibt, können wir die Ergebnisse der Berechnung `pop / 1000000` (bzw. `pop / 1e06`) ebenso einer neuen Variable zuweisen.
+
+```{r}
+gapminder |> 
+  mutate(pop_mn = pop / 1000000)
+```
+
+#### Mit vorhandenen Spalten arbeiten
+
+Wie mit Konstanten können wir auch **mit anderen Variablen arbeiten**, jeweils Zeile für Zeile. In der Tabelle `gapminder` ist so nur das Pro-Kopf-BIP (`gdpPercap`) gegeben. Wenn wir aber des gesamte BIP wissen des jeweiligen Landes nutzen wollten, müssten wir diese Angabe mit der Bevölkerungszahl (`pop`) multiplizieren.
+
+```{r}
+gapminder |> 
+  mutate(gdp = gdpPercap * pop) |>  # Erzeugen einer neuen Variable gdp durch Multiplikation von gdpPercap und pop
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Wenn wir mit vorhandenen Spalten arbeiten wollen, möchten wir manchmal **innerhalb einer Spalte auf bestimmte Werte zugreifen**. Hierfür gibt es vier besonders nützliche **Hilfsfunktionen**:
+
+* **`first()`**: Diese Funktion auf den *ersten* Wert eines Vektors zu.
+* **`last()`**: Diese Funktion greift auf den *letzten* Wert eines Vektors zu.
+* **`lag()`** ("zögern" oder "nachhängen"): Diese Funktion greift auf den *vorangegangenen* Wert eines Vektors zu.
+* **`lead()`** ("führen" oder "voreilen"): Diese Funktion greift auf den *folgenden* Wert eines Vektors zu.
+
+Diese Funktionen können wir unter anderem nutzen, wenn wir **Veränderungen** berechnen wollen. Dies möchten wir anhand eines Beispiels der durchschnittlichen Lebenserwartung für Deutschland verstehen. Hierfür weisen wir zunächst einem Ausschnitt von `gapminder` den Namen `gapminder_germany` zu.
+
+```{r}
+gapminder_germany <- gapminder |> 
+  filter(country == "Germany") |> # Beobachtungen für Deutschland auswählen
+  select(country, year, lifeExp) # Spalten country, year und lifeExp auswählen
+gapminder_germany
+```
+
+Möchten wir berechnen, wie sich die Lebenserwartung jeder Beobachtung hinsichtlich eines Referenzjahres, in diesem Beispiel 1952, darstellt (man spricht hier von einer **Indexierung**), müssen wir mit `first(lifeExp)` nur auf die erste Beobachtung verweisen.
+
+```{r}
+gapminder_germany |> 
+  mutate(lifeExp_index = lifeExp / first(lifeExp)) # Erzeugen einer neuen Variable lifeExp_index durch die Berechnung des Verhältnisses zwischen lifeExp und first(lifeExp)
+```
+
+Wenn wir die **Veränderung von einem Zeitpunkt zum nächsten berechnen** wollen, können wir dies tun, indem wir für jede Zeile die Differenz zwischen `lifeExp` und dem vorangegangenen Wert, `lag(lifeExp)`, berechnen.
+
+```{r}
+gapminder_germany |> 
+  mutate(lifeExp_change_years = lifeExp - lag(lifeExp)) # Erzeugen einer neuen Variable lifeExp_change_years durch die Berechnung der Differenz zwischen lifeExp und lag(lifeExp)
+```
+
+Mit derlei absoluten Differenzen können wir weiterrechnen wie gewohnt. Mit einem kleinen Schritt können wir die **prozentuale Veränderung** berechnen.
+
+```{r}
+gapminder_germany |> 
+  mutate(lifeExp_change_percent = (lifeExp - lag(lifeExp)) / lag(lifeExp) * 100) # Erzeugen einer neuen Variable lifeExp_change_percent durch die Berechnung der prozentualen Differenz zwischen lifeExp und lag(lifeExp)
+```
+
+#### Spalten behalten
+
+Wenn wir neue Spalten erzeugen, können wir auswählen, **welche Spalten der Ursprungstabelle in unserem *output* enthalten bleiben** sollen. Das Argument hierfür heißt **`.keep`** und ist standardmäßig auf `"all"` gesetzt. Das heißt, sobald wir `mutate()` nutzen, werden *alle* Spalten der Ursprungstabelle beibehalten. Wir können stattdessen aber auch mit `.keep = "used"` nur solche Spalten behalten, die wir aktiv in unseren Berechnungen heranziehen.
+
+```{r}
+gapminder |> 
+  mutate(gdp = gdpPercap * pop, # Erzeugen einer neuen Variable gdp durch Multiplikation von gdpPercap und pop
+         .keep = "used") |>  # Behalten nur verwendeter Spalten
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Mit `"unused"` drehen wir diese Auswahl um, es werden nur *nicht* verwendete Spalten behalten.
+
+```{r}
+gapminder |> 
+  mutate(gdp = gdpPercap * pop, # Erzeugen einer neuen Variable gdp durch Multiplikation von gdpPercap und pop
+         .keep = "used") |>  # Behalten nur verwendeter Spalten
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+Zuletzt können wir mit `"none"` keine Spalten behalten, mit Ausnahme der neu erzeugten.
+
+```{r}
+gapminder |> 
+  mutate(gdp = gdpPercap * pop, # Erzeugen einer neuen Variable gdp durch Multiplikation von gdpPercap und pop
+         .keep = "none") |>  # Behalten nur verwendeter Spalten
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen anzeigen
+```
+
+#### Mit Bedingungen arbeiten {#sec-datentransformation-spalten-mutating-bedingungen}
+
+Regelmäßig kommt es vor, dass wir in einem Datensatz eine Variable auf der Basis von **Bedingungen** neu kodieren wollen. 
+Das heißt, dass wir eine Formulierung nutzen wollen, die gesprochen etwa lauten würde: *Wenn Bedingung A zutrifft, dann soll der Inhalt der Variablen `X` sein, sonst soll der Inhalt der Variable `Y` sein.*
+Diese Verwendung von ***wenn***, ***dann*** und ***sonst*** gibt der naheliegendsten Funktion ihren Namen: **`if_else()`**.^[*base R* verfügt über eine Funktion namens `ifelse()`, die `if_else()` nur [leicht verändert](https://stackoverflow.com/questions/50646133/dplyr-if-else-vs-base-r-ifelse) hat.]
+
+Sie funktioniert so, dass zunächst ein Vektor auf eine Bedingung (`condition`) überprüft wird.
+Desweiteren geben wir an, was mit dem Wert geschehen soll, wenn die Bedingung erfüllt (`true`) ist und zuletzt, was mit dem Wert geschehen soll, wenn die Bedingung nicht erfüllt ist (`false`).
+Nehmen wir als **Beispiel** an, wir möchten einen Vektor (`r 1:5`) daraufhin überprüfen, ob die jeweiligen Werte größer als 2 sind (`> 2`).
+Ist dies der Fall, soll der entsprechende Wert durch den Wert unverändert bleiben, sonst soll er durch `99` ersetzt werden. 
+Als Code würden wir folgendes schreiben:
+
+```{r}
+if_else(condition = 1:5 > 2, # Angeben der Bedingung 
+        true = 1:5, # Was soll bei erfüllter Bedingung passieren?
+        false = 99) # Was soll bei unerfüllter Bedingung passieren?
+```
+
+Derartige Transformationen sind nützlich, wenn wir zum Beispiel **Gruppen** bilden möchten (@sec-datentranformation-gruppen) und dafür eine **neue Variable** benötigen.
+Nehmen wir hierfür an, wir möchten die Lebenserwartung innerhalb Europas vergleichen und sind insbesondere im Vergleich von Deutschland mit dem europäischen Durchschnitt außerhalb Deutschlands interessiert.
+Hierfür müssen wir nur `if_else()` innerhalb von `mutate()` nutzen, indem wir eine neue Variable `is_germany` erzeugen.
+
+```{r}
+gapminder |> 
+  filter(continent == "Europe", year == 2007) |> # Auswählen europäischer Länder im Jahr 2007
+  select(country, lifeExp) |> 
+  mutate(is_germany = if_else(country == "Germany", # Angeben der Bedingung 
+                              true = TRUE, # Was soll bei erfüllter Bedingung passieren?
+                              false = FALSE)) |> # Was soll bei unerfüllter Bedingung passieren?
+  arrange(desc(is_germany)) # Aus Platzgründen: Absteigend nach is_germany ordnen
+```
+
+::: callout-note
+## Weiterführendes Arbeiten mit Bedingungen
+
+`if_else()` ist ein einfaches Beispiel für das Arbeiten mit Bedingungen. 
+Wenn es allerdings darum geht, mit **mehreren Bedingungen** zu arbeiten oder bestehende Werte **umzukodieren**, sind andere Funktionen aus dem `dplyr`-Werkzeugkasten wie `case_when()` oder `case_match()` hilfreich [@r4ds2023, Kapitel 12.5].^[Eine kurze Einführung in diese zwei Funktionen liefert ebenfalls [dieser Blogpost](https://debruine.github.io/post/case_functions/).]
+:::
+
+## Gruppen {#sec-datentranformation-gruppen}
+
+Nachdem wir bereits gesehen haben, wie wir mit einzelnen Vektoren nützliche Berechnungen anstellen können (@sec-grundlagen-datenstrukturen-vektor), ist der nächste Schritt, derartige Berechnungen auch mit den Inhalten von Tabellen durchzuführen.
+
+Wie würden wir den zum Beispiel die **mittlere Lebenserwartung** je nach **Kontinent** in der `gapminder`-Tabelle berechnen? Mit *base R* würden wir so verfahren:
+
+1.  Eine Gruppe (z.B. `"Asia"`) mit der Indexschreibweise filtern: `gapminder[gapminder$continent == "Asia", ]`
+2.  Aus der entsprechenden Tabelle den Vektor `lifeExp` mit dem `$`-Operator extrahieren: `gapminder[gapminder$continent == "Asia", ]$lifeExp`
+3.  Mit `mean()` den entsprechenden Mittelwert berechnen: `mean(gapminder[gapminder$continent == "Asia", ]$lifeExp)`
+
+Nicht nur ist diese Berechnung aber **wenig ansprechend zu lesen**, bei fünf Kontinenten müssten wir eine derartige Berechnung fünfmal manuell eingeben - und bei größeren Gruppen, etwa bei einer Berechnung nach Land, noch häufiger. Als R-Einsteiger suchen wir nach einer ansprechenden Lösung, die nicht auf **fortgeschrittene Konzepte wie Schleifen** o.ä. angewiesen ist. Glücklicherweise liegen mit **`group_by()`** und **`summarize()`** auch für diese häufigen Aufgaben entsprechende `dplyr`-Verben vor.
+
+::: callout-note 
+## Schleifen
+
+Beim Programmieren bezeichnen Schleifen solche Anweisungen an ein Programm, **dieselbe(n) Berechnung(en) für alle Elemente einer Datenstruktur zu wiederholen**, z.B. für alle Werte eines Vektors oder alle Elemente einer Liste. Das Verwenden von Schleifen ist eine wichtige, aber für Einsteiger\*innen durchaus voraussetzungvolle Fähigkeit. In diesem Kurs, mit dem die Grundlagen für weitere Kurse gelegt werden sollen, werden wir uns daher **nicht** mit ihnen beschäftigen.
+:::
+
+### Grouping
+
+Viele Tabellen enthalten mehrere **Gruppen** von Beobachtungen. Eine Gruppe besteht dabei aus **einer oder mehreren Beobachtungen, die einen bestimmten Wert einer Variable teilen**. In der `gapminder`-Tabelle etwa sind Länder von `r length(unique(gapminder$continent))` unterschiedlichen Kontinenten sowie `r length(unique(gapminder$year))` unterschiedliche Jahre enthalten. Wir könnten statt dessen auch von einer entsprechenden Anzahl an Kontinent- bzw. Jahres*gruppen* sprechen.
+
+**Gruppen zu spezifizieren** ist der erste Schritt, um gruppenweise Berechnungen anzustellen. Das entsprechende Verb hierfür ist **`group_by()`**, dem wir einfach diejenige Variable nennen, auf Basis derer wir Gruppen bilden möchten.
+
+```{r}
+gapminder |> 
+  group_by(continent) |> # Gruppen auf Basis von continent bilden
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen (diesmal pro Gruppe, also 3 * 5 = 15) anzeigen
+```
+
+Der *output* enthält mit `# Groups:   continent [5]` den Hinweis, dass es sich nicht nur um eine *tibble*, sondern um eine **gruppierte** *tibble* handelt. Für jeden der fünf `continent`-Werte ist also eine Gruppe erzeugt worden. Einmal mit `group_by()` erzeugt, erfolgt **jede weitere Berechnung auf Basis der Gruppen**. (Das heißt, dass hier mit `slice_head(n = 3)` für jede Gruppe die obersten drei Zeilen ausgewählt werden, was in der Summe 3 \* 5 = 15 Zeilen bedeutet.)
+
+Gruppen können wir nicht nur auf Basis einer, sondern auch mehrerer Variablen bilden. Statt nur `continent`, können wir auch `continent` (`r length(unique(gapminder$continent))` Gruppen) und `year`(`r length(unique(gapminder$year))` Gruppen) heranziehen, was also `r gapminder |> distinct(continent, year) |> nrow()` Gruppen bedeutet, wie aus unserem *output* hervorgeht.
+
+```{r}
+gapminder |> 
+  group_by(continent, year) |> # Gruppen auf Basis von continent und year bilden
+  slice_head(n = 3) # Aus Platzgründen: Nur die obersten drei Zeilen (diesmal pro Gruppe, also 3 * 5 * 12 = 180) anzeigen
+```
+
+### Summarizing
+
+Gruppen zu bilden, ist der erste Schritt hin zu gruppenweisen Berechnungen. Der zweite Schritt ist die Kombination mit weiteren `dplyr`-Verben, wie bereits am Beispiel von `slice_head()` gezeigt. Die womöglich am häufigsten genutzte Funktion in Verbindung mit `group_by()` ist **`summarize()`**[^04-datentransformation-10] (zu deutsch "zusammenfassen"). Wie ihr Name suggeriert, handelt es sich um die zentrale Funktion zur Berechnung sogenannter ***summary statistics***, also zusammenfassender beschreibender statistischer Maße. Der Zweck dieser Maße ist, unsere Datensätze besser kennenzulernen.
+
+[^04-datentransformation-10]: Jede `tidyverse`-Funktion, die die *American English*-Endung `*ize()` enthält, existiert auch als *British English*-Alternative `*ise()`.
+
+Viele der Maße kennen wir bereits (@sec-grundlagen-datenstrukturen-vektor). Um ihre Funktionen mit `summarize()` zu nutzen, rufen wir sie innerhalb von `summarize()` auf und nennen die Variable, auf die wir eine bestimmte Berechnung anwenden wollen.
+
+```{r}
+gapminder |> 
+  group_by(continent) |> # Gruppen auf Basis von continent bilden
+  summarize(mean(lifeExp)) # Mittelwert von lifeExp berechnen
+```
+
+Unser *output* hat also für alle fünf Gruppen von `continent` den entsprechenden Mittelwert berechnet. Dabei ist der resultierende **Variablenname** `mean(lifeExp)` unschön. Wir können aber auf die uns von `mutate()` bekannte Weise einen **neuen Namen** für unsere berechnete Variable geben.
+
+```{r}
+gapminder |> 
+  group_by(continent) |> # Gruppen auf Basis von continent bilden
+  summarize(mean_life_exp = mean(lifeExp)) # Mittelwert von lifeExp berechnen und mean_life_exp nennen
+```
+
+Diesen Code können wir nun immer weiter verfeinern und mit **Verschachtelungen** ergänzen.
+
+```{r}
+gapminder |> 
+  group_by(continent) |> # Gruppen auf Basis von continent bilden
+  summarize(mean_life_exp = round(mean(lifeExp))) # Gerundeten Mittelwert von lifeExp berechnen und mean_life_exp nennen
+```
+
+Dabei sind wir nicht auf die Berechnung *einer* neuen Variable beschränkt, sondern können in einem Schritt **mehrere** neue Variablen erzeugen.
+
+```{r}
+#| message: false
+gapminder |> 
+  group_by(continent) |> # Gruppen auf Basis von continent bilden
+  summarize(mean_life_exp = round(mean(lifeExp)), # Gerundeten Mittelwert von lifeExp berechnen und mean_life_exp nennen
+            sd_life_exp = round(sd(lifeExp))) # Gerundete Standardabweichung von lifeExp berechnen und sd_life_exp nennen 
+```
+
+Zugleich können wir immer feinere Gruppen bilden, indem wir wie zuvor **weitere Gruppierungsvariablen** hinzufügen.
+
+```{r}
+#| message: false
+gapminder |> 
+  group_by(continent, year) |> # Gruppen auf Basis von continent und year bilden
+  summarize(mean_life_exp = round(mean(lifeExp)), # Gerundeten Mittelwert von lifeExp berechnen und mean_life_exp nennen
+            sd_life_exp = round(sd(lifeExp))) # Gerundete Standardabweichung von lifeExp berechnen und sd_life_exp nennen 
+```
+
+Wenn immer wir *summary statistics* berechnen, ist es außerdem ratsam, anzugeben, auf wieviele Beobachtungen sich eine Statistik stützt. Mit **`n()`** können wir dies für jede Gruppe berechnen.
+
+```{r}
+#| message: false
+gapminder |> 
+  group_by(continent, year) |> # Gruppen auf Basis von continent und year bilden
+  summarize(mean_life_exp = round(mean(lifeExp)), # Gerundeten Mittelwert von lifeExp berechnen und mean_life_exp nennen
+            sd_life_exp = round(sd(lifeExp)), # Gerundete Standardabweichung von lifeExp berechnen und sd_life_exp nennen 
+            obs = n()) # Zahl der Beobachtungen berechnen und obs nennen
+```
+
+Zuletzt ist wichtig, zu wissen, dass der ***output* der Kombination von `group_by()` und `summarize()` immer eine gruppierte *tibble*** ist. Um diese Gruppen "aufzulösen" -- etwa, weil wir mit der Ergebnistabelle anders weiterrechnen wollen -- können wir entweder `ungroup()` als weiteres Verb anfügen oder innerhalb von `summarize()` das Argument `.groups` auf `"drop"` setzen.
+
+```{r}
+gapminder |> 
+  group_by(continent) |> # Gruppen auf Basis von continent bilden
+  summarize(mean_life_exp = round(mean(lifeExp))) |> # Gerundeten Mittelwert von lifeExp berechnen und mean_life_exp nennen
+  ungroup() # Gruppen auflösen
+```
+
+```{r}
+gapminder |> 
+  group_by(continent) |> # Gruppen auf Basis von continent bilden
+  summarize(mean_life_exp = round(mean(lifeExp)),
+            .groups = "drop") # Gerundeten Mittelwert von lifeExp berechnen und mean_life_exp nennen, Gruppen auflösen
+```
+
+In beiden Fälle verschwindet aus dem *output* der Hinweis auf `# Groups`.
+
+::: callout-note 
+## `group_by()` vs. `.by`
+
+In jüngerer Vergangenheit wurde die Funktion `summarize()` so überarbeitet, dass sie ein eigenes Argument `.by` enthält, dass `group_by()` überflüssig macht. Der Aufruf 
+
+```{r}
+#| eval: false
+gapminder |> 
+  group_by(continent) |> 
+  summarize(mean_life_exp = mean(lifeExp))
+```
+
+kann inzwischen entsprechend auch als 
+
+```{r}
+#| eval: false
+gapminder |> 
+  summarize(mean_life_exp = mean(lifeExp), 
+            .by = continent)`
+```
+
+geschrieben werden. Dennoch kann es insbesondere zu Beginn sinnvoll sein, `group_by()` auszuschreiben, um die Logik des Codes besser nachvollziehen zu können.
+:::
+
+## Übungsaufgaben {#sec-datentransformation-uebungsaufgaben}
+
+Der Datensatz dieser Übungsaufgaben ist `flights`, welcher im Paket `nycflights13` enthalten ist. Installieren und laden Sie zunächst `nycflights13`.^[Die folgenden Aufgaben basieren auf [@r4ds2023, Kapitel 3].]
+
+### Überblick verschaffen
+
+Verschaffen Sie sich zunächst mittels geeigneter Funktionsaufrufe einen Eindruck von `flights`. 
+
+1. Wieviele Zeilen hat die Tabelle?
+2. Wieviele Spalten hat die Tabelle?
+3. Welche Datentypen haben die einzelnen Variablen?
+4. Welche Informationen enthalten die einzelnen Variablen?
+
+### Filtering
+
+Filtern Sie `flights` nach den folgenden Bedingungen. Wieviele Zeilen bleiben von den ursprünglich 336776 Zeilen übrig?
+
+::: callout-tip
+Wenn Sie an `flights |> filter(...)` noch mit `|>` die Funktion `nrow()` anhängen, wird Ihnen nur die Anzahl der Spalten angezeigt.
+:::
+
+1. Verspätete Ankunft von mindestens zwei Stunden
+2. Ankunft in Houston, Texas (`IAH` oder `HOU`)
+3. Fluggesellschaft United, American oder Delta (`UA`, `AA` oder `DL`)
+4. Abflug im Sommer (Juli, August oder September)
+5. Pünktlicher Abflug, aber um mehr als zwei Stunden verspätete Ankunft
+6. Um mindestens eine Stunde verspäteter Abflug, aber um weniger als 30 Minuten verspätete Ankunft
+
+### Einmalige Kombinationen
+
+Nutzen Sie `distinct()`, um zu überprüfen, ob an jedem Tag im Jahr 2013 ein Flug stattfand.
+
+### Slicing
+
+Nutzen Sie eine der `slice_*`-Funktionen, um die folgenden Fragen zu beantworten.
+
+1. Welche drei Flüge haben die größte Distanz zurückgelegt?
+2. Welche drei Flüge haben die geringste Distanz zurückgelegt?
+3. Welche fünf Flüge waren am längsten unterwegs?
+4. Welche fünf Flüge waren am kürzesten unterwegs?
+
+### Arranging
+
+Ordnen Sie die Tabelle nach den folgenden Kriterien.
+
+1. Aufsteigend nach Fluggesellschaft
+2. Aufsteigend nach Fluggesellschaft und absteigend nach Verspätung bei Ankunft
+3. Absteigend nach Monat und aufsteigend nach Tag
+4. Aufsteigend nach Destination, absteigend nach Verspätung bei Abflug
+5. Absteigend nach Geschwindigkeit 
+
+::: callout-tip
+Sie können auch innerhalb von `arrange()` Berechnungen verwenden. Für Aufgabe von nutzen Sie am besten eine Berechnung mithilfe der Variablen `distance` und `air_time`.
+:::
+
+### Selecting
+
+Wählen Sie folgende Spalten aus.
+
+1. `carrier` anhand ihrer Position
+2. `carrier` anhand ihres Namens
+3. `dep_time`, `sched_dep_time` und `dep_delay` anhand ihrer Namen
+4. `year` bis `flight` (*Überlegen Sie, wie Sie hier möglichst kurzen Code schreiben können.*)
+5. Alle Spalten, deren Bezeichnungen mit `"a"` beginnen
+6. Alle Spalten, deren Bezeichnungen mit `"time"` enden
+7. Alle Spalten, deren Bezeichnungen `"rr"` enthalten
+8. Alle Spalten, jedoch mit den Spalten `carrier`, `flight` und `tailnum` zuvorderst
+
+### Renaming und Relocating
+
+1. Benennen Sie die Spalte `air_time` in `air_time_min` um, um die Maßeinheit anzugeben.
+2. Ziehen Sie die Spalten `carrier`, `flight` und `tailnum` (wie zuvor mit `select()`) nach vorn.
+3. Verschieben Sie die Spalte `dep_delay` so, dass sie sich zwischen `dep_time` und `sched_dep_time` befindet.
+
+### Mutating
+
+1. Wie glauben Sie, hängen `dep_time`, `sched_dep_time` und `dep_delay` zusammen? Vollziehen Sie die Berechnung nach und überprüfen, ob Sie zum selben Ergebnis kommen.
+2. Berechnen Sie eine neue Variable `speed` auf Basis von `distance` und `air_time`.
+3. Berechnen Sie eine neue Variable `air_time_hours` auf Basis von `air_time`, sodass die Maßeinheit Stunden, nicht Minuten beträgt.
+
+### Grouping und Summarizing
+
+Berechnen Sie...
+
+1. ...die durchschnittliche Ankunftsverspätung je Fluggesellschaft.
+2. ...die längste zurückgelegte Distanz je Fluggesellschaft.
+3. ...die kürzeste zurückgelegte Distanz je Fluggesellschaft.
+4. ...den Medianwert der Abflugsverspätung je Flughafen.
+
+### Längere `dplyr`-Pipelines
+
+Überlegen Sie, in welcher Reihenfolge Sie die Ihnen bekannten Funktionen kombinieren müssen, um die folgenden Fragen zu beantworten.
+
+1. Welche Fluggesellschaft flog im März mit der höchsten durchschnittlichen Geschwindigkeit?
+2. Welche Fluggesellschaft konnte ihre Abflugsverspätung durchschnittlich am besten während des Fluges ausgleichen?
+3. In welchem Monat war die durchschnittliche Distanz von New York City ausgehender Flüge am höchsten?
+4. Welcher Flughafen wurde von New York City aus im Dezember am häufigsten angeflogen?
+5. Welche Route zwischen dem Abflugsflughafen und Zielflughafen vereinigt die meisten Flüge auf sich?
+
+### Fortgeschrittenes
+
+1. Überlegen Sie sich eine eigene auf `flights` bezogene Fragestellung, für deren Beantwortung Sie mindestens vier `dplyr`-Funktionen nutzen müssen.
+2. `group_by()` ist nicht nur in Verbindung mit `summarize()` nützlich, sondern kann auch mit `mutate()` genutzt werden. Überlegen Sie, wie Sie für jeden Flug einer Fluggesellschaft die Differenz seiner Ankunftsverzögerung von der durchschnittlichen Ankunftsverzögerung aller Flüge der Fluggesellschaft berechnen können.
+
+## Lösungen
+
+### Überblick verschaffen
+
+1. `nrow(flights)`
+2. `ncol(flights)`
+3. `str(flights)`
+4. `?flights`
+
+### Filtering
+
+1. 
+```{r}
+#| eval: false
+flights |> 
+  filter(dep_delay > 120) |> 
+  nrow()
+```
+2. 
+```{r}
+#| eval: false
+flights |> 
+  filter(dest %in% c("IAH", "HOU")) |> 
+  nrow()
+```
+3. 
+```{r}
+#| eval: false
+flights |> 
+  filter(carrier %in% c("UA", "AA", "DL")) |> 
+  nrow()
+```
+4. 
+```{r}
+#| eval: false
+flights |> 
+  filter(between(month, 7, 9)) |> 
+  nrow()
+```
+5. 
+```{r}
+#| eval: false
+flights |> 
+  filter(dep_delay <= 0, arr_delay > 120) |> 
+  nrow()
+```
+6. 
+```{r}
+#| eval: false
+flights |> 
+  filter(dep_delay >= 60, arr_delay < 30) |> 
+  nrow()
+```
+
+### Einmalige Kombinationen
+
+```{r}
+#| eval: false
+flights |> 
+  distinct(year, month, day) |> 
+  nrow()
+```
+
+### Slicing
+
+Nutzen Sie eine der `slice_*`-Funktionen, um die folgenden Fragen zu beantworten.
+
+1. 
+```{r}
+#| eval: false
+flights |> 
+    slice_max(distance, n = 3)
+```
+2. 
+```{r}
+#| eval: false
+flights |> 
+    slice_min(distance, n = 3)
+```
+3.
+```{r}
+#| eval: false
+flights |> 
+    slice_max(air_time, n = 5)
+```
+4. 
+```{r}
+#| eval: false
+flights |> 
+  slice_min(air_time, n = 5)
+```
+
+### Arranging
+
+1. 
+```{r}
+#| eval: false
+flights |> 
+  arrange(carrier)
+```
+2.
+```{r}
+#| eval: false
+flights |> 
+  arrange(carrier, desc(arr_delay), desc(dep_delay))
+```
+3.
+```{r}
+#| eval: false
+flights |> 
+  arrange(desc(month), day)
+```
+4.
+```{r}
+#| eval: false
+flights |> 
+  arrange(dest, desc(arr_delay))
+```
+5.
+```{r}
+#| eval: false
+flights |> 
+  arrange(desc(distance / air_time))
+```
+
+### Selecting
+
+1.
+```{r}
+#| eval: false
+flights |> 
+  select(10)
+```
+2.
+```{r}
+#| eval: false
+flights |> 
+  select(carrier)
+```
+3.
+```{r}
+#| eval: false
+flights |> 
+  select(dep_time, sched_dep_time, dep_delay)
+```
+4.
+```{r}
+#| eval: false
+flights |> 
+  select(year:flight)
+```
+5.
+```{r}
+#| eval: false
+flights |> 
+  select(starts_with("a"))
+```
+6.
+```{r}
+#| eval: false
+flights |> 
+  select(ends_with("time"))
+```
+7.
+```{r}
+#| eval: false
+flights |> 
+  select(contains("rr"))
+```
+8.
+```{r}
+#| eval: false
+flights |> 
+  select(carrier, flight, tailnum, everything())
+```
+
+### Renaming und Relocating
+
+1. 
+```{r}
+#| eval: false
+flights |> 
+  rename(air_time_min = air_time)
+```
+2.
+```{r}
+#| eval: false
+flights |> 
+  relocate(carrier, flight, tailnum)
+```
+3.
+```{r}
+#| eval: false
+flights |> 
+  relocate(dep_delay, .after = dep_time)
+```
+
+### Mutating
+
+1. `dep_delay` gibt die Differenz zwischen der geplanten (`sched_dep_time`) und tatsächlichen Abflugszeit (`dep_time`) an. Weil die Zeitangabe aber im Format `HHMM` ist, können wir die Berechnung nur teilweise nachvollziehen. 
+2. 
+```{r}
+#| eval: false
+flights |> 
+  mutate(speed = distance / air_time)
+```
+3.
+```{r}
+#| eval: false
+flights |> 
+  mutate(air_time_hours = air_time / 60)
+```
+
+
+### Grouping und Summarizing
+
+1.
+```{r}
+#| eval: false
+flights |> 
+  group_by(carrier) |> 
+  summarize(mean_arr_delay = mean(arr_delay, na.rm = TRUE))
+```
+2.
+```{r}
+#| eval: false
+flights |> 
+  group_by(carrier) |> 
+  summarize(max_distance = max(distance))
+```
+3.
+```{r}
+#| eval: false
+flights |> 
+  group_by(carrier) |> 
+  summarize(min_distance = min(distance))
+```
+4.
+```{r}
+#| eval: false
+flights |> 
+  group_by(origin) |> 
+  summarize(median_dep_delay = median(dep_delay, na.rm = TRUE))
+```
+
+### Längere `dplyr`-Pipelines
+
+Überlegen Sie, in welcher Reihenfolge Sie die Ihnen bekannten Funktionen kombinieren müssen, um die folgenden Fragen zu beantworten.
+
+1.
+```{r}
+#| eval: false
+flights |> 
+  filter(month == 3) |> 
+  group_by(carrier) |> 
+  summarize(mean_speed = mean(distance / air_time)) |> 
+  slice_max(mean_speed, n = 1)
+```
+2.
+```{r}
+#| eval: false
+flights |> 
+  mutate(delay_gain = arr_delay - dep_delay) |> 
+  group_by(carrier) |> 
+  summarize(mean_delay_gain = mean(delay_gain, na.rm = TRUE)) |> 
+  slice_min(mean_delay_gain, n = 1)
+```
+3.
+```{r}
+#| eval: false
+flights |> 
+  group_by(month) |> 
+  summarize(mean_distance = mean(distance)) |> 
+  slice_max(mean_distance, n = 1)
+```
+4.
+```{r}
+#| eval: false
+flights |> 
+  filter(month == 12) |> 
+  count(dest) |> 
+  slice_max(n, n = 1)
+```
+5. Welche Route zwischen dem Abflugsflughafen und Zielflughafen vereinigt die meisten Flüge auf sich?
+```{r}
+#| eval: false
+flights |> 
+  count(origin, dest) |> 
+  slice_max(n, n = 1)
+```
+
+### Fortgeschrittenes
+
+1. Hierbei handelt es sich um eine eigene zu entwickelnde Fragestellung. Eine Lösung kann also nicht angeboten werden.
+2.
+```{r}
+#| eval: false
+flights |> 
+  group_by(carrier) |> 
+  mutate(dep_delay_difference_from_carrier_mean = dep_delay - mean(dep_delay, na.rm = TRUE))
+```

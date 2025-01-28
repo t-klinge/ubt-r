@@ -1,0 +1,484 @@
+# Datenzusammenführung
+
+Nur selten beziehen wir alle Daten, die wir auswerten oder visualisieren möchten, an einem einzigen Ort bzw. in einer einzigen Datei. Um dies zu bewerkstelligen, müssen wir begreifen, wie Tabellen miteinander zusammenhängen und welche Funktionen wir nutzen können, um sie zusammenzuführen.^[Dieses Kapitel basiert auf @r4ds2023 [Kapitel 19].]
+
+In diesem Kapitel lernen wir...
+
+-   ...was Datenzusammenführung in Form sog. *joins* bedeutet.
+-   ...welche unterschiedlichen Arten von *joins* es gibt.
+-   ...wie wir im Rahmen des `tidyverse` unterschiedliche Arten von *joins* ausführen.
+
+Wir benötigen hierfür die folgenden Pakete:
+
+```{r}
+#| message: false
+#| warning: false
+library(starwarsdb)
+library(tidyverse)
+library(nycflights13)
+```
+
+## Was sind Joins?
+
+Im *Data Science*-Jargon wird das Zusammenführen von Daten in Tabellenform als *joining* (zu deutsch "zusammenführen", "verbinden") bezeichnet, der einzelne Schritt als *join*. Dabei werden zwei grundsätzliche Arten von *joins* unterschieden:
+
+- ***Mutating joins***: Bei diesen *joins* werden einer Tabelle auf Basis von passenden Beobachtungen in einer anderen Tabelle **neue Variablen** hinzugefügt. 
+- ***Filtering joins***: Bei diesen *joins* werden Beobachtungen in einer Tabelle auf Basis von (nicht-)passenden Beobachtungen in einer anderen Tabelle **gefiltert**.
+
+Grundsätzlich lautet die zu klärende Frage beim Zusammenführen von Tabellen also immer: **Gibt es eine Übereinstimmung?** Oder, um die zentrale Frage der digitalen Praxis der Partnervermittlung zu bemühen: ***Is it a match?***
+
+```{r}
+#| echo: false
+#| out.width: "60%"
+#| fig-align: "center"
+#| fig-cap: "Is it a match? ([GIPHY](https://giphy.com/gifs/RBLS-hakim-simoes-rbls-Sr36wKcQi3vtBMldT9) 2024)."
+knitr::include_graphics("https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzMzdDRyZXVkdnc0MWQ5ZGdsbmVua2dxdWh2bDU2a3dxcWFhdWNyNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Sr36wKcQi3vtBMldT9/giphy.webp")
+```
+
+## Schlüsselfelder
+
+### Definition
+
+*Joins* hängen davon ab, dass zwei miteinander zusammenzuführende Tabellen sog. **Schlüsselfelder** (*keys*) enthalten. Ein sog. **Primärschlüssel** (*primary key*) ist eine Variable, die jede Beobachtung in einer Tabelle eindeutig identifiziert. Werden mehrere Variablen benötigt, um eine Beobachtung eindeutig zu identifizieren, ist von **zusammengesetzten Schlüsseln** (*compound keys*) die Rede. Wo der bzw. die Schlüssel auch in einer zweiten Tabelle vorhanden sind, sprechen wir vom **Fremdschlüssel** (*foreign key*).
+
+Anschauliche Beispiele bieten die unterschieden *data frames* aus dem uns bereits bekannten Package `nycflights13` (@sec-datentransformation-uebungsaufgaben):
+
+- **`airlines`** enthält zwei Variablen: die Abkürzung jeder Fluggesellschaft sowie ihren vollen Namen. Als kürzerer und einfacherer Primärschlüssel bietet sich also **`carrier`** an.
+
+```{r}
+airlines
+```
+
+- **`airports`** enthält acht Variablen: einen dreistelligen internationalen Code sowie den Namen und unterschiedliche geographische und zeitliche Informationen. Als Primärschlüssel bietet sich auch hier der Code (**`faa`**) an.
+
+```{r}
+airports
+```
+
+- **`planes`** enthält neun Variablen: einen für jedes Flugzeug individuellen Code sowie unterschiedliche technische Informationen. Abermals ist der Code (**`tailnum`**) als Primärschlüssel besonders geeignet.
+
+```{r}
+planes
+```
+
+- **`weather`** enthält 15 Variablen: einen Code für jeden Flughafen sowie Wetterangaben für unterschiedliche Tage und Uhrzeiten; in der Variablen `time_hour` sind Tages- und Uhrzeit zusammengefügt. Als zusammengesetzter Schlüssel böte sich hier also eine Kombination aus **`origin` und `time_hour`** an. 
+
+### Schlüsselfelder überprüfen
+
+Bislang haben wir nur behauptet, dass bestimmte Variablen geeignete Primär- oder zusammengesetzte Schlüssel sind. Wir können überprüfen, ob dies wirklich so ist, indem wir mithilfe von **`count()`** (@sec-datentransformation-spalten-counting) die Häufigkeit von einem oder mehreren Schlüsselfeldern zählen und **sichergehen, dass keine Kombination häufiger als einmal vorkommt**. Möchten wir also wissen, dass `carrier` ein geeigneter Schlüssel von **`airlines`** ist, gehen wir so vor:
+
+```{r}
+airlines |> 
+  count(carrier) |> 
+  filter(n > 1)
+```
+
+Unsere Ergebnistabelle hat null Zeilen, es kommt also kein `carrier`-Wert mehr als einmal vor. Die Variable ist als Schlüsselfeld geeignet. Wie steht es mit `origin` in **`weather`**?
+
+```{r}
+weather |> 
+  count(origin) |> # Anzahl vorhandener Werte zählen
+  filter(n > 1) # Nur Werte angeben, die häufiger als einmal vorhanden sind
+```
+
+Alle drei Flughäfen kommen mehr als 8700 Mal vor, `origin` allein ist also kein geeigneter Schlüssel. Was aber, wenn wir `time_hour` hinzunehmen?
+
+```{r}
+weather |> 
+  count(origin, time_hour) |> 
+  filter(n > 1)
+```
+
+Das sieht viel besser aus. **Gemeinsam kommen `origin` und `time_hour` jeweils nur einmal vor**, es gibt also für jeden Flughafen an jedem Tag zu jeder Stunde nur eine Beobachtung.
+
+### Primär- und Fremdschlüssel
+
+Sobald wir passende Schlüssel in einer Tabelle identifiziert haben, stellt sich die Frage, welche Variablen als **Primärschlüssel** in einer Tabelle auch in einer anderen Tabelle als **Fremdschlüssel** vorhanden sind. Bei näherer Betrachtung von `airlines`, `airports`, `weather` und (der uns bereits bekannten Tabelle) `flights` können wir folgende Verbindungen erkennen:
+
+- `flights$tailnum` entspricht `planes$tailnum`.
+- `flights$carrier` entspricht `airlines$carrier`.
+- `flights$origin` entspricht `airports$faa`.
+- `flights$dest` entspricht ebenfalls `airports$faa`.
+- `flights$origin` in Verbindung mit `flights$time_hour` entspricht `weather$origin` in Verbindung mit `weather$time_hour`.
+
+**Visuell** können wir die **Verbindungen** zwischen den Primärschlüsseln in `airlines`, `airports`, `planes` sowie `weather` und den Fremdschlüsseln in `flights` mit verbindenden Pfeilen darstellen. 
+
+```{r} 
+#| echo: false
+#| out.width: "60%"
+#| fig-align: "center"
+#| fig-cap: "Die Verbindungen zwischen Primärschlüsseln in `airlines`, `airports`, `planes`, `weather` und Fremdschlüsseln in `flights` [@r4ds2023, Kapitel 19.2]."
+knitr::include_graphics("https://r4ds.hadley.nz/diagrams/relational.png")
+```
+
+Dabei ist wichtig, festzuhalten, dass in diesen Beispielen alle Schlüsselfelder identische Namen tragen. Das ist ein vereinfachender Umstand, der leider nicht immer vorliegt.
+
+## Arten von Joins
+
+### Mutating Joins
+
+Durch das `tidyverse`-Paket `dplyr` (@sec-datentransformation-tidyverse-dplyr) stehen uns insgesamt **sechs `*_join()`-Funktionen** zur Verfügung: `left_join()`, `right_join()`, `full_join()`, `inner_join()`, `semi_join()` und `anti_join()`.^[Das `tidyverse` hat *joins* keineswegs erfunden. *Left joins*, *right joins*, *inner joins* und *full joins* sind auch im Rahmen von *base R* unter Nutzung der Funktion `merge()` möglich (siehe `?merge`).] All diese Funktionen benötigen zwei *data frames* (`x` und `y`). Das **Ergebnis** eines *joins* ist immer ein weiterer ***data frame***, wobei die Reihenfolge der Zeilen durch `x` bestimmt wird. 
+
+#### Left Join {#sec-datenzusammenfuehrung-arten-mutating-left}
+
+Die vermutlich **am häufigsten genutzte Spielart** eines *joins* ist ein *left join*. Bei einem solchen *mutating join* werden auf Grundlage eines Schlüsselfeldes alle Zeilen von `x` durch passende Variablen von `y` ergänzt. Die Angabe `left` bezieht sich darauf, dass es die **"linke" Tabelle** ist, die **bestimmt, wie die zusammengeführte Tabelle aussieht**. Die Ergebnistabelle enthält alle Zeilen aus `x` und fügt dort, wo sich eine Verbindung durch das Schlüsselfeld ergibt, alle Spalten aus `y` ein.
+
+Visuell können wir uns den Ablauf eines **`left_join()`** wie folgt vorstellen:
+
+```{r}
+#| echo: false
+#| out.width: "50%"
+#| fig-align: "center"
+#| fig-cap: "Die Logik eines `left_join()` [@r4ds2023, Kapitel 19.4]."
+knitr::include_graphics("https://r4ds.hadley.nz/diagrams/join/left.png")
+```
+
+Nehmen wir als Beispiel an, wir würden die **ausgeschriebenen Namen der Fluggesellschaften aus `airlines` unserer Tabelle `flights2`** (einer Auswahl von `flights`) **hinzufügen** wollen:
+
+```{r}
+flights2 <- flights |> 
+  select(time_hour, flight, origin, dest, carrier, tailnum) # Auswahl an Variablen treffen und einem Objekt namens flights2 zuschreiben
+flights2
+```
+
+Um dies zu tun, verbinden wir `flights2` durch `|>` mit `left_join()`. Weil `flights2` bereits als erster Parameter (also `x`) in `left_join()` eingeht, nimmt `airlines` die Rolle von `y` ein. 
+
+```{r}
+#| message: false
+flights2 |> 
+  left_join(airlines) # Left join durchführen
+```
+
+Das Ergebnis unseres *joins* sieht fast so aus wie `flights2`, aber nur fast. Tatsächlich wurde für jede Zeile aus `flights2` auf Basis des Schlüsselfeldes `carrier` (wie aus der Meldung abzulesen ist) ein passender Wert aus der Spalte `name`, die sich in `airlines` findet, eingefügt. Unsere Ursprungstabelle hat also eine **zusätzliche Spalte** dazugewonnen. Die beiden Tabellen wurden **erfolgreich zusammengeführt**.
+
+::: callout-note
+## Explizite Angabe der Schlüsselfelder
+
+Im bisherigen Beispiel `left_join(flights2, airlines)` hat **R das geeignete Schlüsselfeld** (`carrier`) **selbst erkannt**. Was aber, wenn R einmal nicht die richtigen Felder erkennt? Oder wenn die Schlüsselfelder zwar vorhanden sind, aber nicht dieselbe Bezeichnung tragen? In diesem Fall nutzen wir den Parameter **`by`**, um mit einem Vektor **Schlüsselfelder explizit anzugeben**^[Bei einem Schlüsselfeld genügt die Nennung als `character`. Bei zwei oder mehr Schlüsselfelder müssen diese mit `c()` angegeben werden.]. Um das obige Ergebnis mit eigenen Einstellungen zu erzielen, würden wir unseren Code wie folgt ergänzen:
+
+```{r}
+flights2 |> 
+  left_join(airlines,
+            by = "carrier") # Gleichnamiges Schlüsselfeld angeben
+```
+
+Wenn das **Schlüsselfeld in `x` oder `y`** einen anderen Namen hätte, würden wir diese Felder **mithilfe von `by` "gleichsetzen"**. In diesem Beispiel heißt das Schlüsselfeld in `airlines` `CARRIER`. Wenn wir einen *left join* ohne Nutzung von `by` probieren, erhalten wir eine Fehlermeldung.
+
+```{r}
+#| eval: false
+flights2 |> 
+  left_join(airlines |> 
+              rename(CARRIER = carrier)) # Variable umbenennen
+```
+
+R warnt uns, weil es keinen gemeinsamen Schlüssel finden kann: `Error in left_join(): ! by must be supplied when x and y have no common variables.` Um diesen Fehler zu korrigieren, geben wir mit `by = c("carrier" = "CARRIER")` an, dass das Schlüsselfeld in den Tabellen jeweils anders benannt ist. Dann glückt der *join* ohne Probleme.
+
+```{r}
+flights2 |> 
+  left_join(airlines |> 
+              rename(CARRIER = carrier),
+            by = c("carrier" = "CARRIER")) # Ungleichnamige Schlüsselfelder angeben
+```
+:::
+
+Ein **weiteres Beispiel** festigt unser Verständnis. Zunächst erzeugen wir eine Auswahl an `weather`-Variablen.
+
+```{r}
+weather2 <- weather |> 
+  select(origin, time_hour, temp, wind_speed) # Vier Spalten auswählen
+weather2
+```
+
+Um mehr über die **Wetterlage unserer Flüge bei Abflug** zu erfahren, möchten wir `flights2` jetzt durch alle Variablen in `weather2` ergänzen. Zuvor entfernen wir `dest` aus `flights2`, damit uns klar ist, dass sich die Informationen auf den Abflugsflughafen, also `origin` beziehen. Diesmal erfolgt der *left join*, wie uns R mitteilt, auf Basis eines **zusammengesetzten Schlüssels** aus `origin` und `time_hour`. Der **neue *data frame*** hat durch die Zusammenführung **zwei neue Spalten**, nämlich `temp` und `windspeed`, hinzugewonnen, während alle Zeilen aus `flights2` erhalten bleiben
+
+```{r}
+#| message: false
+flights2 |>
+  select(- dest) |> # Spalte dest entfernen
+  left_join(weather2) # Left join durchführen
+```
+
+#### Right Join
+
+Nachdem wir verstanden haben, wie ein *left join* funktioniert, ist die Erklärung eines *right joins* mittels **`right_join()`** für uns leichter zu verstehen: in diesem Fall handelt es sich nämlich lediglich um eine **umgekehrte Ausgabetabelle**. Das heißt, **jede Zeile von `y`** bleibt erhalten und wird lediglich **um Variablen aus `x` ergänzt**. Weil `y` die "rechte" Tabelle ist, handelt es sich um einen *right join*. Visuell sieht der Vorgang so aus:
+
+```{r} 
+#| echo: false
+#| out.width: "50%"
+#| fig-align: "center"
+#| fig-cap: "Die Logik eines `right_join()` [@r4ds2023, Kapitel 19.4]."
+knitr::include_graphics("https://r4ds.hadley.nz/diagrams/join/right.png")
+```
+
+Um einen *data frame* mit denselben Informationen wie im **vorherigen Beispiel** von `flights2` und `weather2` zu erzeugen, würden wir also **`x` und `y` einfach vertauschen**. Das Ergebnis ist, bis auf die Reihenfolge der Spalten, gleich.
+
+```{r}
+#| message: false
+weather2 |> 
+  right_join(flights2 |> # Right join durchführen
+               select(- dest)) # Variable dest aus flights2 entfernen
+```
+
+#### Full Join
+
+Wenn wir weder *nur* alle Beobachtungen von `x` noch *nur* alle Beobachtungen von `y` in unserer zusammengeführten Tabelle behalten möchten, sondern den **vollen Umfang beider Tabellen erhalten** möchten, nutzen wir einen *full join*. Visuell können wir uns einen *full join* so vorstellen:
+
+```{r} 
+#| echo: false
+#| out.width: "50%"
+#| fig-align: "center"
+#| fig-cap: "Die Logik eines `full_join()` [@r4ds2023, Kapitel 19.4]."
+knitr::include_graphics("https://r4ds.hadley.nz/diagrams/join/full.png")
+```
+
+Wenn wir beispielsweise mittels **`slice_sample()`**^[Hierbei handelt es sich um eine weitere Spielart der uns bereits bekannte `slice_*()`-Funktionen (@sec-datentransformation-zeilen-slicing).] zwei **Stichproben von `flights2` und `weather2`** mit je 1000 Beobachtungen erzeugen und **`full_join()`** zusammenfügen, hat die Ergebnistabelle nicht nur 1000 Beobachtungen (wie jeweils `x` und `y` haben), sondern mehr.^[Der Funktionsaufruf `set.seed(1234)` wird benötigt, um die Zufallsstichprobe nachvollziehbar zu machen, sodass der folgende `slice_sample()`-Aufruf auf jedem Computer dieselbe Stichprobe generiert. Eine Erläutering findet sich in [diesem Blogbeitrag](https://r-coder.com/set-seed-r/).]
+
+
+```{r}
+set.seed(1234)
+flights2_sample <- flights2 |> 
+    slice_sample(n = 1000) # 1000 Fälle als Stichprobe ziehen
+weather2_sample <- weather2 |> 
+    slice_sample(n = 1000) # 1000 Fälle als Stichprobe ziehen
+```
+
+```{r}
+#| message: false
+flights2_weather2_full_join <- flights2_sample |> 
+    full_join(weather2_sample) # Full join durchführen
+flights2_weather2_full_join
+```
+
+Was ist passiert? Ein *full join* hat **alle Beobachtungen aus `x` und `y` behalten**. In `r flights2_weather2_full_join |> drop_na() |> nrow()` Fällen gab es übereinstimmende Beobachtungen in beiden Tabellen, sodass diese nicht als neue Beobachtungen angehängt wurden. Deshalb ist die **Gesamtanzahl der Beobachtungen** nicht gleich 2000 (= 1000 aus `x` + 1000 aus `y`), sondern etwas weniger, nämlich `r nrow(flights2_weather2_full_join)`.
+
+#### Inner Join {#sec-datenzusammenfuehrung-arten-mutating-inner}
+
+Das Gegenstück zu einem *full join* ist ein *inner join*: ein solcher *join* erzeugt eine Tabelle, die ausschließlich solche **Beobachtungen** enthält, die **sowohl in `x` als auch in `y` enthalten** sind.
+
+```{r}
+#| message: false
+flights2_weather2_inner_join <- flights2_sample |> 
+  inner_join(weather2_sample) # Inner join durchführen
+flights2_weather2_inner_join
+```
+
+::: callout-note
+## Check, check!
+
+Dass die vollständigen Beobachtungen eines *full join* gleich den Beobachtungen eines *inner join* sind, können wir in zwei Schritten **überprüfen.**
+
+1.  Wir entfernen mit `drop_na()` alle Beobachtungen aus `flights2_weather2_full_join`, die in irgendeiner Variable fehlende Werte (`NA`s) aufweisen.
+2.  Wir überprüfen mit `identical()`^[`identical()` gibt `TRUE`
+aus, wenn zwei Objekte einander gleichen und `FALSE`, wenn dies nicht der Fall ist.], ob die `flights2_weather2_full_join` ohne fehlende Werte gleich `flights2_weather2_inner_join` ist.
+
+```{r}
+identical(flights2_weather2_full_join |> 
+              drop_na(),
+          flights2_weather2_inner_join)
+```
+::: 
+
+Abschließend lassen sich die vier Formen von *mutating joins* und damit die Schnittmengen zwischen `x` und `y` auch in Form eines sog. **Venn-Diagramms** darstellen.
+
+```{r} 
+#| echo: false
+#| out.width: "60%"
+#| fig-align: "center"
+#| fig-cap: "Die Schnittmengen zweier *data frames* je nach *mutating join* [@r4ds2023, Kapitel 19.4]."
+knitr::include_graphics("https://r4ds.hadley.nz/diagrams/join/venn.png")
+```
+
+### Filtering Joins
+
+Während *mutating joins* Tabellen ergänzen, werden *filtering joins* genutzt, um Beobachtungen in `x` auf Basis von dem (Nicht-)Vorhandensein von Beobachtungen in `y` zu filtern. Es werden also **keine Beobachtungen ergänzt oder wiederholt**.
+
+#### Semi Join
+
+Ein *semi join* überprüft die Beobachtungen von `x` auf entsprechende Beobachtungen in `y`.  **Wird eine Übereinstimmung gefunden, wird die Beobachtung in die Ergebnistabelle übernommen; wird sie das nicht, wird die Beobachtung entfernt bzw. "fallengelassen"** (*drop*). Visuell können wir uns einen *semi join* so vorstellen:
+
+```{r} 
+#| echo: false
+#| out.width: "50%"
+#| fig-align: "center"
+#| fig-cap: "Die Logik eines `semi_join()` [@r4ds2023, Kapitel 19.4]."
+knitr::include_graphics("https://r4ds.hadley.nz/diagrams/join/semi.png")
+```
+
+Wir können uns dieses Vorgehen anhand von `flights2_sample` und `weather2_sample` gut verständlich machen. Möchten wir **nur die Beobachtungen in `flights2_sample` ausgeben, für die in `weather2_sample` Wetterinformationen vorhanden sind**, dabei aber **keine Variablen in `flights2_sample` ergänzen**, nutzen wir **`semi_join()`**.
+
+```{r}
+#| message: false
+flights2_sample |> 
+  semi_join(weather2_sample) # Semi join durchführen
+```
+
+Unsere Ergebnistabelle sieht dem Ergebnis eines *inner join* (@sec-datenzusammenfuehrung-arten-mutating-inner) sehr ähnlich, beinhaltet aber nur die Variablen aus `flights2_sample`.
+
+#### Anti Join
+
+Ein *anti join* stellt das Gegenstück zu einem *semi join* dar. In diesem Fall werden **nur Beobachtungen in `x` in die Ergebnistabelle übernommen, für die keine Übereinstimmung in `y` vorliegt**. Wie zuvor werden aber keine Variablen ergänzt. Visuell sieht dieser Vorgang so aus:
+
+```{r} 
+#| echo: false
+#| out.width: "50%"
+#| fig-align: "center"
+#| fig-cap: "Die Logik eines `anti_join()` [@r4ds2023, Kapitel 19.4]."
+knitr::include_graphics("https://r4ds.hadley.nz/diagrams/join/anti.png")
+```
+
+Anhand von `flights2_sample` und `weather2_sample` werden also **nur die Fälle in `flights2_sample` gefiltert, für die keine Wetterinformationen in `weather2_sample` vorliegen**.
+
+```{r}
+#| message: false
+flights2_sample |> 
+  anti_join(weather2_sample) # Anti join durchführen
+```
+
+### Weitere Arten von Join
+
+Mit den in diesem Kapitel vorgestellten Arten von *joins* ist bereits ein großer Bereich abgedeckt. Für weitere Anwendungen finden sich bei @r4ds2023 [Kapitel 19.5] noch fortgeschrittene Funktionen.
+
+## Übungsaufgaben
+
+### *A long time ago in a galaxy far, far away...*
+
+```{r}
+#| echo: false
+#| out.width: "60%"
+#| fig-align: "center"
+#| fig-cap: "*Wird die Macht mit uns sein?* ([GIPHY](https://giphy.com/gifs/darth-vader-dancing-star-wars-1HPUSulSOHDpe) 2024)."
+knitr::include_graphics("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzV6ZmhiM3hiOWthY2FtMWhwdno4dGp4dTQycXlxMHF4cjF1YjlqbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1HPUSulSOHDpe/200.webp")
+```
+
+Die folgenden Übungsaufgaben beziehen sich auf neun *data frames* aus dem Package **`starwarsdb`**. Wenn wir `starwarsdb` bereits installiert haben, müssen wir es nur noch mit `library(starwarsdb)` laden. Wenn wir `starwarsdb` noch nicht installiert haben (was einige Minuten dauert), können wir stattdessen [diese RDATA-Datei](https://github.com/ubt-r/starwars/raw/refs/heads/main/starwars.rdata) herunterladen und sie dann mit mit `load()` laden:
+
+```{r}
+load("./files/starwars.rdata")
+```
+
+Die folgenden neun *data frames* stehen uns dann zur Verfügung, deren Inhalte wir mit **`glimpse()`** betrachten können:
+
+- **`films`**: Detaillierte Angaben zu Filmen.
+- **`films_people`**: Angaben zu Charakteren je nach Film.
+- **`films_planet`**: Angaben zu Planeten je nach Film.
+- **`films_vehicles`**: Angaben zu Vehikeln je nach Film.
+- **`people`**: Detaillierte Angaben zu Charakteren.
+- **`pilots`**: Angaben zu Piloten je nach Vehikel.
+- **`planets`**: Detaillierte Angaben zu Planeten.
+- **`species`**: Detallierte Angaben zu Spezien.
+- **`vehicles`**: Detaillierte Angaben zu Vehikeln.
+
+In den folgenden Aufgaben werden mindestens zwei *data frames* zusammengeführt. Hierfür müssen wir zunächst passende Schlüsselfelder (Primär- und Fremdschlüssel) identifizieren. Wichtig ist, dass diese Schlüssel **nicht immer dieselbe Bezeichnung tragen** -- anders als in den Erläuterungen oben. **Bei den meisten *joins* müssen wir also `by` nutzen.**
+
+### Left Join
+
+Führen Sie `films_planets` und `planets` zusammen. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+films_planets |> 
+  left_join(planets,
+            by = c("planet" = "name"))
+```
+
+Werten Sie die Tabelle mittels `group_by()` und `count()` so aus, dass Sie erfahren, in welchem Film die meisten unterschiedlichen Planeten vorkamen. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+films_planets |> 
+  left_join(planets,
+            by = c("planet" = "name")) |> 
+  group_by(title) |> 
+  count(sort = TRUE)
+```
+
+### Right Join
+
+Führen Sie `people` und `films_people` zusammen. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+people |> 
+  right_join(films_people,
+             by = c("name" = "character"))
+```
+
+Werten Sie die Tabelle mittels `filter()`, `group_by()` und `count()` so aus, dass Sie erfahren, in welchem Film die meisten Wookies (`species == "Wookie"`) vorkamen. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+people |> 
+  right_join(films_people,
+             by = c("name" = "character")) |> 
+  filter(species == "Wookie") |> 
+  group_by(title) |> 
+  count(sort = TRUE)
+```
+
+### Full Join
+
+Führen Sie `films_vehicles` und `vehicles` zusammen. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+films_vehicles |> 
+  full_join(vehicles,
+            by = c("vehicle" = "name"))
+```
+
+Werten Sie die Tabelle mittels `filter()`, `group_by()` und `summarize()` so aus, dass Sie erfahren, in welchem Film die schnellsten (`mean(max_atmosphering_speed, na.rm = TRUE)`) Raumschiffe (`type == "starship"`) vorkamen. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+films_vehicles |> 
+  full_join(vehicles,
+            by = c("vehicle" = "name")) |> 
+  filter(type == "starship") |> 
+  group_by(title) |> 
+  summarize(mean_speed = mean(max_atmosphering_speed, na.rm = TRUE)) |> 
+  arrange(desc(mean_speed))
+```
+
+### Inner Join
+
+Führen Sie `vehicles` und `pilots` zusammen. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+vehicles |> 
+    inner_join(pilots,
+               by = c("name" = "vehicle"))
+```
+
+Werten Sie die Tabelle mittels `group_by()` und `count()` so aus, dass Sie erfahren, welche Vehikel die meisten unterschiedlichen Pilot\*innen hatten. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+vehicles |> 
+    inner_join(pilots,
+               by = c("name" = "vehicle")) |> 
+  group_by(name) |> 
+  count(sort = TRUE)
+```
+
+### Semi Join
+
+Fügen Sie zunächst `films_planets` und die Spalten `title` und `episode_id` aus `films` mit `left_join()` zusammen. Nutzen Sie dann `filter()`, um nur die ersten drei Episoden auszuwählen (`between(episode_id, 1, 3)`). Die Ergebnistabelle soll `planet_names_first_trilogy` heißen und so aussehen:
+
+```{r}
+planet_names_first_trilogy <- films_planets |> 
+  left_join(films |> 
+              select(title, episode_id)) |> 
+  filter(between(episode_id, 1, 3))
+planet_names_first_trilogy
+```
+
+Führen Sie desweiteren `planets` und  `planet_names_first_trilogy` mittels `semi_join()` zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen der ersten drei Episoden enthält. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+planets |> 
+  semi_join(planet_names_first_trilogy,
+            by = c("name" = "planet"))
+```
+
+### Anti Join
+
+Führen Sie `planets` und `planet_names_first_trilogy` zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen aller Planeten, die *nicht* in den ersten drei Episoden vorkommen, enthält. Die Ergebnistabelle soll so aussehen:
+
+```{r}
+planets |> 
+  anti_join(planet_names_first_trilogy,
+            by = c("name" = "planet"))
+```

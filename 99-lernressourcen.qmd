@@ -1,0 +1,66 @@
+# Lernressourcen {-}
+
+## Lehrwerke {-}
+
+### Allgemein  {-}
+
+* Hadley Wickham, Mine Çetinkaya-Rundel & Garrett Grolemund (2023) *R for Data Science, Import, Tidy, Transform, Visualize and Model Data*, zweite Auflage, O’Reilly. Eine vollständige Online-Ausgabe liegt [hier](https://r4ds.hadley.nz/) vor.  
+*Das Standardwerk für Data Science mit R unter Nutzung des* tidyverse*.*
+* Robert Kabacoff (2015) *R in Action: Statistics and graphics with R*, dritte Auflage, Manning.  
+*Gut strukturiert und anschaulich, dafür notwendigerweise etwas betagter als jüngere Lehrbücher.*
+* Norman Matloff (2011) *The Art of R Programming. A Tour of Statistical Software Design*, No Starch Press.  
+*Gutes Standardwerk zur tieferen Auseinandersetzung mit* base R*.*
+
+## Vertiefungen {-}
+
+### Datenvisualisierung {-}
+
+* Hadley Wickham (2016) *ggplot2. Elegant Graphics for Data Analysis*, zweite Auflage, Springer.
+Eine vollständige Online-Ausgabe der dritten Auflage liegt [hier](https://ggplot2-book.org/) vor.
+*Das Standardwerk vom Hauptautoren des ggplot2-Paketes, das jeden Aspekt abdeckt.*
+* Robert Kabacoff (2023) *Modern Data Visualization with R*, CRC Press. 
+Eine vollständige Online-Ausgabe liegt [hier](https://rkabacoff.github.io/datavis/) vor.  
+*Umfangreiches Nachschlagewerk mit vielen Beispielen.*
+
+### Geodatenanalyse {-}
+
+* Robin Lovelace, Jakub Nowosad & Jannes Münchow (2019) *Geocomputation with R*, CRC Press. Eine vollständige Online-Ausgabe liegt [hier](https://r.geocompx.org/) vor.  
+*Gute Einführung in GIS im Allgemeinen, nicht nur die Funktionalitäten von R, auch mit Berücksichtigung von* tidyverse*-Paketen.*
+
+### Programmierung {-}
+
+* Garrett Grolemund (2014) *Hands-On Programming with R. Write Your Own Functions and Simulations*, O’Reilly. Eine vollständige Online-Ausgabe liegt [hier](https://rstudio-education.github.io/hopr/) vor.  
+*Zugänglich und motivierend geschrieben liefert dieses Buch einen Einstieg in die tiefere Auseinandersetzung mit dem "Innenleben" von R.*
+
+### RMarkdown und Quarto {-}
+
+* Yihui Xie, Christophe Dervieux & Emily Riederer (2023) *R Markdown Cookbook*, CRC Press. Eine vollständige Online-Ausgabe liegt [hier](https://bookdown.org/yihui/rmarkdown-cookbook/) vor.  
+*Kein Aspekt von Markdown-Dokumenten bleibt hier unerwähnt, sehr gutes Nachschlagewerk.*
+* Carlos Scheidegger, Charles Teague, Christophe Dervieux, J.J. Allaire & Yihui Xie (2024) [*Quarto Guide*](https://quarto.org/docs/guide/).
+*Quarto ist die neueste Entwicklung hinsichtlich der Dokumentation von Code, die nicht nur für R, sondern auch für viele andere Programmiersprachen verwendet werden kann. Noch liegt kein diesbezügliches Buch vor, deshalb ist es ratsam, die Online-Anleitung der im Auge zu behalten.*  
+
+## Blogs {-}
+
+-   [DataNovia](https://www.datanovia.com/)
+-   [R-Bloggers](https://www.r-bloggers.com/)
+-   [R-Coder](https://r-coder.com/)
+-   [R Graph Gallery](https://r-graph-gallery.com/)
+-   [TechVidan](https://techvidvan.com/tutorials/learn-r-programming/)
+-   [Quick-R](https://www.statmethods.net/)
+
+## Hochschulkurse {-}
+
+* Andrew Heiss (Andrew Young School of Policy Studies Georgia State University): [Data Visualization with R](https://datavizf23.classes.andrewheiss.com/).
+*Sehr gelungener Kurs, der anspruchsvolle Visualisierungskonzepte anhand von `ggplot2` vermittelt.*
+* Stefano De Sabbata (University of Leicester/University of Oxford): [R for Geographic Data Science](https://sdesabbata.github.io/r-for-geographic-data-science/).
+*Fortgeschrittener Kurs, der mit explizit geographischem Fokus bis zu schließender Statistik und maschinellem Lernen führt.*
+
+## Tutorials {-}
+
+* [Posit Recipes](https://posit.cloud/learn/recipes)  
+*Erklärt anhand von Code-Snippets wichtige Arbeitsschritte mit unterschiedlichen* tidyverse-*Funktionen.*
+* [R-Exercises](https://www.r-exercises.com/)  
+*Stellt eine Vielzahl an Übungsaufgaben zu* base R- *und* tidyverse-*Funktionen samt Lösungen bereit.*
+* [Swirl](https://swirlstats.com/)  
+*Ermöglicht das Lernen unterschiedlicher R-Inhalte* innerhalb *von R selbst, teilweise in deutscher Übersetzung.*
+

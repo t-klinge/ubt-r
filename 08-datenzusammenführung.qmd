@@ -340,7 +340,7 @@ Mit den in diesem Kapitel vorgestellten Arten von *joins* ist bereits ein große
 
 ## Übungsaufgaben
 
-### *A long time ago in a galaxy far, far away...*
+*A long time ago in a galaxy far, far away...*
 
 ```{r}
 #| echo: false
@@ -494,7 +494,7 @@ planets |>
             by = c("name" = "planet"))
 ```
 
-##Lösungen
+## Lösungen
 
 ### Left Join
 

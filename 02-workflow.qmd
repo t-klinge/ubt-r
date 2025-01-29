@@ -33,7 +33,7 @@ knitr::include_graphics("./images/rstudio-panes-labeled.jpeg")
 
 Auch **Konsole** oder **Kommandozeile** genannt: Hier "lebt" R. Sämtliche Eingaben in das Programm werden hier, hinter der **Eingabeaufforderung** `>` getätigt. Wenn es im Verlauf des Kurses heißt, dass Sie etwas eingeben oder ausführen lassen sollen, damit die Konsole gemeint. Rechts vom R-Logo wird die installiert R-Version (hier 4.2.0) sowie das derzeit genutzte Verzeichnis (hier `~/rstudio-user-guide/`) angezeigt.
 
-### Source {#workflow-rstudio-source}
+### Source {#sec-workflow-rstudio-source}
 
 Auch **Quelle** oder **Skript-Editor** genannt: Hier können wir R-Code in einer Datei mit der Endung **`.R`** schreiben und abspeichern. Neue Skripte können wir in der Menüleiste über `File` &rarr; `New File` &rarr; `R Script` oder über die Schaltfläche darunter ebenso wie über die Tastenkombination <kbd>Strg+Shift+N</kbd> erstellen. Während wir Eingaben in der Konsole nur mithilfe zusätzlicher Schritte wieder aufrufen können, ist das Verfassen von Skripten eine sichere Art, den eigenen Fortschritt nicht mit Beenden des Programms einzubüßen. Außerdem liefert der Skript-Editor noch zahlreiche weitere **Hilfestellungen**: zum Beispiel färbt er den Code gemäß bestimmter (von uns noch kennenzulernenden) Regeln ein und macht ihn dadurch lesbarer, während er links neben dem Code oftmals schon Hinweise auf mögliche Fehler gibt.
 
@@ -63,7 +63,7 @@ Wenn wir unseren *workspace* nicht immer speichern wollen, um unsere Fortschritt
 
 ### Skripte
 
-Die einfachste Art, R-Code zu dokumentieren, ist, für **zusammenhängende Schritte** ein Skript zu schreiben. Der Ort, dies zu tun, ist der Skript-Editor(@workflow-rstudio-source) in RStudio. Einmal verfasst, können wir **Code auf zwei Weisen ausführen**:
+Die einfachste Art, R-Code zu dokumentieren, ist, für **zusammenhängende Schritte** ein Skript zu schreiben. Der Ort, dies zu tun, ist der Skript-Editor(@sec-workflow-rstudio-source) in RStudio. Einmal verfasst, können wir **Code auf zwei Weisen ausführen**:
 
 - Wenn der Cursor sich an einer Stelle im Code befindet oder der entsprechende Code mit der Maus markiert wurde, können wir ihn mit <kbd>Strg+Enter</kbd> ausführen.
 - Alternativ können wir in der kleinen Leiste im Skript-Editor auf `Run` klicken. Das Dropdown-Menü ermöglicht noch weitere Schritte, etwa das Ausführen von Code-Chunk nach Code-Chunk.

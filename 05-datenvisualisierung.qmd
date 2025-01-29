@@ -1585,7 +1585,7 @@ Exportieren Sie mit `ggsave()` Ihre fertigen Diagramme je einmal in den Formaten
 3. `str(penguins)`
 4. `?penguins`
 
-### Visualisierungsarten {#sec-datenvisualisierung-uebungsaufgaben-visualisierungsarten}
+### Visualisierungsarten
 
 1. 
 ```{r}

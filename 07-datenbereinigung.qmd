@@ -285,7 +285,7 @@ Betrachten Sie die durch `tidyr` mitgelieferte Tabelle **`billboard`**, welche U
 In einem weiteren Schritt trennen Sie die Variable `date.entered` in drei separate Variablen (`year`, `month` und `day`). Ihr Ergebnis (ohne die `wk`-Spalten) sollte so aussehen (beachten Sie auch die Variablentypen!):
 
 ```{r}
-#| echo: true
+#| echo: false
 billboard |> 
     select(1:3) |> 
     separate(col = date.entered,
@@ -299,7 +299,7 @@ billboard |>
 Betrachten Sie die durch `tidyr` mitgelieferte Tabelle **`table5`**. Verbinden Sie die Spalten `century` und `year` zu einer neuen Spalte `year`, die eine korrekte, vierstellige Jahresangabe beinhaltet. Nutzen Sie außerdem ein weiteres `dplyr`-Verb, um die Variable in den richtigen Datentyp zu transformieren (@sec-grundlagen-datentypen-arbeiten-transformieren). Ihr Ergebnis sollte so aussehen:
 
 ```{r}
-#| echo: true
+#| echo: false
 table5 |> 
   unite(year, 
         century, year, 
@@ -314,7 +314,7 @@ table5 |>
 Verlängern Sie `billboard` so, dass die Wochenangaben in einer Variable `week` und die Platzierungen in einer Variable `rank` dargestellt werden. Ihr Ergebnis sollte so aussehen:
  
 ```{r}
-#| echo: true
+#| echo: false
 billboard |> 
     pivot_longer(cols = starts_with("wk"), # or !1:2
                  names_to = "week",
@@ -333,7 +333,7 @@ Betrachten Sie die Tabelle **`who2`**. Stellen Sie sich erneut die folgenden Fra
 Nachdem wie in Erfahrung gebracht haben, wofür die Spaltennamen stehen^[Siehe `?who2`.], verlängern Sie die Tabelle so, dass die einzelnen Informationen in drei verschiedene Variablen `diagnosis`, `gender` und `age_group` sowie die Fallzahlen in einer Variable `count` dargestellt werden. Ihr Ergebnis sollte so aussehen:
 
 ```{r}
-#| echo: true
+#| echo: false
 who2 |> 
     pivot_longer(cols = !1:2,
                  names_to = c("diagnosis", "gender", "age_group"), 
@@ -359,10 +359,10 @@ geburten <- tibble(jahr = c(2013, 2014, 2015, 2016, 2017, 2018, 2019,
 geburten
 ```
 
-Verlängern Sie diese Tabelle so, dass die Geschlechtsangabe und die Anzahl der Geburten in eigenen Variablen vorliegen. Ihr Ergebnis sollte so aussehen:
+1. Verlängern Sie diese Tabelle so, dass die Geschlechtsangabe und die Anzahl der Geburten in eigenen Variablen vorliegen. Ihr Ergebnis sollte so aussehen:
 
 ```{r}
-#| echo: true
+#| echo: false
 geburten |> 
   pivot_longer(cols = starts_with("geburten"),
                names_to = "geschlecht",
@@ -370,10 +370,85 @@ geburten |>
                values_to = "geburten")
 ```
 
-Diese Tabelle ist aufgeräumt, aber für manche Zwecke ungeeignet. Was, wenn wir den Anteil an Geburten je nach Geschlecht und Jahr berechnen wollen? Eine Möglichkeit, dies zu tun, wäre die folgende: Verlängern Sie `geburten` statt wie zuvor so, dass nur die Spalten `geburten_maennlich` und `geburten_weiblich` herangezogen werden. Die Spalten `geburten_insgesamt` soll hingegen erhalten bleiben. In einem weiteren Schritt nutzen Sie `mutate()`, um den jeweiligen Anteil zu berechnen. Ihr Ergebnis sollte so aussehen:
+2. Diese Tabelle ist aufgeräumt, aber für manche Zwecke ungeeignet. Was, wenn wir den Anteil an Geburten je nach Geschlecht und Jahr berechnen wollen? Eine Möglichkeit, dies zu tun, wäre die folgende: Verlängern Sie `geburten` statt wie zuvor so, dass nur die Spalten `geburten_maennlich` und `geburten_weiblich` herangezogen werden. Die Spalten `geburten_insgesamt` soll hingegen erhalten bleiben. In einem weiteren Schritt nutzen Sie `mutate()`, um den jeweiligen Anteil zu berechnen. Ihr Ergebnis sollte so aussehen:
 
 ```{r}
-#| echo: true
+#| echo: false
+geburten |> 
+  pivot_longer(cols = c(geburten_maennlich, geburten_weiblich),
+               names_to = "geschlecht",
+               names_prefix = "geburten_",
+               values_to = "geburten") |> 
+  mutate(anteil = round(geburten / geburten_insgesamt * 100, digits = 1))
+```
+
+## Lösungen
+
+### Variablen
+
+#### Trennen
+
+```{r}
+#| eval: false
+billboard |> 
+    select(1:3) |> 
+    separate(col = date.entered,
+             into = c("y", "m", "d"),
+             sep = "-",
+             convert = TRUE)
+```
+
+#### Verbinden
+
+```{r}
+#| eval: false
+table5 |> 
+  unite(year, 
+        century, year, 
+        sep = "") |> 
+  mutate(year = as.numeric(year))
+```
+
+### Tabellenorganisation
+
+#### `billboard`
+
+```{r}
+#| eval: false
+billboard |> 
+    pivot_longer(cols = starts_with("wk"), # or !1:2
+                 names_to = "week",
+                 values_to = "rank",
+                 names_prefix = "wk", # or parse_number afterwards
+                 values_drop_na = TRUE)
+```
+
+#### `who2`
+
+```{r}
+#| eval: false
+who2 |> 
+    pivot_longer(cols = !1:2,
+                 names_to = c("diagnosis", "gender", "age_group"), 
+                 names_sep = "_",
+                 values_to = "count")
+```
+
+#### `geburten`
+
+1.
+```{r}
+#| eval: false
+geburten |> 
+  pivot_longer(cols = starts_with("geburten"),
+               names_to = "geschlecht",
+               names_prefix = "geburten_",
+               values_to = "geburten")
+```
+
+2.
+```{r}
+#| eval: false
 geburten |> 
   pivot_longer(cols = c(geburten_maennlich, geburten_weiblich),
                names_to = "geschlecht",

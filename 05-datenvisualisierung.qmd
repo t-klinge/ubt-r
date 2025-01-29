@@ -1404,7 +1404,7 @@ Verschaffen Sie sich zunächst mittels geeigneter Funktionsaufrufe einen Eindruc
     * Zeichnen Sie um alle Säulen als konstante Ästhetik eine schwarze Linie.
 
 ```{r}
-#| echo: true
+#| echo: false
 penguins |> 
   ggplot(mapping = aes(x = fct_infreq(species),
                        fill = species)) +
@@ -1417,7 +1417,7 @@ penguins |>
     * Zeichnen Sie alle Linien als konstante Ästhetik mit einer Liniendicke (`linewidth`) von 1.
   
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 penguins |> 
@@ -1436,7 +1436,7 @@ penguins |>
     * Zeichnen Sie alle *geoms* mit einer konstanten Transparenz (`alpha`) von 0.75.
 
 ```{r}
-#| echo: true
+#| echo: false
 #| warning: false
 penguins |> 
   ggplot(mapping = aes(x = species,
@@ -1452,7 +1452,7 @@ penguins |>
     * Zeichnen Sie alle Punkte mit einer konstanten Größe (`size`) von 3 und einer konstanten Transparenz (`alpha`) von 0.25.
     
 ```{r}
-#| echo: true
+#| echo: false
 #| warning: false
 penguins |> 
   ggplot(mapping = aes(x = flipper_length_mm,
@@ -1472,7 +1472,7 @@ penguins |>
     * Wählen Sie ein anderes *theme* Ihrer Wahl aus.
 
 ```{r}
-#| echo: true
+#| echo: false
 penguins |> 
   ggplot(mapping = aes(x = fct_infreq(species),
                        fill = species)) +
@@ -1495,7 +1495,7 @@ penguins |>
     * Wählen Sie ein anderes *theme* Ihrer Wahl aus.
     
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 penguins |> 
   group_by(year, species) |> 
@@ -1523,7 +1523,7 @@ penguins |>
     * Wählen Sie ein anderes *theme* Ihrer Wahl aus.
     
 ```{r}
-#| echo: true
+#| echo: false
 #| warning: false
 penguins |> 
   filter(!is.na(sex)) |> 
@@ -1548,7 +1548,7 @@ penguins |>
     * Wählen Sie das *theme* des *Economist* und dessen entsprechende Farbpalette aus.
     
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 penguins |> 
@@ -1575,3 +1575,146 @@ penguins |>
 ### Visualisierungen exportieren
 
 Exportieren Sie mit `ggsave()` Ihre fertigen Diagramme je einmal in den Formaten PDF und JPEG mit jeweils passenden Dimensionen.
+
+## Lösungen
+
+### Überblick verschaffen
+
+1. `nrow(penguins)`
+2. `ncol(penguins)`
+3. `str(penguins)`
+4. `?penguins`
+
+### Visualisierungsarten {#sec-datenvisualisierung-uebungsaufgaben-visualisierungsarten}
+
+1. 
+```{r}
+#| eval: true
+penguins |> 
+  ggplot(mapping = aes(x = fct_infreq(species),
+                       fill = species)) +
+  geom_bar(color = "black") 
+```
+
+2. 
+```{r}
+#| eval: false
+penguins |> 
+  group_by(year, species) |> 
+  summarize(mean_body_mass_g = mean(body_mass_g, na.rm = TRUE)) |> 
+  ggplot(mapping = aes(x = year,
+                       y = mean_body_mass_g,
+                       col = species,
+                       linetype = species)) +
+  geom_line(size = 1)
+```
+
+3. 
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(mapping = aes(x = species,
+                       y = flipper_length_mm,
+                       fill = species)) +
+  geom_violin(alpha = 0.75)
+```
+
+4.
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(mapping = aes(x = flipper_length_mm,
+                       y = body_mass_g,
+                       color = species,
+                       shape = species)) +
+  geom_point(size = 3,
+             alpha = 0.25) +
+  scale_shape_manual(values = 17:19)
+```
+
+### Visualisierungen verfeinern
+
+1.
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(mapping = aes(x = fct_infreq(species),
+                       fill = species)) +
+  geom_bar(color = "black",
+           show.legend = FALSE) +
+  scale_y_continuous(limits = c(0, 160),
+                     breaks = seq(from = 0, to = 160, by = 40),
+                     labels = seq(from = 0, to = 160, by = 40)) +
+  labs(title = "Überblick des palmerpenguins-Datensatzes",
+       x = "Spezies",
+       y = "Anzahl an Beobachtungen") +
+  theme_minimal()
+```
+
+2.
+```{r}
+#| eval: false
+penguins |> 
+  group_by(year, species) |> 
+  summarize(mean_body_mass_g = mean(body_mass_g, na.rm = TRUE)) |> 
+  ggplot(mapping = aes(x = year,
+                       y = mean_body_mass_g,
+                       col = reorder(species, desc(mean_body_mass_g)),
+                       linetype = reorder(species, desc(mean_body_mass_g)))) +
+  geom_line(size = 1) +
+  labs(title = "Durchschnittliches Gewicht unterschiedlicher Pinguine",
+       x = "Jahr",
+       y = "Gramm",
+       color = "Spezies",
+       linetype = "Spezies") +
+  scale_x_continuous(breaks = 2007:2009,
+                     labels = 2007:2009) +
+  scale_color_manual(values = c("black", "red", "blue")) +
+  theme_bw()
+```
+
+3.
+```{r}
+#| eval: false
+penguins |> 
+  filter(!is.na(sex)) |> 
+  ggplot(mapping = aes(x = species,
+                       y = flipper_length_mm,
+                       fill = species,
+                       color = species)) +
+  geom_violin(alpha = 0.75,
+              show.legend = FALSE) +
+  labs(title = "Flossenlängen unterschiedlicher Pinguine",
+       x = "Spezies",
+       y = "Millimeter") +
+  facet_wrap(~ sex) +
+  theme_dark()
+```
+
+4.
+```{r}
+#| eval: false
+penguins |> 
+  filter(!is.na(sex)) |> 
+  ggplot(mapping = aes(x = flipper_length_mm,
+                       y = body_mass_g,
+                       color = species,
+                       shape = species)) +
+  geom_point(size = 3,
+             alpha = 0.15,
+             show.legend = FALSE) +
+  geom_smooth(method = "lm", 
+              se = FALSE,
+              show.legend = FALSE) +
+  labs(title = "Physische Merkmale unterschiedlicher Pinguine",
+       x = "Flossenlänge (in Millimeter)",
+       y = "Körpermasse (in Gramm)") +
+  scale_shape_manual(values = 17:19) +
+  facet_grid(sex ~ species) +
+  scale_color_economist() +
+  theme_economist()
+```
+
+### Visualisierungen exportieren
+
+Der Code dieser Lösung hängt von Ihrem eigenen Dateiverzeichnis und Präferenzen ab, daher wird keine Musterlösung angeboten.

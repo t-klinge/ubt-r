@@ -389,12 +389,12 @@ Visualisierung mit <em>base R</em>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In diesem Kapitel lernen wir Visualisierung im Rahmen des <code>tidyverse</code>-Paketes <code>ggplot2</code> kennen. Es ist aber keineswegs so, dass dies die einzige Art und Weise wäre, mit R Grafiken zu erzeugen. Auch <em>base R</em> liefert bereits vielseitige (und manchmal mit einer einzigen Zeile Code schnell zu erstellende) Möglichkeiten zur Grafikerstellung. Eine gute Einführung liefern <span class="citation" data-cites="douglas2024">Douglas u.&nbsp;a. (<a href="references.html#ref-douglas2024" role="doc-biblioref">2024, Kap. 4</a>)</span>.</p>
+<p>In diesem Kapitel lernen wir Visualisierung im Rahmen des <code>tidyverse</code>-Paketes <code>ggplot2</code> kennen. Es ist aber keineswegs so, dass dies die einzige Art und Weise wäre, mit R Grafiken zu erzeugen. Auch <em>base R</em> liefert bereits vielseitige (und manchmal mit einer einzigen Zeile Code schnell zu erstellende) Möglichkeiten zur Grafikerstellung. Eine gute Einführung liefern <span class="citation" data-cites="douglas2024">Douglas u.&nbsp;a. (<a href="#ref-douglas2024" role="doc-biblioref">2024, Kap. 4</a>)</span>.</p>
 </div>
 </div>
 <section id="die-grammar-of-graphics" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="die-grammar-of-graphics"><span class="header-section-number">5.1</span> Die <em>grammar of graphics</em></h2>
-<p>Das Konzept der <em>grammar of graphics</em>, also der “Grammatik der Grafiken”, geht zurück auf <span class="citation" data-cites="wilkinson2005">Wilkinson (<a href="references.html#ref-wilkinson2005" role="doc-biblioref">2005</a>)</span>. Es besagt, dass <strong>jede Grafik</strong> sich – ähnlich wie ein Satz – in eine <strong>begrenzte Anzahl an Elementen</strong> zerlegen lässt. Kennen wir diese Elemente, können wir Grafiken besser verstehen und verändern.</p>
+<p>Das Konzept der <em>grammar of graphics</em>, also der “Grammatik der Grafiken”, geht zurück auf <span class="citation" data-cites="wilkinson2005">Wilkinson (<a href="#ref-wilkinson2005" role="doc-biblioref">2005</a>)</span>. Es besagt, dass <strong>jede Grafik</strong> sich – ähnlich wie ein Satz – in eine <strong>begrenzte Anzahl an Elementen</strong> zerlegen lässt. Kennen wir diese Elemente, können wir Grafiken besser verstehen und verändern.</p>
 <p>Innerhalb der <em>grammar of graphics</em> unterscheiden wir <strong>sieben Elemente</strong><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <ul>
 <li><strong>Daten</strong> (<em>data</em>): Welche Informationen stellen wir dar?</li>
@@ -411,7 +411,7 @@ Visualisierung mit <em>base R</em>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://michielnoback.github.io/bincourses/course_contents/davur2/book/graphics/all_layers_50p.png" class="img-fluid figure-img" style="width:40.0%"></p>
-<figcaption>Die Ebenen einer Grafik <span class="citation" data-cites="noback2021">(<a href="references.html#ref-noback2021" role="doc-biblioref">Noback 2021</a>)</span>.</figcaption>
+<figcaption>Die Ebenen einer Grafik <span class="citation" data-cites="noback2021">(<a href="#ref-noback2021" role="doc-biblioref">Noback 2021</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -631,7 +631,7 @@ Wohin mit <code>aes()</code>?
 <li><strong><code>shape</code></strong>: <em>Form</em> eines Punktes, der z.B. als Kreis, Raute oder Dreieck gezeichnet werden kann.</li>
 <li><strong><code>size</code></strong>: <em>Größe</em> eines Punktes.</li>
 </ul>
-<p>Je nach <em>geom</em> kann es noch <strong>viel mehr visuelle Eigenschaften</strong> geben, die man aber am besten erst dann erkundet, wenn man es nutzen möchte. Auch hierfür ist der <code>ggplot2</code>-Cheatsheet (<a href="#sec-workflow-hilfe-und-selbsthilfe-cheatsheets" class="quarto-xref"><span class="quarto-unresolved-ref">sec-workflow-hilfe-und-selbsthilfe-cheatsheets</span></a>) eine nützliche Ressource.</p>
+<p>Je nach <em>geom</em> kann es noch <strong>viel mehr visuelle Eigenschaften</strong> geben, die man aber am besten erst dann erkundet, wenn man es nutzen möchte. Auch hierfür ist der <code>ggplot2</code>-Cheatsheet (<a href="02-workflow.html#sec-workflow-hilfe-und-selbsthilfe-cheatsheets" class="quarto-xref"><span>Kapitel 2.4.5</span></a>) eine nützliche Ressource.</p>
 </section>
 <section id="grafiken-exportieren" class="level3" data-number="5.2.4">
 <h3 data-number="5.2.4" class="anchored" data-anchor-id="grafiken-exportieren"><span class="header-section-number">5.2.4</span> Grafiken exportieren</h3>
@@ -795,7 +795,7 @@ Wohin mit <code>aes()</code>?
 </section>
 <section id="säulendiagramm-größen" class="level4" data-number="5.3.1.2">
 <h4 data-number="5.3.1.2" class="anchored" data-anchor-id="säulendiagramm-größen"><span class="header-section-number">5.3.1.2</span> Säulendiagramm: Größen</h4>
-<p>Wie wir ein einfaches Säulendiagramm mittels <strong><code>geom_col()</code></strong> zeichnen können, haben wir bereits kennengelernt (<a href="#sec-datenvisualisierung-ggplot2-geoms" class="quarto-xref"><span class="quarto-unresolved-ref">sec-datenvisualisierung-ggplot2-geoms</span></a>). Rufen wir uns unsere letzte Version nochmal in Erinnerung.</p>
+<p>Wie wir ein einfaches Säulendiagramm mittels <strong><code>geom_col()</code></strong> zeichnen können, haben wir bereits kennengelernt (<a href="#sec-datenvisualisierung-ggplot2-geoms" class="quarto-xref"><span>Kapitel 5.2.2</span></a>). Rufen wir uns unsere letzte Version nochmal in Erinnerung.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cont_life_exp_2007,</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> continent,</span>
@@ -937,7 +937,7 @@ Wohin mit <code>aes()</code>?
 </div>
 </div>
 </div>
-<p>Mit der uns ebenfalls aus <code>dplyr</code> bekannten Hilfsfunktion <strong><code>desc()</code></strong> (<a href="#sec-datentransformation-zeilen-arranging" class="quarto-xref"><span class="quarto-unresolved-ref">sec-datentransformation-zeilen-arranging</span></a>) können wir aus einer aufsteigenden kurzerhand auch eine <strong>absteigende</strong> Reihenfolge erstellen.</p>
+<p>Mit der uns ebenfalls aus <code>dplyr</code> bekannten Hilfsfunktion <strong><code>desc()</code></strong> (<a href="04-datentransformation.html#sec-datentransformation-zeilen-arranging" class="quarto-xref"><span>Kapitel 4.2.3</span></a>) können wir aus einer aufsteigenden kurzerhand auch eine <strong>absteigende</strong> Reihenfolge erstellen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> pop_by_continent,</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year,</span>
@@ -995,7 +995,7 @@ Warum <em>keine</em> Tortendiagramme?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Es ist eine berechtigte Frage, weshalb in diesem Kapitel keine Tortendiagramme vorgestellt werden. Tatsächlich gibt es im Rahmen von <code>ggplot2</code> kein entsprechendes <em>geom</em>, sondern nur eine Reihe von <a href="https://r-graph-gallery.com/pie-plot.html">Umwegen</a>, solche Diagramme zu erzeugen. Das liegt darin begründet, dass <strong>Tortendiagramme zwar weitverbreitet, aber oft wenig geeignet</strong> zur Visualisierung von Proportionen sind: sie können nur eine geringe Anzahl an Gruppen visuell unterscheidbar darstellen und ein Säulendiagramm vermittelt kleine Unterschiede deutlich besser <span class="citation" data-cites="barnett2024">(<a href="references.html#ref-barnett2024" role="doc-biblioref">Barnett und Oguoma 2024</a>)</span>.<br>
+<p>Es ist eine berechtigte Frage, weshalb in diesem Kapitel keine Tortendiagramme vorgestellt werden. Tatsächlich gibt es im Rahmen von <code>ggplot2</code> kein entsprechendes <em>geom</em>, sondern nur eine Reihe von <a href="https://r-graph-gallery.com/pie-plot.html">Umwegen</a>, solche Diagramme zu erzeugen. Das liegt darin begründet, dass <strong>Tortendiagramme zwar weitverbreitet, aber oft wenig geeignet</strong> zur Visualisierung von Proportionen sind: sie können nur eine geringe Anzahl an Gruppen visuell unterscheidbar darstellen und ein Säulendiagramm vermittelt kleine Unterschiede deutlich besser <span class="citation" data-cites="barnett2024">(<a href="#ref-barnett2024" role="doc-biblioref">Barnett und Oguoma 2024</a>)</span>.<br>
 Tortendiagramme sollten wir deshalb <strong>allgemein meiden</strong>. Die Ausnahme von dieser Regel ist, wenn wir einen Unterschied zwischen “sehr groß” und “sehr klein” hinsichtlich weniger Gruppen darstellen möchten.</p>
 </div>
 </div>
@@ -1084,7 +1084,7 @@ Tortendiagramme sollten wir deshalb <strong>allgemein meiden</strong>. Die Ausna
 </section>
 <section id="flächendiagramm" class="level4" data-number="5.3.3.2">
 <h4 data-number="5.3.3.2" class="anchored" data-anchor-id="flächendiagramm"><span class="header-section-number">5.3.3.2</span> Flächendiagramm</h4>
-<p>Wenn wir keinen einzelnen Wert, sondern den <strong>zeitlichen Verlauf einer Menge</strong> darstellen wollen, können wir neben einem (gestapelten) Säulendiagramm auch ein Flächendiagramm zeichnen. Dabei handelt es sich quasi um <strong>Linien mit eingefärbten Zwischenräumen</strong> werden. Wir können für die Erstellung unseren Code für ein gestapeltes Säulendiagramm (<a href="#sec-datenvisualisierung-visualisierungsarten-anteile" class="quarto-xref"><span class="quarto-unresolved-ref">sec-datenvisualisierung-visualisierungsarten-anteile</span></a>) als Grundlage nehmen.</p>
+<p>Wenn wir keinen einzelnen Wert, sondern den <strong>zeitlichen Verlauf einer Menge</strong> darstellen wollen, können wir neben einem (gestapelten) Säulendiagramm auch ein Flächendiagramm zeichnen. Dabei handelt es sich quasi um <strong>Linien mit eingefärbten Zwischenräumen</strong> werden. Wir können für die Erstellung unseren Code für ein gestapeltes Säulendiagramm (<a href="#sec-datenvisualisierung-visualisierungsarten-anteile" class="quarto-xref"><span>Kapitel 5.3.2</span></a>) als Grundlage nehmen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> pop_by_continent,</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year, </span>
@@ -1203,7 +1203,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://datatab.de/assets/tutorial/boxplot_interpretieren.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>Die Bestandteile eines Boxplots <span class="citation" data-cites="datatab2024a">(<a href="references.html#ref-datatab2024a" role="doc-biblioref">DATAtab 2024a</a>)</span>.</figcaption>
+<figcaption>Die Bestandteile eines Boxplots <span class="citation" data-cites="datatab2024a">(<a href="#ref-datatab2024a" role="doc-biblioref">DATAtab 2024a</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -1274,7 +1274,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 </section>
 <section id="violindiagramm" class="level4" data-number="5.3.4.3">
 <h4 data-number="5.3.4.3" class="anchored" data-anchor-id="violindiagramm"><span class="header-section-number">5.3.4.3</span> Violindiagramm</h4>
-<p>Auch Boxplots können täuschen. Dadurch, dass sie nur bestimmte Werteschwellen zeigen, kann unser Eindruck davon, wo sich Werte “ballen”, getrügt sein <span class="citation" data-cites="desbarats2021">(<a href="references.html#ref-desbarats2021" role="doc-biblioref">Desbarats 2021</a>)</span>. Eine Alternative, wenn wir mehrere Verteilungen miteinander vergleichen möchten, ist das <strong>Violindiagramm</strong>. Hierbei handelt es sich um ein Flächenpolygon, das dort “bauchig” gezeichnet wird, wo sich viele Werte befinden und dort “schmal” gezeichnet wird, wo es wiederum kaum Werte gibt.</p>
+<p>Auch Boxplots können täuschen. Dadurch, dass sie nur bestimmte Werteschwellen zeigen, kann unser Eindruck davon, wo sich Werte “ballen”, getrügt sein <span class="citation" data-cites="desbarats2021">(<a href="#ref-desbarats2021" role="doc-biblioref">Desbarats 2021</a>)</span>. Eine Alternative, wenn wir mehrere Verteilungen miteinander vergleichen möchten, ist das <strong>Violindiagramm</strong>. Hierbei handelt es sich um ein Flächenpolygon, das dort “bauchig” gezeichnet wird, wo sich viele Werte befinden und dort “schmal” gezeichnet wird, wo es wiederum kaum Werte gibt.</p>
 <p>Abermals müssen wir unseren vorherigen Code nur minimal verändern, indem wir <strong><code>geom_violin()</code></strong> anstelle von <code>geom_histogram()</code> eingeben, um ein aussagekräftiges Violindiagramm zu zeichnen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>gapminder <span class="sc">|&gt;</span> </span>
@@ -1401,7 +1401,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 </div>
 </div>
 </div>
-<p>Was jedoch regelmäßig Probleme bei derartigen Diagrammen macht, ist der Umstand, dass größere Punkte kleinere leicht <strong>überlagern</strong> (<em>overplotting</em>) und weniger sichtbar machen. Diesem Umstand können wir auf zwei Weisen Rechnung tragen. Die <em>erste</em> Möglichkeit besteht darin, die sich überlagernden Elemente leicht <strong>transparent</strong> zu zeichnen. Wir können dafür eine <strong>konstante Ästhetik</strong> nutzen, denn der Transparenzgrad soll für alle Punkte gleich sind und nicht in Abhängigkeit von einer Variablen variieren (<a href="#sec-datenvisualisierung-ggplot2-aesthetiken" class="quarto-xref"><span class="quarto-unresolved-ref">sec-datenvisualisierung-ggplot2-aesthetiken</span></a>). In diesem Fall nutzen wir also kein <em>mapping</em>, erstellen keine Verbindung, sondern geben einfach mit <code>geom_point(alpha = 0.5)</code> ein, dass wir <em>jeden</em> Punkt mit 50%-iger Transparenz (<em>alpha</em>) zeichnen wollen. Die <em>zweite</em> Möglichkeit, <em>overplotting</em> zu verhindern, ist das sog. <em>facetting</em> (<a href="#sec-datenvisualisierung-verfeinern-facetting" class="quarto-xref"><span class="quarto-unresolved-ref">sec-datenvisualisierung-verfeinern-facetting</span></a>).</p>
+<p>Was jedoch regelmäßig Probleme bei derartigen Diagrammen macht, ist der Umstand, dass größere Punkte kleinere leicht <strong>überlagern</strong> (<em>overplotting</em>) und weniger sichtbar machen. Diesem Umstand können wir auf zwei Weisen Rechnung tragen. Die <em>erste</em> Möglichkeit besteht darin, die sich überlagernden Elemente leicht <strong>transparent</strong> zu zeichnen. Wir können dafür eine <strong>konstante Ästhetik</strong> nutzen, denn der Transparenzgrad soll für alle Punkte gleich sind und nicht in Abhängigkeit von einer Variablen variieren (<a href="#sec-datenvisualisierung-ggplot2-aesthetiken" class="quarto-xref"><span>Kapitel 5.2.3</span></a>). In diesem Fall nutzen wir also kein <em>mapping</em>, erstellen keine Verbindung, sondern geben einfach mit <code>geom_point(alpha = 0.5)</code> ein, dass wir <em>jeden</em> Punkt mit 50%-iger Transparenz (<em>alpha</em>) zeichnen wollen. Die <em>zweite</em> Möglichkeit, <em>overplotting</em> zu verhindern, ist das sog. <em>facetting</em> (<a href="#sec-datenvisualisierung-verfeinern-facetting" class="quarto-xref"><span>Kapitel 5.4.2</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>gapminder <span class="sc">|&gt;</span> </span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2007</span>) <span class="sc">|&gt;</span> </span>
@@ -1430,7 +1430,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 <p>Die möglichen <strong>Kombinationen sind quasi unerschöpflich</strong>, denn sie entspringen aus der Kreativität der Nutzer*in. Wir wollen aber wenigstens <em>drei Beispiele</em> für häufig genutzte Kombinationen geben.</p>
 <section id="linien-mit-punkten" class="level4" data-number="5.4.1.1">
 <h4 data-number="5.4.1.1" class="anchored" data-anchor-id="linien-mit-punkten"><span class="header-section-number">5.4.1.1</span> Linien mit Punkten</h4>
-<p>Wir beginnen mit einem Liniendiagramm, das wir zuvor erzeugt haben (<a href="#sec-datenvisualisierung-arten-zeitlich-linie" class="quarto-xref"><span class="quarto-unresolved-ref">sec-datenvisualisierung-arten-zeitlich-linie</span></a>). <strong>Problematisch</strong> ist an derartigen Diagrammen, dass sie dort <strong>Daten andeuten, wo keine vorhanden sind</strong>. Schließlich wissen wir, dass <code>gapminder</code> keine jährlichen Daten, sondern nur solche in Fünfjahresabständen enthält. Die von uns erzeugte Tabelle <code>cont_life_exp</code> enthält also nur Angaben für 4 Jahre (nämlich 1977, 1987, 1997, 2007), nicht für den gesamten Zeitraum.</p>
+<p>Wir beginnen mit einem Liniendiagramm, das wir zuvor erzeugt haben (<a href="#sec-datenvisualisierung-arten-zeitlich-linie" class="quarto-xref"><span>Kapitel 5.3.3.1</span></a>). <strong>Problematisch</strong> ist an derartigen Diagrammen, dass sie dort <strong>Daten andeuten, wo keine vorhanden sind</strong>. Schließlich wissen wir, dass <code>gapminder</code> keine jährlichen Daten, sondern nur solche in Fünfjahresabständen enthält. Die von uns erzeugte Tabelle <code>cont_life_exp</code> enthält also nur Angaben für 4 Jahre (nämlich 1977, 1987, 1997, 2007), nicht für den gesamten Zeitraum.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cont_life_exp,</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year,</span>
@@ -1580,7 +1580,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 </section>
 <section id="lokal-gewichtete-regression" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="lokal-gewichtete-regression">Lokal gewichtete Regression</h5>
-<p>Lineare Trendlinien sind aber nicht immer gleich hilfreich. Denken wir für ein Beispiel zurück an dieses Streudiagramm, das wir zuvor erzeugt haben (<a href="#sec-visualisierungsarten-beziehungen-streudiagramm" class="quarto-xref"><span class="quarto-unresolved-ref">sec-visualisierungsarten-beziehungen-streudiagramm</span></a>).</p>
+<p>Lineare Trendlinien sind aber nicht immer gleich hilfreich. Denken wir für ein Beispiel zurück an dieses Streudiagramm, das wir zuvor erzeugt haben (<a href="#sec-visualisierungsarten-beziehungen-streudiagramm" class="quarto-xref"><span>Kapitel 5.3.5.1</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>gapminder <span class="sc">|&gt;</span> </span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2007</span>) <span class="sc">|&gt;</span> <span class="co"># Nur Beobachtungen des Jahres 2007 darstellen</span></span>
@@ -1747,7 +1747,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 </div>
 </div>
 </div>
-<p><code>facet_wrap()</code> ordnet die einzelnen Diagrammen in <strong>Reihen <em>und</em> Spalten</strong> an, also in fortlaufender Ordnung. Dabei können auch mittels <code>facet_wrap(variable_1 ~ variable_2)</code> gruppenweise Diagramme auf Basis von <strong>zwei Variablen</strong>. gezeichnet werden <span class="citation" data-cites="ggplot2020">(siehe <a href="references.html#ref-ggplot2020" role="doc-biblioref">Wickham, Navarro, und Pedersen 2020, Kap. 16</a>)</span>.</p>
+<p><code>facet_wrap()</code> ordnet die einzelnen Diagrammen in <strong>Reihen <em>und</em> Spalten</strong> an, also in fortlaufender Ordnung. Dabei können auch mittels <code>facet_wrap(variable_1 ~ variable_2)</code> gruppenweise Diagramme auf Basis von <strong>zwei Variablen</strong>. gezeichnet werden <span class="citation" data-cites="ggplot2020">(siehe <a href="#ref-ggplot2020" role="doc-biblioref">Wickham, Navarro, und Pedersen 2020, Kap. 16</a>)</span>.</p>
 <p>Möchten wir die Diagramme “dehnen”, sodass sie in <strong>Zeilen <em>oder</em> Spalten</strong> dargestellt werden, nutzen wir <strong><code>facet_grid()</code></strong>. Hier gibt die Variable links von <code>~</code> die Zeilen, die Variable rechts von <code>~</code> die Spalten an. Möchten wir einen der beiden Werte “leer” lassen, setzen wir einen <code>.</code> ein.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>population_by_continent <span class="sc">+</span></span>
@@ -1792,7 +1792,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 </div>
 </div>
 </div>
-<p>Weitere Änderungen in der Anzeige der Legende sind mittels Änderungen im <em>theme</em> (<a href="#sec-visualisierungen-verfeinern-themes" class="quarto-xref"><span class="quarto-unresolved-ref">sec-visualisierungen-verfeinern-themes</span></a>) möglich.</p>
+<p>Weitere Änderungen in der Anzeige der Legende sind mittels Änderungen im <em>theme</em> (<a href="#sec-visualisierungen-verfeinern-themes" class="quarto-xref"><span>Kapitel 5.4.7</span></a>) möglich.</p>
 </section>
 <section id="koordinatensysteme" class="level3" data-number="5.4.4">
 <h3 data-number="5.4.4" class="anchored" data-anchor-id="koordinatensysteme"><span class="header-section-number">5.4.4</span> Koordinatensysteme</h3>
@@ -1804,7 +1804,7 @@ Mit großer Macht kommt große Verantwortung 🦸
 </ol>
 <section id="achseneinheit" class="level4" data-number="5.4.4.1">
 <h4 data-number="5.4.4.1" class="anchored" data-anchor-id="achseneinheit"><span class="header-section-number">5.4.4.1</span> Achseneinheit</h4>
-<p>Rufen wir uns dieses zuvor erzeugte Streudiagramm in Erinnerung (<a href="#sec-visualisierungsarten-beziehungen-streudiagramm" class="quarto-xref"><span class="quarto-unresolved-ref">sec-visualisierungsarten-beziehungen-streudiagramm</span></a>). Es stellt <strong>keinen linearen</strong> Trend dar, sondern gerade bei geringen Pro-Kopf-BIP-Werten starke Zuwachsraten, die im Verlauf deutlich abflachen.</p>
+<p>Rufen wir uns dieses zuvor erzeugte Streudiagramm in Erinnerung (<a href="#sec-visualisierungsarten-beziehungen-streudiagramm" class="quarto-xref"><span>Kapitel 5.3.5.1</span></a>). Es stellt <strong>keinen linearen</strong> Trend dar, sondern gerade bei geringen Pro-Kopf-BIP-Werten starke Zuwachsraten, die im Verlauf deutlich abflachen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>gapminder <span class="sc">|&gt;</span> </span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2007</span>) <span class="sc">|&gt;</span></span>
@@ -1946,7 +1946,7 @@ Andere Variablentypen, andere <code>scale_*()</code>-Funktion: viele Wege zum Zi
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>ggplot</code> bietet für viele andere Variablentypen (zum Beispiel <em>factors</em> oder <em>dates</em>, <a href="#sec-grundlagen-datentypen" class="quarto-xref"><span class="quarto-unresolved-ref">sec-grundlagen-datentypen</span></a>) entsprechende <code>scale_*()</code>-Funktionen, um Markierungen und Beschriftungen einer Achse zu verändern.</p>
+<p><code>ggplot</code> bietet für viele andere Variablentypen (zum Beispiel <em>factors</em> oder <em>dates</em>, <a href="03-grundlagen.html#sec-grundlagen-datentypen" class="quarto-xref"><span>Kapitel 3.4</span></a>) entsprechende <code>scale_*()</code>-Funktionen, um Markierungen und Beschriftungen einer Achse zu verändern.</p>
 <p>Zuletzt gibt es (wie fast immer bei R) <strong>mehrere Wege zu einem gewünschten Ziel</strong>. Ein Beispiel hierfür ist <code>scale_y_continuous()</code>, denn wie wir aus <code>?scale_y_continuous</code> erfahren, können wir diese Funktion auch dafür nutzen, um Achsenbegrenzungen einzugeben. <code>scale_y_continuous()</code> verfügt nämlich selbst ebenfalls über die Parameter <code>limits</code> (was dem Parameter <code>ylim</code> in <code>coord_cartesian()</code> entspricht), sodass die folgenden zwei Codebeispiele dasselbe Diagramm zeichnen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Variante 1: ylim mit coord_cartesian()</span></span>
@@ -2071,8 +2071,8 @@ Andere Variablentypen, andere <code>scale_*()</code>-Funktion: viele Wege zum Zi
 </section>
 <section id="farben" class="level3" data-number="5.4.6">
 <h3 data-number="5.4.6" class="anchored" data-anchor-id="farben"><span class="header-section-number">5.4.6</span> Farben</h3>
-<p>Mit R bzw. <code>ggplot</code> können wir <strong>zahlreiche Farben</strong> nutzen <span class="citation" data-cites="wei2006">(siehe <a href="references.html#ref-wei2006" role="doc-biblioref">Wei 2006</a>)</span>.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> Auf diese können wir zurückgreifen, wenn wir die Standardpalette von <code>ggplot</code> verlassen möchten. Wir können dabei die Farben selbst bestimmen oder auf andere Farbpaletten zurückgreifen, worunter auch solche gehören, die für von Farbfehlsichtigkeit betroffene Leser*innen geeignet sind.</p>
-<p>Für die folgenden Beispiele nutzen wir ein simples <strong>Balkendiagramm</strong> (<a href="#sec-datenvisualisierung-visualisierungsarten-mengen-saeulendiagramm" class="quarto-xref"><span class="quarto-unresolved-ref">sec-datenvisualisierung-visualisierungsarten-mengen-saeulendiagramm</span></a>) namens <code>my_barplot</code>.</p>
+<p>Mit R bzw. <code>ggplot</code> können wir <strong>zahlreiche Farben</strong> nutzen <span class="citation" data-cites="wei2006">(siehe <a href="#ref-wei2006" role="doc-biblioref">Wei 2006</a>)</span>.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> Auf diese können wir zurückgreifen, wenn wir die Standardpalette von <code>ggplot</code> verlassen möchten. Wir können dabei die Farben selbst bestimmen oder auf andere Farbpaletten zurückgreifen, worunter auch solche gehören, die für von Farbfehlsichtigkeit betroffene Leser*innen geeignet sind.</p>
+<p>Für die folgenden Beispiele nutzen wir ein simples <strong>Balkendiagramm</strong> (<a href="#sec-datenvisualisierung-visualisierungsarten-mengen-saeulendiagramm" class="quarto-xref"><span>Kapitel 5.3.1.1</span></a>) namens <code>my_barplot</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>my_barplot <span class="ot">&lt;-</span> gapminder <span class="sc">|&gt;</span> </span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2007</span>) <span class="sc">|&gt;</span></span>
@@ -2128,7 +2128,7 @@ Andere Variablentypen, andere <code>scale_*()</code>-Funktion: viele Wege zum Zi
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./images/brewer-scales.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption>Die Farbpaletten des <code>RColorBrewer</code>-Pakets <span class="citation" data-cites="ggplot2020">(<a href="references.html#ref-ggplot2020" role="doc-biblioref">Wickham, Navarro, und Pedersen 2020, Kap. 11</a>)</span>.<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a></figcaption>
+<figcaption>Die Farbpaletten des <code>RColorBrewer</code>-Pakets <span class="citation" data-cites="ggplot2020">(<a href="#ref-ggplot2020" role="doc-biblioref">Wickham, Navarro, und Pedersen 2020, Kap. 11</a>)</span>.<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a></figcaption>
 </figure>
 </div>
 </div>
@@ -2156,7 +2156,7 @@ Anderer Variablentyp? Kein Problem!
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>ggplot2</code> und <code>RColorBrewer</code> bietet nicht nur für diskrete Variablen Möglichkeiten zur Farbwahl, sondern auch für kontinuierliche und andere Datentypen. Bei Fragen lohnt sich ein Blick in <span class="citation" data-cites="ggplot2020">Wickham, Navarro, und Pedersen (<a href="references.html#ref-ggplot2020" role="doc-biblioref">2020, Kap. 11</a>)</span>.</p>
+<p><code>ggplot2</code> und <code>RColorBrewer</code> bietet nicht nur für diskrete Variablen Möglichkeiten zur Farbwahl, sondern auch für kontinuierliche und andere Datentypen. Bei Fragen lohnt sich ein Blick in <span class="citation" data-cites="ggplot2020">Wickham, Navarro, und Pedersen (<a href="#ref-ggplot2020" role="doc-biblioref">2020, Kap. 11</a>)</span>.</p>
 </div>
 </div>
 </section>
@@ -2168,7 +2168,7 @@ Anderer Variablentyp? Kein Problem!
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./images/viridis-scales.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption>Die Farbpaletten des <code>viridis</code>-Pakets <span class="citation" data-cites="viridis2024">(<a href="references.html#ref-viridis2024" role="doc-biblioref">Rudis, Ross, und Garnier 2024</a>)</span>.</figcaption>
+<figcaption>Die Farbpaletten des <code>viridis</code>-Pakets <span class="citation" data-cites="viridis2024">(<a href="#ref-viridis2024" role="doc-biblioref">Rudis, Ross, und Garnier 2024</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -2221,7 +2221,7 @@ Anderer Variablentyp? Kein Problem!
 </section>
 <section id="ggthemes" class="level4" data-number="5.4.7.2">
 <h4 data-number="5.4.7.2" class="anchored" data-anchor-id="ggthemes"><span class="header-section-number">5.4.7.2</span> <code>ggthemes</code></h4>
-<p>Durch die unbegrenzen Möglichkeiten, eigene <em>themes</em> zu entwickeln, gibt es inzwischen zahlreiche Pakete, die Ergänzungen anbieten <span class="citation" data-cites="larsen2024">(<a href="references.html#ref-larsen2024" role="doc-biblioref">Larsen 2024</a>)</span>. An dieser Stelle möchten wir nur auf ein einziges solches Paket zurückgreifen: <strong><code>ggthemes</code></strong>. Dieses Paket bietet die Möglichkeit, die eigenen <code>ggplot</code>-Objekte so umzugestalten, dass sie den Diagrammen aus bekannten <strong>Medien</strong> wie dem US-amerikanischen <em>Wall Street Journal</em>, dem britischen <em>Economist</em> oder den Standardeinstellungen von <strong>Software</strong> wie Stata oder Excel 2003<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a> entsprechen. Einen interaktiven Überblick über die Möglichkeiten von <code>ggthemes</code> bietet <a href="https://r-charts.com/ggplot2/themes/">R Charts</a>.</p>
+<p>Durch die unbegrenzen Möglichkeiten, eigene <em>themes</em> zu entwickeln, gibt es inzwischen zahlreiche Pakete, die Ergänzungen anbieten <span class="citation" data-cites="larsen2024">(<a href="#ref-larsen2024" role="doc-biblioref">Larsen 2024</a>)</span>. An dieser Stelle möchten wir nur auf ein einziges solches Paket zurückgreifen: <strong><code>ggthemes</code></strong>. Dieses Paket bietet die Möglichkeit, die eigenen <code>ggplot</code>-Objekte so umzugestalten, dass sie den Diagrammen aus bekannten <strong>Medien</strong> wie dem US-amerikanischen <em>Wall Street Journal</em>, dem britischen <em>Economist</em> oder den Standardeinstellungen von <strong>Software</strong> wie Stata oder Excel 2003<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a> entsprechen. Einen interaktiven Überblick über die Möglichkeiten von <code>ggthemes</code> bietet <a href="https://r-charts.com/ggplot2/themes/">R Charts</a>.</p>
 <p>Möchten wir <code>my_barplot()</code> beispielsweise so aussehen lassen, wie es dem Stil des <em>Economist</em> entspricht, fügen wir lediglich <code>theme_economist()</code> hinzu.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>my_barplot <span class="sc">+</span></span>
@@ -2515,7 +2515,7 @@ Anderer Variablentyp? Kein Problem!
 <p>Exportieren Sie mit <code>ggsave()</code> Ihre fertigen Diagramme je einmal in den Formaten PDF und JPEG mit jeweils passenden Dimensionen.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-barnett2024" class="csl-entry" role="listitem">
 Barnett, Adrian, und Victor Oguoma. 2024. <span>„Here’s why you should (almost) never use a pie chart for your data“</span>. <em><span>The Conversation</span></em>. <a href="https://theconversation.com/heres-why-you-should-almost-never-use-a-pie-chart-for-your-data-214576" class="uri">https://theconversation.com/heres-why-you-should-almost-never-use-a-pie-chart-for-your-data-214576</a>.
 </div>
@@ -2568,19 +2568,19 @@ Yao, Zhuo. 2015. <span>„Introduction to ggthemes“</span>. <a href="https://w
 <li id="fn5"><p>Weiterführende Anleitungen zum Umgang mit Treemaps unter Nutzung von <code>ggplot2</code> finden sich in der <a href="https://wilkox.org/treemapify/">Dokumentation</a> und bei <a href="https://r-charts.com/part-whole/treemapify/">R Charts</a>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>Eine Übersicht aller möglichen Formen liefert <a href="https://www.sthda.com/english/wiki/ggplot2-point-shapes">dieser Blogeintrag</a>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>Diese Form der wissenschaftlichen Notation kann mit der Anweisung “Verschiebe den Dezimalpunkt dieser Zahl um acht Stellen nach hinten” übersetzt werden. <code>2.50e+08</code> entspricht also 250000000 oder 250 Millionen.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8"><p>Dieser Linie liegt zugrunde, dass <code>ggplot</code> im Hintergrund eine Linie berechnet, deren Abstand zu den einzelnen Punkten in der Summe am geringsten ist. Eine einfache Erklärung findet sich bei <span class="citation" data-cites="datatab2024b">DATAtab (<a href="references.html#ref-datatab2024b" role="doc-biblioref">2024b</a>)</span>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9"><p>Die Erklärung dieser Metrik würde zu weit führen, kann aber bei <span class="citation" data-cites="datatab2024b">DATAtab (<a href="references.html#ref-datatab2024b" role="doc-biblioref">2024b</a>)</span> nachgelesen werden.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Dieser Linie liegt zugrunde, dass <code>ggplot</code> im Hintergrund eine Linie berechnet, deren Abstand zu den einzelnen Punkten in der Summe am geringsten ist. Eine einfache Erklärung findet sich bei <span class="citation" data-cites="datatab2024b">DATAtab (<a href="#ref-datatab2024b" role="doc-biblioref">2024b</a>)</span>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Die Erklärung dieser Metrik würde zu weit führen, kann aber bei <span class="citation" data-cites="datatab2024b">DATAtab (<a href="#ref-datatab2024b" role="doc-biblioref">2024b</a>)</span> nachgelesen werden.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn10"><p>Siehe <code>?labs</code>.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn11"><p>Eine weitere Übersicht liefert <a href="https://r-charts.com/colors/">R Charts</a>.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn12"><p>Bei anderen Ästhetiken gibt es entsprechende analoge Funktionen wie <code>scale_color_manual()</code>, <code>scale_shape_manual()</code> usw. (siehe `?scale_color_manual´.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn13"><p>Ein Hexadezimal-Code gibt im Format <code>#RRGGBB</code> die jeweiligen <strong>R</strong>ot-, <strong>G</strong>rün- und <strong>B</strong>lauwerte einer Farbe an, durch deren Kombinationen nahezu 17 Millionen unterschiedlicher Farben generiert werden können <span class="citation" data-cites="gunnell2024">(<a href="references.html#ref-gunnell2024" role="doc-biblioref">Gunnell 2024</a>)</span>.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>Ein Hexadezimal-Code gibt im Format <code>#RRGGBB</code> die jeweiligen <strong>R</strong>ot-, <strong>G</strong>rün- und <strong>B</strong>lauwerte einer Farbe an, durch deren Kombinationen nahezu 17 Millionen unterschiedlicher Farben generiert werden können <span class="citation" data-cites="gunnell2024">(<a href="#ref-gunnell2024" role="doc-biblioref">Gunnell 2024</a>)</span>.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn14"><p>Dieses Paket wird mitgeladen, sobald Sie <code>ggplot2</code> bzw. das <code>tidyverse</code>-Paket laden.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn15"><p>Wir können diese Übersicht selbst jederzeit in unserer R-Sitzung mit <code>RColorBrewer::display.brewer.all()</code> aufrufen.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn16"><p>Für mehr Informationen siehe diese <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html">Einführung</a> seitens der Autoren.<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn17"><p>Bei der Ästhetik <code>color</code> stehen entsprechende <code>scale_color_viridis()</code>-Funktionen bereit.<a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn18"><p>Wie dies zu bewerkstelligen ist, wird bei <span class="citation" data-cites="ggplot2020">Wickham, Navarro, und Pedersen (<a href="references.html#ref-ggplot2020" role="doc-biblioref">2020, Kap. 17</a>)</span> erläutert.<a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p>Wie dies zu bewerkstelligen ist, wird bei <span class="citation" data-cites="ggplot2020">Wickham, Navarro, und Pedersen (<a href="#ref-ggplot2020" role="doc-biblioref">2020, Kap. 17</a>)</span> erläutert.<a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn19"><p>Eine visuelle Übersicht bietet die <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">Dokumentation</a>.<a href="#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn20"><p><span class="citation" data-cites="yao2015">Yao (<a href="references.html#ref-yao2015" role="doc-biblioref">2015</a>)</span> vermutet, dass <code>theme_excel()</code> nur aus ironischen Gründen erzeugt wurde und bittet uns eindringlich: “Please never use this theme.” 🤡<a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p><span class="citation" data-cites="yao2015">Yao (<a href="#ref-yao2015" role="doc-biblioref">2015</a>)</span> vermutet, dass <code>theme_excel()</code> nur aus ironischen Gründen erzeugt wurde und bittet uns eindringlich: “Please never use this theme.” 🤡<a href="#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn21"><p>Für weitere <code>ggplot2</code>-Beispiele anhand von <code>penguins</code> siehe die <a href="https://allisonhorst.github.io/palmerpenguins/articles/examples.html">Dokumentation</a>.<a href="#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn22"><p>Hierfür müssen Sie zunächst zwei <code>dplyr</code>-Verben nutzen.<a href="#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn23"><p>Hierfür müssen Sie innerhalb von <code>aes()</code> <em>zweimal</em> die Hilfsfunktion <code>reorder()</code> mit <code>desc()</code> nutzen.<a href="#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>

@@ -1,4 +1,4 @@
-  # Datenimport und -export {#sec-datenimport}
+# Datenimport und -export {#sec-datenimport}
 
 In Zeiten fortschreitender Digitalisierung wächst der Bestand an frei zur Verfügung stehenden Daten in unterschiedlichsten Formaten mit jedem Moment. Nachdem wir bislang nur mit vorgefertigten Datensätzen gearbeitet haben, möchten wir als nächstes lernen, eigens ausgewählte Daten in unsere R-Sitzung zu laden und sie nach getaner Arbeit abzuspeichern. Dabei werden wir uns auf die gängige Tabellenformate beschränken, bevor wir später (@sec-geodatenbearbeitung) Geodaten zu importieren lernen.
 
@@ -549,7 +549,7 @@ Für diese Übungsaufgaben nutzen wir unterschiedliche Datensätze des Bayerisch
 Ihre Tabelle könnte so aussehen:
     
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 geburten <- read_csv2(file = "./files/12612-003z.csv",
           skip = 7,
@@ -577,7 +577,7 @@ knitr::include_graphics("./images/genesis-area-type.png")
 Ihre Tabelle könnte so aussehen:
 
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 read_csv2(file = "./files/33111-001z.csv",
           skip = 11,
@@ -596,7 +596,7 @@ read_csv2(file = "./files/33111-001z.csv",
 Ihre Tabelle könnte so aussehen:
 
 ```{r}
-#| echo: true
+#| echo: false
 #| warning: false
 gaspreise_bayern <- read_excel(path = "./files/61111-311z.xlsx",
                                range = "B7:D20",
@@ -624,6 +624,58 @@ kaufpreise_bauland_bayern
 
 ### R
 
-1.    Exportieren Sie `geburten` als `geburten.rds`.
-2.    Exportieren Sie `geburten` und `flaechen` als `meine_daten.rdata`.
-3.    Exportieren Sie alle Objekte in Ihrem *workspace* als `mein_workspace.rdata`.
+1. Exportieren Sie `geburten` als `geburten.rds`.
+2. Exportieren Sie `geburten` und `flaechen` als `my_data.rdata`.
+3. Exportieren Sie alle Objekte in Ihrem *workspace* als `my_workspace.rdata`.
+
+## Lösungen
+
+### CSV
+
+1.
+```{r}
+#| eval: false
+geburten <- read_csv2(file = "./files/12612-003z.csv",
+          skip = 7,
+          n_max = 11,
+          col_names = c("jahr", "geburten_insgesamt", "geburten_maennlich", "geburten_weiblich"))
+geburten
+```
+
+2.
+```{r}
+#| eval: false
+read_csv2(file = "./files/33111-001z.csv",
+          skip = 11,
+          n_max = 5,
+          col_names = c("code", "beschreibung", 2014:2023),
+          locale = locale(encoding = "ISO-8859-1"))
+```
+
+### XLSX und XLS
+
+1.
+```{r}
+#| eval: false
+gaspreise_bayern <- read_excel(path = "./files/61111-311z.xlsx",
+                               range = "B7:D20",
+                               col_types = c("numeric", "skip", "numeric"),
+                               col_names = c("jahr", "verbraucherpreisindex_gas"))
+gaspreise_bayern
+```
+
+2. 
+```{r}
+#| eval: false
+kaufpreise_bauland_bayern <- read_excel(path = "./files/61511-111z.xlsx",
+           range = "A7:I17",
+           col_types = c("numeric", rep("skip", 4), rep("numeric", 4)),
+           col_names = c("jahr", "faelle_bauland_anzahl", "faelle_baureifes_land_anzahl", "kaufwert_bauland_qm", "kaufwert_baureifes_land_qm"))
+kaufpreise_bauland_bayern
+```
+
+### R
+
+1. `write_rds(geburten, file = "./files/geburten.rds")`
+2. `save(geburten, flaechen, file = "my_data.rdata")`
+3. `save.image(file = "./files/my_workspace.rdata")`

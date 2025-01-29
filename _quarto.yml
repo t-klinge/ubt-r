@@ -23,14 +23,15 @@ book:
   sidebar:
     search: true
     logo: images/bayReuth-logo.png
+    repo-actions: [edit, issue]
+    repo-branch: master
+    repo-url: "https://github.com/t-klinge/ubt-r"
 
 bibliography: references.bib
 
 format:
   html:
-    theme:
-      light: flatly
-      dark: darkly
+    theme: cosmo
     lang: de
     number-sections: true
     toc: true
@@ -42,5 +43,3 @@ format:
   #   number-sections: true
   #   toc: true
   #   toc-depth: 3
-
-

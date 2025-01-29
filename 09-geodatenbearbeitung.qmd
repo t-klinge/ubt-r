@@ -46,7 +46,7 @@ Für die Arbeit mit Vektordaten hat sich in den letzten Jahren das Paket **`sf`*
 Wie diese Objekte aussehen, schauen wir uns anhand eines **Beispiels** an.^[Die Geodaten für alle Beispiele in diesem Kurs stammen ursprünglich aus den Github-Datenbeständen [`deutschlandGeoJSON`](https://github.com/isellsoap/deutschlandGeoJSON) (vom Nutzer `isellsoap`) und [`map-of-europe`](https://github.com/idris-maps/map-of-europe/) (vom Nutzer `idris-maps`).] Hierfür importieren wir mit der Funktion **`read_sf()`** (*read simple features*) eine **GeoJSON-Datei** als `de_nation`, die die Gebietsgrenzen Deutschlands enthält.^[GeoJSON ist eine von zahlreichen Alternativen zum gängigen, aber teils unvorteilhaften SHP-Format, auch *shapefile* genannt. Die Nachteile von *shapefiles* werden auf [dieser](http://switchfromshapefile.org/) Website übersichtlich dargestellt.] Als einzigen Parameter nutzen wir `dsn` (*data source name*), dem wir eine URL nennen.
 
 ```{r}
-de_nation <- read_sf(dsn = "https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_nation.geojson") # Einlesen von GEOJSON-Datei
+de_nation <- read_sf(dsn = "https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/de_nation.geojson") # Einlesen von GEOJSON-Datei
 ```
 
 Zunächst sehen wir, dass es sich bei `de_nation` nicht nur um eine *tibble* bzw. einen *data frame*, sondern auch um ein Objekt der **Klasse `sf`** handelt.
@@ -104,7 +104,7 @@ Mit `ggplot()` können wir nun **Beispiele** für die erwähnten Arten von **`Ge
 ```{r}
 #| eval: false
 #| echo: false
-# Prepare data for upload to GitHub
+# Prepare data for upload to GitHub - can be removed later.
 # POLYGON: Sachsen
 read_sf("https://github.com/isellsoap/deutschlandGeoJSON/raw/refs/heads/main/2_bundeslaender/3_mittel.geo.json") |> 
     filter(name == "Sachsen") |> 
@@ -136,17 +136,16 @@ de_roads |>
 ```{r}
 #| warning: false
 # POLYGON: Sachsen
-sachsen <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/sachsen.geojson")
+sachsen <- read_sf("https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/sachsen.geojson")
 # MULTIPOLYGON: Bundesländer
-de_states <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_states.geojson")
+de_states <- read_sf("https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/de_states.geojson")
 # POINT: Berlin
-berlin <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/berlin.geojson") 
-# MULTIPOINT: Ausgewählte Städte
-de_cities <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_cities.geojson") 
+berlin <- read_sf("https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/berlin.geojson") # MULTIPOINT: Ausgewählte Städte
+de_cities <- read_sf("https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/de_cities.geojson") 
 # LINESTRING: E41 nahe Worms
-e31_worms <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/e41_worms.geojson")
+e31_worms <- read_sf("https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/e41_worms.geojson")
 # MULTILINESTRING: Ausgewählte Straßen
-de_roads <- read_sf("https://github.com/ubt-r/geodatenbearbeitung/raw/refs/heads/main/de_roads.geojson")
+de_roads <- read_sf("https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/de_roads.geojson")
 ```
 
 Nachdem wir `MULTIPOLYGON` bereits kennengelernt haben, ist **`sachsen`** ein Objekt für **`POLYGON`**, denn es enthält nur ein großes Flächenpolygon.
@@ -480,9 +479,9 @@ readxl::read_excel(path = "./files/kinder-dwolk-0-202406-xlsm.xlsm",
 
 Nehmen Sie die folgenden Arbeitsschritte vor, um Ihre eigene Choroplethenkarte zu erstellen.
 
-1. Laden Sie die [Geodaten](https://github.com/ubt-r/geodatenbearbeitung/blob/main/de_districts.geojson) aller deutschen Kreise und kreisfreien Städte im GeoJSON-Format herunter. Importieren Sie die Geodaten mit `read_sf()` in Ihre R-Sitzung und weisen Sie den Inhalt einem Objekt namens `de_districts` zu. Zeichnen Sie die Geodaten mit `ggplot()`.
+1. Laden Sie die [Geodaten](https://raw.githubusercontent.com/t-klinge/ubt-r/refs/heads/master/files/de_states.geojson) aller deutschen Kreise und kreisfreien Städte im GeoJSON-Format herunter. Importieren Sie die Geodaten mit `read_sf()` in Ihre R-Sitzung und weisen Sie den Inhalt einem Objekt namens `de_districts` zu. Zeichnen Sie die Geodaten mit `ggplot()`.
 2. Filtern Sie aus den Geodaten nur die bayerischen Kreise und kreisfreien Städte heraus und erstellen ein Objekt namens `de_districts_bay`. Hierfür beschränken Sie die Auswahl aller Zeilen auf `SN_L == "09"`.^[Der [Dokumentation](https://sg.geodatenzentrum.de/web_public/gdz/dokumentation/deu/vg2500.pdf) (ab S. 9) entnehmen wir, dass das Attribut `SN_L` einen String aus zwei Ziffern für die jeweiligen Länder enthält und die Attribute `ARS`, `AGS` und weitere Felder unterschiedliche Regionalschlüssel darstellen.] Überprüfen Sie Ihre Aktion, in dem Sie die Geodaten abermals zeichnen.
-3. Laden Sie die [thematischen Daten](https://github.com/ubt-r/geodatenbearbeitung/blob/main/de_kreise_sgb2_u18.rds) herunter und importieren Sie sie mit `read_rds()`.
+3. Laden Sie die [thematischen Daten](https://github.com/t-klinge/ubt-r/raw/refs/heads/master/files/de_kreise_sgb2_u18.rds) herunter und importieren Sie sie mit `read_rds()`.
 4. Führen Sie die Geodaten und die thematischen Daten mittels `left_join()` zusammen, indem Sie `AGS` bzw. `ags` als Schlüsselfelder nutzen. 
 5. Zeichnen Sie eine thematische Karte, die die folgenden Elemente enthält:
     - Füllfarbe: Werte von `sgb2_u18_prozent`
@@ -496,6 +495,28 @@ Ihr Ergebnis könnte so aussehen:
 
 ```{r}
 #| echo: false
+read_sf(dsn = "./files/de_districts.geojson") |> 
+  filter(SN_L == "09") |> 
+  left_join(read_rds("./files/de_kreise_sgb2_u18.rds"),
+            by = c("AGS" = "ags")) |> 
+  ggplot(mapping = aes(fill = sgb2_u18_prozent)) +
+  geom_sf() +
+  scale_fill_viridis_b(name = "Prozent",
+                       option = "inferno", 
+                       direction = -1) +
+  labs(title = "Kinderarmut in Bayern",
+       subtitle = "Anteil Minderjähriger in SGB II-Bedarfsgemeinschaften",
+       caption = "Quelle: Bundesagentur für Arbeit, Juni 2024") +
+  theme_void() +
+  annotation_scale(location = "br") +
+  annotation_north_arrow(style = north_arrow_orienteering(),
+                         location = "bl")
+```
+
+### Lösung
+
+```{r}
+#| eval: false
 read_sf(dsn = "./files/de_districts.geojson") |> 
   filter(SN_L == "09") |> 
   left_join(read_rds("./files/de_kreise_sgb2_u18.rds"),
@@ -783,3 +804,31 @@ Nehmen Sie die folgenden Arbeitsschritte vor, um Ihre eigene Klimadatenkarte zu 
     - Bundesländerumrisse Deutschlands
     
 Wenn Ihnen diese Aufgabe zu leicht oder wiederholend erscheint, können Sie alternativ **Klimadaten für ein Land und einen Monat Ihrer Wahl visualisieren**. Machen Sie sich hierbei mit `gadm()` vertraut^[Siehe vorherige Fußnote.], um die Gebietsgrenzen des von Ihnen gewählten Landes herunterzuladen.
+
+### Lösung
+
+```{r}
+worldclim_country(country = "DE",
+                  var = "wind",
+                  res = 10, 
+                  path = "./files/de_wind") |> 
+  project("epsg:32632") |> 
+  mask(de_states_reprojected) |> 
+  app(fun = "mean") |> 
+  as.data.frame(xy = TRUE) |> 
+  ggplot() +
+  geom_raster(mapping = aes(x = x,
+                            y = y,
+                            fill = mean)) +
+  scale_fill_viridis(name = "m*s⁻¹", 
+                     option = "rocket") +
+  labs(title = "Durchschnittliche Windgeschwindigkeit",
+       caption = "Quelle: WorldClim") + 
+  theme_void() + 
+  annotation_north_arrow(style = north_arrow_fancy_orienteering(),
+                         location = "bl") + 
+  annotation_scale(location = "br") +
+  geom_sf(data = de_states_reprojected,
+          fill = NA,
+          color = "darkgrey")
+```

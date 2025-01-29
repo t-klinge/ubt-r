@@ -350,7 +350,7 @@ Mit den in diesem Kapitel vorgestellten Arten von *joins* ist bereits ein große
 knitr::include_graphics("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzV6ZmhiM3hiOWthY2FtMWhwdno4dGp4dTQycXlxMHF4cjF1YjlqbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1HPUSulSOHDpe/200.webp")
 ```
 
-Die folgenden Übungsaufgaben beziehen sich auf neun *data frames* aus dem Package **`starwarsdb`**. Wenn wir `starwarsdb` bereits installiert haben, müssen wir es nur noch mit `library(starwarsdb)` laden. Wenn wir `starwarsdb` noch nicht installiert haben (was einige Minuten dauert), können wir stattdessen [diese RDATA-Datei](https://github.com/ubt-r/starwars/raw/refs/heads/main/starwars.rdata) herunterladen und sie dann mit mit `load()` laden:
+Die folgenden Übungsaufgaben beziehen sich auf neun *data frames* aus dem Package **`starwarsdb`**. Wenn wir `starwarsdb` bereits installiert haben, müssen wir es nur noch mit `library(starwarsdb)` laden. Wenn wir `starwarsdb` noch nicht installiert haben (was einige Minuten dauert), können wir stattdessen [diese RDATA-Datei](https://github.com/t-klinge/ubt-r/raw/refs/heads/master/files/starwars.rdata) herunterladen und sie dann mit mit `load()` laden:
 
 ```{r}
 load("./files/starwars.rdata")
@@ -372,17 +372,19 @@ In den folgenden Aufgaben werden mindestens zwei *data frames* zusammengeführt.
 
 ### Left Join
 
-Führen Sie `films_planets` und `planets` zusammen. Die Ergebnistabelle soll so aussehen:
+1. Führen Sie `films_planets` und `planets` zusammen. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 films_planets |> 
   left_join(planets,
             by = c("planet" = "name"))
 ```
 
-Werten Sie die Tabelle mittels `group_by()` und `count()` so aus, dass Sie erfahren, in welchem Film die meisten unterschiedlichen Planeten vorkamen. Die Ergebnistabelle soll so aussehen:
+2. Werten Sie die Tabelle mittels `group_by()` und `count()` so aus, dass Sie erfahren, in welchem Film die meisten unterschiedlichen Planeten vorkamen. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 films_planets |> 
   left_join(planets,
             by = c("planet" = "name")) |> 
@@ -392,17 +394,19 @@ films_planets |>
 
 ### Right Join
 
-Führen Sie `people` und `films_people` zusammen. Die Ergebnistabelle soll so aussehen:
+1. Führen Sie `people` und `films_people` zusammen. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 people |> 
   right_join(films_people,
              by = c("name" = "character"))
 ```
 
-Werten Sie die Tabelle mittels `filter()`, `group_by()` und `count()` so aus, dass Sie erfahren, in welchem Film die meisten Wookies (`species == "Wookie"`) vorkamen. Die Ergebnistabelle soll so aussehen:
+2. Werten Sie die Tabelle mittels `filter()`, `group_by()` und `count()` so aus, dass Sie erfahren, in welchem Film die meisten Wookies (`species == "Wookie"`) vorkamen. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 people |> 
   right_join(films_people,
              by = c("name" = "character")) |> 
@@ -413,17 +417,19 @@ people |>
 
 ### Full Join
 
-Führen Sie `films_vehicles` und `vehicles` zusammen. Die Ergebnistabelle soll so aussehen:
+1. Führen Sie `films_vehicles` und `vehicles` zusammen. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 films_vehicles |> 
   full_join(vehicles,
             by = c("vehicle" = "name"))
 ```
 
-Werten Sie die Tabelle mittels `filter()`, `group_by()` und `summarize()` so aus, dass Sie erfahren, in welchem Film die schnellsten (`mean(max_atmosphering_speed, na.rm = TRUE)`) Raumschiffe (`type == "starship"`) vorkamen. Die Ergebnistabelle soll so aussehen:
+2. Werten Sie die Tabelle mittels `filter()`, `group_by()` und `summarize()` so aus, dass Sie erfahren, in welchem Film die schnellsten (`mean(max_atmosphering_speed, na.rm = TRUE)`) Raumschiffe (`type == "starship"`) vorkamen. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 films_vehicles |> 
   full_join(vehicles,
             by = c("vehicle" = "name")) |> 
@@ -435,17 +441,19 @@ films_vehicles |>
 
 ### Inner Join
 
-Führen Sie `vehicles` und `pilots` zusammen. Die Ergebnistabelle soll so aussehen:
+1. Führen Sie `vehicles` und `pilots` zusammen. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 vehicles |> 
     inner_join(pilots,
                by = c("name" = "vehicle"))
 ```
 
-Werten Sie die Tabelle mittels `group_by()` und `count()` so aus, dass Sie erfahren, welche Vehikel die meisten unterschiedlichen Pilot\*innen hatten. Die Ergebnistabelle soll so aussehen:
+2. Werten Sie die Tabelle mittels `group_by()` und `count()` so aus, dass Sie erfahren, welche Vehikel die meisten unterschiedlichen Pilot\*innen hatten. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 vehicles |> 
     inner_join(pilots,
                by = c("name" = "vehicle")) |> 
@@ -455,9 +463,10 @@ vehicles |>
 
 ### Semi Join
 
-Fügen Sie zunächst `films_planets` und die Spalten `title` und `episode_id` aus `films` mit `left_join()` zusammen. Nutzen Sie dann `filter()`, um nur die ersten drei Episoden auszuwählen (`between(episode_id, 1, 3)`). Die Ergebnistabelle soll `planet_names_first_trilogy` heißen und so aussehen:
+1. Fügen Sie zunächst `films_planets` und die Spalten `title` und `episode_id` aus `films` mit `left_join()` zusammen. Nutzen Sie dann `filter()`, um nur die ersten drei Episoden auszuwählen (`between(episode_id, 1, 3)`). Die Ergebnistabelle soll `planet_names_first_trilogy` heißen und so aussehen:
 
 ```{r}
+#| echo: false
 planet_names_first_trilogy <- films_planets |> 
   left_join(films |> 
               select(title, episode_id)) |> 
@@ -465,9 +474,10 @@ planet_names_first_trilogy <- films_planets |>
 planet_names_first_trilogy
 ```
 
-Führen Sie desweiteren `planets` und  `planet_names_first_trilogy` mittels `semi_join()` zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen der ersten drei Episoden enthält. Die Ergebnistabelle soll so aussehen:
+2. Führen Sie desweiteren `planets` und  `planet_names_first_trilogy` mittels `semi_join()` zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen der ersten drei Episoden enthält. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
 planets |> 
   semi_join(planet_names_first_trilogy,
             by = c("name" = "planet"))
@@ -478,6 +488,121 @@ planets |>
 Führen Sie `planets` und `planet_names_first_trilogy` zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen aller Planeten, die *nicht* in den ersten drei Episoden vorkommen, enthält. Die Ergebnistabelle soll so aussehen:
 
 ```{r}
+#| echo: false
+planets |> 
+  anti_join(planet_names_first_trilogy,
+            by = c("name" = "planet"))
+```
+
+##Lösungen
+
+### Left Join
+
+1.
+```{r}
+#| eval: false
+films_planets |> 
+  left_join(planets,
+            by = c("planet" = "name"))
+```
+
+2.
+```{r}
+#| eval: false
+films_planets |> 
+  left_join(planets,
+            by = c("planet" = "name")) |> 
+  group_by(title) |> 
+  count(sort = TRUE)
+```
+
+### Right Join
+
+1.
+```{r}
+#| eval: false
+people |> 
+  right_join(films_people,
+             by = c("name" = "character"))
+```
+
+2.
+```{r}
+#| eval: false
+people |> 
+  right_join(films_people,
+             by = c("name" = "character")) |> 
+  filter(species == "Wookie") |> 
+  group_by(title) |> 
+  count(sort = TRUE)
+```
+
+### Full Join
+
+1.
+```{r}
+#| eval: false
+films_vehicles |> 
+  full_join(vehicles,
+            by = c("vehicle" = "name"))
+```
+
+2.
+```{r}
+#| eval: false
+films_vehicles |> 
+  full_join(vehicles,
+            by = c("vehicle" = "name")) |> 
+  filter(type == "starship") |> 
+  group_by(title) |> 
+  summarize(mean_speed = mean(max_atmosphering_speed, na.rm = TRUE)) |> 
+  arrange(desc(mean_speed))
+```
+
+### Inner Join
+
+1.
+```{r}
+#| eval: false
+vehicles |> 
+    inner_join(pilots,
+               by = c("name" = "vehicle"))
+```
+
+2.
+```{r}
+#| eval: false
+vehicles |> 
+    inner_join(pilots,
+               by = c("name" = "vehicle")) |> 
+  group_by(name) |> 
+  count(sort = TRUE)
+```
+
+### Semi Join
+
+1.
+```{r}
+#| eval: false
+planet_names_first_trilogy <- films_planets |> 
+  left_join(films |> 
+              select(title, episode_id)) |> 
+  filter(between(episode_id, 1, 3))
+planet_names_first_trilogy
+```
+
+2.
+```{r}
+#| eval: false
+planets |> 
+  semi_join(planet_names_first_trilogy,
+            by = c("name" = "planet"))
+```
+
+### Anti Join
+
+```{r}
+#| eval: false
 planets |> 
   anti_join(planet_names_first_trilogy,
             by = c("name" = "planet"))

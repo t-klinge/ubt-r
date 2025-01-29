@@ -1139,32 +1139,32 @@ Filtering mit <em>base R</em>
 <span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>) <span class="co"># Strings als factors behandeln</span></span>
 <span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>my_data_frame</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name     number
-1     A  0.0690451
-2     B -1.2167246
-3     A  0.4833398
-4     B  0.4481453
-5     A -1.4707950
-6     B -0.4827690
-7     A -0.1449537
-8     B -0.1352923
-9     A -0.1411728
-10    B  0.6464303</code></pre>
+<pre><code>   name      number
+1     A -1.19808582
+2     B -0.79473613
+3     A -1.01854923
+4     B  0.57328909
+5     A  0.12234996
+6     B -0.94488392
+7     A -0.03724966
+8     B  0.63034719
+9     A  1.48785379
+10    B  0.96959537</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>my_data_frame <span class="sc">|&gt;</span> </span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">number_2 =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)) <span class="co"># Erzeugen einer neuen Variable number_2 mit 10 Zufallszahlen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name     number    number_2
-1     A  0.0690451 -0.91968891
-2     B -1.2167246  1.80506131
-3     A  0.4833398 -0.49421038
-4     B  0.4481453  0.93875809
-5     A -1.4707950  1.08971386
-6     B -0.4827690 -1.50655134
-7     A -0.1449537 -0.08164807
-8     B -0.1352923 -1.47958438
-9     A -0.1411728  1.27700835
-10    B  0.6464303 -1.10132625</code></pre>
+<pre><code>   name      number    number_2
+1     A -1.19808582  0.71571993
+2     B -0.79473613 -0.64851699
+3     A -1.01854923 -0.05071735
+4     B  0.57328909 -0.28274624
+5     A  0.12234996  0.83975794
+6     B -0.94488392  0.82444779
+7     A -0.03724966  0.17620608
+8     B  0.63034719  0.95272502
+9     A  1.48785379 -1.15446974
+10    B  0.96959537  1.36173408</code></pre>
 </div>
 </div>
 </section>

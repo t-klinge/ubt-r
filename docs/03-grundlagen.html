@@ -1173,7 +1173,7 @@ $date
 [1] "2025-01-29"
 
 $random_numbers
-[1]  2.0148606 -0.4391358  1.4214859  0.1434293 -0.7823707</code></pre>
+[1]  2.0195812 -0.5248489  0.1723572  0.4975999  0.4676589</code></pre>
 </div>
 </div>
 <p>Im Prinzip ist eine Liste also eine mächtige Datenstruktur. Dabei müssen wir verstehen, dass nicht nur – wie in unserem Beispiel – Vektoren also Komponente dienen können. Tatsächlich kann eine Liste auch selbst <strong>weitere Listen</strong> enthalten:</p>
@@ -1196,7 +1196,7 @@ $date
 [1] "2025-01-29"
 
 $random_numbers
-[1] -0.11074826 -0.08651466 -1.09425958 -0.56976779  0.60387845
+[1] -0.5148977 -1.5837887  0.2310836 -0.1899639  0.1289173
 
 $my_second_list
 $my_second_list$component_character
@@ -1214,7 +1214,7 @@ $my_second_list$component_numeric
  $ first_name    : chr "Art"
  $ last_name     : chr "Vandelay"
  $ date          : Date[1:1], format: "2025-01-29"
- $ random_numbers: num [1:5] -0.1107 -0.0865 -1.0943 -0.5698 0.6039
+ $ random_numbers: num [1:5] -0.515 -1.584 0.231 -0.19 0.129
  $ my_second_list:List of 2
   ..$ component_character: chr "Ein Wort"
   ..$ component_numeric  : int [1:5] 1 2 3 4 5</code></pre>
@@ -1391,17 +1391,17 @@ Datsun 710    22.8   4  108  93</code></pre>
 <div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">name =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">times =</span> <span class="dv">5</span>), <span class="co"># Vektor wiederholen</span></span>
 <span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">number =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)) <span class="co"># Zufallszahlen erzeugen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name       number
-1     A -0.741080033
-2     B -1.316711288
-3     A  1.486603942
-4     B -1.138243670
-5     A -0.007832131
-6     B -0.354206496
-7     A -0.771280986
-8     B  1.151852454
-9     A -0.652550694
-10    B -0.322875285</code></pre>
+<pre><code>   name      number
+1     A -1.84743170
+2     B  1.38252477
+3     A -0.09914434
+4     B -0.67912685
+5     A  0.71938306
+6     B  0.81066777
+7     A  0.34373079
+8     B -2.30507554
+9     A -1.41632464
+10    B  0.41875591</code></pre>
 </div>
 </div>
 <p>Tatsächlich handelt es sich bei <code>name</code> aber nicht um einen <code>character</code>-String, sondern um einen <code>factor</code>, denn es handelt sich bei A und B um mehrere Beobachtungen derselben Gruppe. Standardmäßig behandelt <code>data.frame()</code> alle Texteingaben als <code>character</code>. Wollen wir das ändern, müssen wir den Parameter <strong><code>stringsAsFactors</code></strong> auf <code>TRUE</code> setzen.</p>
@@ -1410,17 +1410,17 @@ Datsun 710    22.8   4  108  93</code></pre>
 <span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">zahl =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>),</span>
 <span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>) <span class="co"># Strings als factors einlesen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name        zahl
-1     A -0.18581488
-2     B -0.85554346
-3     A  0.07847864
-4     B -0.76365913
-5     A  0.35744945
-6     B  0.42816764
-7     A  0.75523495
-8     B -0.26206592
-9     A  1.71629897
-10    B -0.15952549</code></pre>
+<pre><code>   name       zahl
+1     A -0.8516020
+2     B -0.1467786
+3     A -0.4274095
+4     B  0.5295791
+5     A -0.8503677
+6     B -0.8305182
+7     A -0.8063169
+8     B -0.3793948
+9     A  1.0158814
+10    B -0.3623168</code></pre>
 </div>
 </div>
 <p>Und natürlich können wir unseren <em>data frame</em> als Objekt erstellen und dann darauf zugreifen.</p>
@@ -1430,17 +1430,17 @@ Datsun 710    22.8   4  108  93</code></pre>
 <span id="cb153-3"><a href="#cb153-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a>my_data_frame</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name       zahl
-1     A  2.1275438
-2     B -0.8499969
-3     A -0.2057648
-4     B  0.1780225
-5     A -0.3514293
-6     B  0.2894069
-7     A -1.2539977
-8     B  1.1534838
-9     A  0.2230626
-10    B -1.7269183</code></pre>
+<pre><code>   name        zahl
+1     A -1.09697800
+2     B  0.03891659
+3     A -0.85759231
+4     B -0.15295957
+5     A -0.07655005
+6     B  0.47686719
+7     A -0.38058840
+8     B -0.37484552
+9     A -2.20147025
+10    B -1.11578812</code></pre>
 </div>
 </div>
 </section>

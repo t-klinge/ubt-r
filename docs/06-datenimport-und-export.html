@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; Allgemeiner Ablauf – Einführung in R</title>
+<title>6&nbsp; Datenimport und -export – Einführung in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -91,12 +91,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -137,7 +135,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-datenimport-und-export.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-datenimport-und-export.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Seitenleiste umschalten" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Suchen" onclick="window.quartoOpenSearch();">
@@ -157,7 +155,6 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Einführung in R</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -212,7 +209,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -255,51 +252,58 @@ div.csl-indent {
     <h2 id="toc-title">Inhaltsverzeichnis</h2>
    
   <ul>
-  <li><a href="#csv" id="toc-csv" class="nav-link active" data-scroll-target="#csv"><span class="header-section-number">6.1</span> CSV</a>
+  <li><a href="#allgemeiner-ablauf" id="toc-allgemeiner-ablauf" class="nav-link active" data-scroll-target="#allgemeiner-ablauf"><span class="header-section-number">6.1</span> Allgemeiner Ablauf</a></li>
+  <li><a href="#csv" id="toc-csv" class="nav-link" data-scroll-target="#csv"><span class="header-section-number">6.2</span> CSV</a>
   <ul>
-  <li><a href="#erste-ansicht" id="toc-erste-ansicht" class="nav-link" data-scroll-target="#erste-ansicht"><span class="header-section-number">6.1.1</span> Erste Ansicht</a></li>
-  <li><a href="#importieren" id="toc-importieren" class="nav-link" data-scroll-target="#importieren"><span class="header-section-number">6.1.2</span> Importieren</a>
+  <li><a href="#erste-ansicht" id="toc-erste-ansicht" class="nav-link" data-scroll-target="#erste-ansicht"><span class="header-section-number">6.2.1</span> Erste Ansicht</a></li>
+  <li><a href="#importieren" id="toc-importieren" class="nav-link" data-scroll-target="#importieren"><span class="header-section-number">6.2.2</span> Importieren</a>
   <ul class="collapse">
-  <li><a href="#sec-datenimport-csv-importieren-spaltennamen" id="toc-sec-datenimport-csv-importieren-spaltennamen" class="nav-link" data-scroll-target="#sec-datenimport-csv-importieren-spaltennamen"><span class="header-section-number">6.1.2.1</span> Einheitliche Spaltennamen</a></li>
-  <li><a href="#sec-datenimport-csv-import-na" id="toc-sec-datenimport-csv-import-na" class="nav-link" data-scroll-target="#sec-datenimport-csv-import-na"><span class="header-section-number">6.1.2.2</span> Angabe fehlender Werte</a></li>
-  <li><a href="#sec-datenimport-csv-importieren-datentypen" id="toc-sec-datenimport-csv-importieren-datentypen" class="nav-link" data-scroll-target="#sec-datenimport-csv-importieren-datentypen"><span class="header-section-number">6.1.2.3</span> Datentypen für Spalten angeben</a></li>
-  <li><a href="#zeilen-überspringen" id="toc-zeilen-überspringen" class="nav-link" data-scroll-target="#zeilen-überspringen"><span class="header-section-number">6.1.2.4</span> Zeilen überspringen</a></li>
-  <li><a href="#keine-spaltennamen-nutzen" id="toc-keine-spaltennamen-nutzen" class="nav-link" data-scroll-target="#keine-spaltennamen-nutzen"><span class="header-section-number">6.1.2.5</span> Keine Spaltennamen nutzen</a></li>
-  <li><a href="#eigene-spaltennamen-angeben" id="toc-eigene-spaltennamen-angeben" class="nav-link" data-scroll-target="#eigene-spaltennamen-angeben"><span class="header-section-number">6.1.2.6</span> Eigene Spaltennamen angeben</a></li>
+  <li><a href="#sec-datenimport-csv-importieren-spaltennamen" id="toc-sec-datenimport-csv-importieren-spaltennamen" class="nav-link" data-scroll-target="#sec-datenimport-csv-importieren-spaltennamen"><span class="header-section-number">6.2.2.1</span> Einheitliche Spaltennamen</a></li>
+  <li><a href="#sec-datenimport-csv-import-na" id="toc-sec-datenimport-csv-import-na" class="nav-link" data-scroll-target="#sec-datenimport-csv-import-na"><span class="header-section-number">6.2.2.2</span> Angabe fehlender Werte</a></li>
+  <li><a href="#sec-datenimport-csv-importieren-datentypen" id="toc-sec-datenimport-csv-importieren-datentypen" class="nav-link" data-scroll-target="#sec-datenimport-csv-importieren-datentypen"><span class="header-section-number">6.2.2.3</span> Datentypen für Spalten angeben</a></li>
+  <li><a href="#zeilen-überspringen" id="toc-zeilen-überspringen" class="nav-link" data-scroll-target="#zeilen-überspringen"><span class="header-section-number">6.2.2.4</span> Zeilen überspringen</a></li>
+  <li><a href="#keine-spaltennamen-nutzen" id="toc-keine-spaltennamen-nutzen" class="nav-link" data-scroll-target="#keine-spaltennamen-nutzen"><span class="header-section-number">6.2.2.5</span> Keine Spaltennamen nutzen</a></li>
+  <li><a href="#eigene-spaltennamen-angeben" id="toc-eigene-spaltennamen-angeben" class="nav-link" data-scroll-target="#eigene-spaltennamen-angeben"><span class="header-section-number">6.2.2.6</span> Eigene Spaltennamen angeben</a></li>
   </ul></li>
-  <li><a href="#exportieren" id="toc-exportieren" class="nav-link" data-scroll-target="#exportieren"><span class="header-section-number">6.1.3</span> Exportieren</a></li>
-  <li><a href="#sec-datenimport-csv-verwandte-funktionen" id="toc-sec-datenimport-csv-verwandte-funktionen" class="nav-link" data-scroll-target="#sec-datenimport-csv-verwandte-funktionen"><span class="header-section-number">6.1.4</span> Verwandte Funktionen</a></li>
+  <li><a href="#exportieren" id="toc-exportieren" class="nav-link" data-scroll-target="#exportieren"><span class="header-section-number">6.2.3</span> Exportieren</a></li>
+  <li><a href="#sec-datenimport-csv-verwandte-funktionen" id="toc-sec-datenimport-csv-verwandte-funktionen" class="nav-link" data-scroll-target="#sec-datenimport-csv-verwandte-funktionen"><span class="header-section-number">6.2.4</span> Verwandte Funktionen</a></li>
   </ul></li>
-  <li><a href="#xlsx-und-xls" id="toc-xlsx-und-xls" class="nav-link" data-scroll-target="#xlsx-und-xls"><span class="header-section-number">6.2</span> XLSX und XLS</a>
+  <li><a href="#xlsx-und-xls" id="toc-xlsx-und-xls" class="nav-link" data-scroll-target="#xlsx-und-xls"><span class="header-section-number">6.3</span> XLSX und XLS</a>
   <ul>
-  <li><a href="#erste-ansicht-1" id="toc-erste-ansicht-1" class="nav-link" data-scroll-target="#erste-ansicht-1"><span class="header-section-number">6.2.1</span> Erste Ansicht</a></li>
-  <li><a href="#importieren-1" id="toc-importieren-1" class="nav-link" data-scroll-target="#importieren-1"><span class="header-section-number">6.2.2</span> Importieren</a>
+  <li><a href="#erste-ansicht-1" id="toc-erste-ansicht-1" class="nav-link" data-scroll-target="#erste-ansicht-1"><span class="header-section-number">6.3.1</span> Erste Ansicht</a></li>
+  <li><a href="#importieren-1" id="toc-importieren-1" class="nav-link" data-scroll-target="#importieren-1"><span class="header-section-number">6.3.2</span> Importieren</a>
   <ul class="collapse">
-  <li><a href="#auswahl-eines-bestimmten-tabellenblattes" id="toc-auswahl-eines-bestimmten-tabellenblattes" class="nav-link" data-scroll-target="#auswahl-eines-bestimmten-tabellenblattes"><span class="header-section-number">6.2.2.1</span> Auswahl eines bestimmten Tabellenblattes</a></li>
-  <li><a href="#auswahl-eines-tabellenbereichs" id="toc-auswahl-eines-tabellenbereichs" class="nav-link" data-scroll-target="#auswahl-eines-tabellenbereichs"><span class="header-section-number">6.2.2.2</span> Auswahl eines Tabellenbereichs</a></li>
-  <li><a href="#einheitliche-spaltennamen" id="toc-einheitliche-spaltennamen" class="nav-link" data-scroll-target="#einheitliche-spaltennamen"><span class="header-section-number">6.2.2.3</span> Einheitliche Spaltennamen</a></li>
-  <li><a href="#angabe-fehlender-werte" id="toc-angabe-fehlender-werte" class="nav-link" data-scroll-target="#angabe-fehlender-werte"><span class="header-section-number">6.2.2.4</span> Angabe fehlender Werte</a></li>
-  <li><a href="#datentypen-für-spalten-angeben" id="toc-datentypen-für-spalten-angeben" class="nav-link" data-scroll-target="#datentypen-für-spalten-angeben"><span class="header-section-number">6.2.2.5</span> Datentypen für Spalten angeben</a></li>
-  <li><a href="#zeilen-überspringen-1" id="toc-zeilen-überspringen-1" class="nav-link" data-scroll-target="#zeilen-überspringen-1"><span class="header-section-number">6.2.2.6</span> Zeilen überspringen</a></li>
-  <li><a href="#sec-datenimport-excel-import-keine-spaltennamen" id="toc-sec-datenimport-excel-import-keine-spaltennamen" class="nav-link" data-scroll-target="#sec-datenimport-excel-import-keine-spaltennamen"><span class="header-section-number">6.2.2.7</span> Keine Spaltennamen nutzen</a></li>
-  <li><a href="#eigene-spaltennamen-angeben-1" id="toc-eigene-spaltennamen-angeben-1" class="nav-link" data-scroll-target="#eigene-spaltennamen-angeben-1"><span class="header-section-number">6.2.2.8</span> Eigene Spaltennamen angeben</a></li>
+  <li><a href="#auswahl-eines-bestimmten-tabellenblattes" id="toc-auswahl-eines-bestimmten-tabellenblattes" class="nav-link" data-scroll-target="#auswahl-eines-bestimmten-tabellenblattes"><span class="header-section-number">6.3.2.1</span> Auswahl eines bestimmten Tabellenblattes</a></li>
+  <li><a href="#auswahl-eines-tabellenbereichs" id="toc-auswahl-eines-tabellenbereichs" class="nav-link" data-scroll-target="#auswahl-eines-tabellenbereichs"><span class="header-section-number">6.3.2.2</span> Auswahl eines Tabellenbereichs</a></li>
+  <li><a href="#einheitliche-spaltennamen" id="toc-einheitliche-spaltennamen" class="nav-link" data-scroll-target="#einheitliche-spaltennamen"><span class="header-section-number">6.3.2.3</span> Einheitliche Spaltennamen</a></li>
+  <li><a href="#angabe-fehlender-werte" id="toc-angabe-fehlender-werte" class="nav-link" data-scroll-target="#angabe-fehlender-werte"><span class="header-section-number">6.3.2.4</span> Angabe fehlender Werte</a></li>
+  <li><a href="#datentypen-für-spalten-angeben" id="toc-datentypen-für-spalten-angeben" class="nav-link" data-scroll-target="#datentypen-für-spalten-angeben"><span class="header-section-number">6.3.2.5</span> Datentypen für Spalten angeben</a></li>
+  <li><a href="#zeilen-überspringen-1" id="toc-zeilen-überspringen-1" class="nav-link" data-scroll-target="#zeilen-überspringen-1"><span class="header-section-number">6.3.2.6</span> Zeilen überspringen</a></li>
+  <li><a href="#sec-datenimport-excel-import-keine-spaltennamen" id="toc-sec-datenimport-excel-import-keine-spaltennamen" class="nav-link" data-scroll-target="#sec-datenimport-excel-import-keine-spaltennamen"><span class="header-section-number">6.3.2.7</span> Keine Spaltennamen nutzen</a></li>
+  <li><a href="#eigene-spaltennamen-angeben-1" id="toc-eigene-spaltennamen-angeben-1" class="nav-link" data-scroll-target="#eigene-spaltennamen-angeben-1"><span class="header-section-number">6.3.2.8</span> Eigene Spaltennamen angeben</a></li>
   </ul></li>
-  <li><a href="#exportieren-1" id="toc-exportieren-1" class="nav-link" data-scroll-target="#exportieren-1"><span class="header-section-number">6.2.3</span> Exportieren</a></li>
+  <li><a href="#exportieren-1" id="toc-exportieren-1" class="nav-link" data-scroll-target="#exportieren-1"><span class="header-section-number">6.3.3</span> Exportieren</a></li>
   </ul></li>
-  <li><a href="#r-datenformate" id="toc-r-datenformate" class="nav-link" data-scroll-target="#r-datenformate"><span class="header-section-number">6.3</span> R-Datenformate</a>
+  <li><a href="#r-datenformate" id="toc-r-datenformate" class="nav-link" data-scroll-target="#r-datenformate"><span class="header-section-number">6.4</span> R-Datenformate</a>
   <ul>
-  <li><a href="#rds" id="toc-rds" class="nav-link" data-scroll-target="#rds"><span class="header-section-number">6.3.1</span> RDS</a></li>
-  <li><a href="#rdata" id="toc-rdata" class="nav-link" data-scroll-target="#rdata"><span class="header-section-number">6.3.2</span> RDATA</a>
+  <li><a href="#rds" id="toc-rds" class="nav-link" data-scroll-target="#rds"><span class="header-section-number">6.4.1</span> RDS</a></li>
+  <li><a href="#rdata" id="toc-rdata" class="nav-link" data-scroll-target="#rdata"><span class="header-section-number">6.4.2</span> RDATA</a>
   <ul class="collapse">
-  <li><a href="#mehrere-objekte" id="toc-mehrere-objekte" class="nav-link" data-scroll-target="#mehrere-objekte"><span class="header-section-number">6.3.2.1</span> Mehrere Objekte</a></li>
-  <li><a href="#workspace" id="toc-workspace" class="nav-link" data-scroll-target="#workspace"><span class="header-section-number">6.3.2.2</span> Workspace</a></li>
+  <li><a href="#mehrere-objekte" id="toc-mehrere-objekte" class="nav-link" data-scroll-target="#mehrere-objekte"><span class="header-section-number">6.4.2.1</span> Mehrere Objekte</a></li>
+  <li><a href="#workspace" id="toc-workspace" class="nav-link" data-scroll-target="#workspace"><span class="header-section-number">6.4.2.2</span> Workspace</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#übungsaufgaben" id="toc-übungsaufgaben" class="nav-link" data-scroll-target="#übungsaufgaben"><span class="header-section-number">6.4</span> Übungsaufgaben</a>
+  <li><a href="#übungsaufgaben" id="toc-übungsaufgaben" class="nav-link" data-scroll-target="#übungsaufgaben"><span class="header-section-number">6.5</span> Übungsaufgaben</a>
   <ul>
-  <li><a href="#sec-datenimport-uebungsaufgaben-csv" id="toc-sec-datenimport-uebungsaufgaben-csv" class="nav-link" data-scroll-target="#sec-datenimport-uebungsaufgaben-csv"><span class="header-section-number">6.4.1</span> CSV</a></li>
-  <li><a href="#xlsx-und-xls-1" id="toc-xlsx-und-xls-1" class="nav-link" data-scroll-target="#xlsx-und-xls-1"><span class="header-section-number">6.4.2</span> XLSX und XLS</a></li>
-  <li><a href="#r" id="toc-r" class="nav-link" data-scroll-target="#r"><span class="header-section-number">6.4.3</span> R</a></li>
+  <li><a href="#sec-datenimport-uebungsaufgaben-csv" id="toc-sec-datenimport-uebungsaufgaben-csv" class="nav-link" data-scroll-target="#sec-datenimport-uebungsaufgaben-csv"><span class="header-section-number">6.5.1</span> CSV</a></li>
+  <li><a href="#xlsx-und-xls-1" id="toc-xlsx-und-xls-1" class="nav-link" data-scroll-target="#xlsx-und-xls-1"><span class="header-section-number">6.5.2</span> XLSX und XLS</a></li>
+  <li><a href="#r" id="toc-r" class="nav-link" data-scroll-target="#r"><span class="header-section-number">6.5.3</span> R</a></li>
+  </ul></li>
+  <li><a href="#lösungen" id="toc-lösungen" class="nav-link" data-scroll-target="#lösungen"><span class="header-section-number">6.6</span> Lösungen</a>
+  <ul>
+  <li><a href="#csv-1" id="toc-csv-1" class="nav-link" data-scroll-target="#csv-1"><span class="header-section-number">6.6.1</span> CSV</a></li>
+  <li><a href="#xlsx-und-xls-2" id="toc-xlsx-und-xls-2" class="nav-link" data-scroll-target="#xlsx-und-xls-2"><span class="header-section-number">6.6.2</span> XLSX und XLS</a></li>
+  <li><a href="#r-1" id="toc-r-1" class="nav-link" data-scroll-target="#r-1"><span class="header-section-number">6.6.3</span> R</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -309,7 +313,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></h1>
+<h1 class="title"><span id="sec-datenimport" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span></h1>
 </div>
 
 
@@ -326,7 +330,6 @@ div.csl-indent {
 </header>
 
 
-<p># Datenimport und -export {#sec-datenimport}</p>
 <p>In Zeiten fortschreitender Digitalisierung wächst der Bestand an frei zur Verfügung stehenden Daten in unterschiedlichsten Formaten mit jedem Moment. Nachdem wir bislang nur mit vorgefertigten Datensätzen gearbeitet haben, möchten wir als nächstes lernen, eigens ausgewählte Daten in unsere R-Sitzung zu laden und sie nach getaner Arbeit abzuspeichern. Dabei werden wir uns auf die gängige Tabellenformate beschränken, bevor wir später (<a href="09-geodatenbearbeitung.html" class="quarto-xref"><span>Kapitel 9</span></a>) Geodaten zu importieren lernen.</p>
 <p>In diesem Kapitel lernen wir…</p>
 <ul>
@@ -340,6 +343,8 @@ div.csl-indent {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="allgemeiner-ablauf" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="allgemeiner-ablauf"><span class="header-section-number">6.1</span> Allgemeiner Ablauf</h2>
 <p>Sobald wir eine Tabelle importieren wollen, müssen wir uns meist eine Reihe an Fragen stellen.</p>
 <ul>
 <li>Welches <strong>Dateiformat</strong> liegt vor?</li>
@@ -360,14 +365,15 @@ div.csl-indent {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In den folgenden Ausführungen nutzen wir Funktionen aus den Paketen <code>readr</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> (das Teil des <code>tidyverse</code> ist, siehe <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7</a>)</span> und <code>readxl</code>. Das bedeutet jedoch nicht, dass nicht bereits <em>base R</em> viele Möglichkeiten böte. Tatsächlich sind auch “jüngere” Funktionen oft auf Basis von <em>base R</em> geschrieben worden. Deshalb lohnt es sich immer, auch diese kennenzlernen. Eine gute Einführung liefern <span class="citation" data-cites="douglas2024">Douglas u.&nbsp;a. (<a href="#ref-douglas2024" role="doc-biblioref">2024, Kap. 3.3</a> und 3.6)</span>.</p>
+<p>In den folgenden Ausführungen nutzen wir Funktionen aus den Paketen <code>readr</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> (das Teil des <code>tidyverse</code> ist, siehe <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7</a>)</span> und <code>readxl</code>. Das bedeutet jedoch nicht, dass nicht bereits <em>base R</em> viele Möglichkeiten böte. Tatsächlich sind auch “jüngere” Funktionen oft auf Basis von <em>base R</em> geschrieben worden. Deshalb lohnt es sich immer, auch diese kennenzlernen. Eine gute Einführung liefern <span class="citation" data-cites="douglas2024">Douglas u.&nbsp;a. (<a href="references.html#ref-douglas2024" role="doc-biblioref">2024, Kap. 3.3</a> und 3.6)</span>.</p>
 </div>
 </div>
-<section id="csv" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="csv"><span class="header-section-number">6.1</span> CSV</h2>
-<section id="erste-ansicht" class="level3" data-number="6.1.1">
-<h3 data-number="6.1.1" class="anchored" data-anchor-id="erste-ansicht"><span class="header-section-number">6.1.1</span> Erste Ansicht</h3>
-<p>Das wohl einfachste Tabellenformat ist <strong>CSV</strong>. Dieses Kürzel steht für <strong>c</strong><em>omma</em> <strong>s</strong><em>eparated</em> <strong>v</strong><em>alues</em>, also “durch Kommata getrennte Werte”. Als Beispiel möchten wir uns die Tabelle <a href="https://pos.it/r4ds-students-csv"><code>students.csv</code></a> näher anschauen <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7.2</a>)</span>. Hierfür öffnen wir die Datei zunächst in ihrer “Rohform”, indem wir einen Browser oder einen Texteditor (wie <em>Notepad</em> unter Windows oder <em>TextEdit</em> unter macOS) heranziehen.</p>
+</section>
+<section id="csv" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="csv"><span class="header-section-number">6.2</span> CSV</h2>
+<section id="erste-ansicht" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="erste-ansicht"><span class="header-section-number">6.2.1</span> Erste Ansicht</h3>
+<p>Das wohl einfachste Tabellenformat ist <strong>CSV</strong>. Dieses Kürzel steht für <strong>c</strong><em>omma</em> <strong>s</strong><em>eparated</em> <strong>v</strong><em>alues</em>, also “durch Kommata getrennte Werte”. Als Beispiel möchten wir uns die Tabelle <a href="https://pos.it/r4ds-students-csv"><code>students.csv</code></a> näher anschauen <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7.2</a>)</span>. Hierfür öffnen wir die Datei zunächst in ihrer “Rohform”, indem wir einen Browser oder einen Texteditor (wie <em>Notepad</em> unter Windows oder <em>TextEdit</em> unter macOS) heranziehen.</p>
 <div class="cell" data-tbl-cap="students.csv in der Texteditor-Ansicht.">
 <div class="cell-output cell-output-stdout">
 <pre><code>Student ID,Full Name,favourite.food,mealPlan,AGE
@@ -448,8 +454,8 @@ div.csl-indent {
 </div>
 </div>
 </section>
-<section id="importieren" class="level3" data-number="6.1.2">
-<h3 data-number="6.1.2" class="anchored" data-anchor-id="importieren"><span class="header-section-number">6.1.2</span> Importieren</h3>
+<section id="importieren" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="importieren"><span class="header-section-number">6.2.2</span> Importieren</h3>
 <p>Um eine derartige CSV-Datei zu importieren, nutzen wir die Funktion <strong><code>read_csv()</code></strong><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Deren wichtigster Parameter ist <strong><code>file</code></strong>, der als Argument einen <strong>Dateipfad</strong> benötigt. Dieser Dateipfad kann auf eine <strong>lokale Datei</strong> (eine Datei, die sich auf unserem Rechner befindet) verweisen. Wenn wir <code>students.csv</code> in einem Ordner namens <code>files</code> in unserem Projekt gespeichert haben, würden wir die Datei mit dem folgenden Code einlesen und einem Objekt namens <code>students</code> zuschreiben.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">"./files/students.csv"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -506,8 +512,8 @@ dbl (1): Student ID
 <li>Die Werte der Spalte <code>mealPlan</code> sind <strong>als <code>character</code>-Werte eingelesen</strong>, beinhalten aber tatsächlich nur zwei Ausprägungen. Besser wäre es, wenn sie als <code>factor</code> eingelesen würden.</li>
 <li>In der Spalte <code>AGE</code> befindet sich mit <code>"five"</code> keine Zahl, sondern ein Text, weshalb die gesamte <strong>Spalte fälschlicherweise als <code>character</code> eingelesen</strong> wurden.</li>
 </ol>
-<section id="sec-datenimport-csv-importieren-spaltennamen" class="level4" data-number="6.1.2.1">
-<h4 data-number="6.1.2.1" class="anchored" data-anchor-id="sec-datenimport-csv-importieren-spaltennamen"><span class="header-section-number">6.1.2.1</span> Einheitliche Spaltennamen</h4>
+<section id="sec-datenimport-csv-importieren-spaltennamen" class="level4" data-number="6.2.2.1">
+<h4 data-number="6.2.2.1" class="anchored" data-anchor-id="sec-datenimport-csv-importieren-spaltennamen"><span class="header-section-number">6.2.2.1</span> Einheitliche Spaltennamen</h4>
 <p>Um die Spaltennamen anzupassen, können wir beim Import auf eine nützliche Funktion namens <strong><code>clean_names()</code></strong> aus dem <strong><code>janitor</code></strong>-Paket zugreifen. <code>clean_names()</code> “säubert” die Namen eines <em>data frames</em> so, dass sie alle der Schreibweise <code>snake_case</code> folgen (<a href="03-grundlagen.html#sec-grundlagen-eingabe-rechtschreibung" class="quarto-xref"><span>Kapitel 3.1.1</span></a>). Sobald wir <code>janitor</code> geladen haben, können wir die <code>clean_names()</code> einfach mittels der <em>pipe</em> mit <code>read_csv()</code> verbinden.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">"https://pos.it/r4ds-students-csv"</span>) <span class="sc">|&gt;</span> </span>
@@ -526,8 +532,8 @@ dbl (1): Student ID
 </div>
 </div>
 </section>
-<section id="sec-datenimport-csv-import-na" class="level4" data-number="6.1.2.2">
-<h4 data-number="6.1.2.2" class="anchored" data-anchor-id="sec-datenimport-csv-import-na"><span class="header-section-number">6.1.2.2</span> Angabe fehlender Werte</h4>
+<section id="sec-datenimport-csv-import-na" class="level4" data-number="6.2.2.2">
+<h4 data-number="6.2.2.2" class="anchored" data-anchor-id="sec-datenimport-csv-import-na"><span class="header-section-number">6.2.2.2</span> Angabe fehlender Werte</h4>
 <p>Es kommt immer wieder vor, dass in Tabellen fehlende Werte auf unterschiedliche Weise kenntlich gemacht werden. Standardmäßig hält <code>read_csv()</code> jedoch nur leere Zellen (<code>""</code>) für wirklich fehlende Werte und übersieht damit Angaben wie <code>"</code>N/A<code>"</code>. Um dies zu ändern, nutzen wir den Parameter <strong><code>na</code></strong>, dem wir einen <strong>Vektor mit all jenen Werten als Argument geben, die für fehlende Werte stehen</strong>. Zusätzlich zu <code>""</code> möchten wir also mit <code>na = c("", "N/A")</code> auch noch <code>"N/A"</code> explizit angeben.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="at">file =</span> <span class="st">"https://pos.it/r4ds-students-csv"</span>,</span>
@@ -547,9 +553,9 @@ dbl (1): Student ID
 </div>
 </div>
 </section>
-<section id="sec-datenimport-csv-importieren-datentypen" class="level4" data-number="6.1.2.3">
-<h4 data-number="6.1.2.3" class="anchored" data-anchor-id="sec-datenimport-csv-importieren-datentypen"><span class="header-section-number">6.1.2.3</span> Datentypen für Spalten angeben</h4>
-<p>Standardmäßig <strong>“rät” <code>readr</code></strong> bei jeder Spalte, um welchen Datentypen es sich handelt <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7.3.1</a>)</span>. Nicht immer ist <code>readr</code>s Vermutung dabei richtig. Wenn wir möchten, dass <code>meal_plan</code> statt als <code>character</code> als <code>factor</code> eingelesen wird, können wir hierfür den Parameter <code>col_types</code> (<em>column types</em>) nutzen, um <strong>für jede Spalte einen eigenen Datentyp anzugeben</strong>. <code>col_types</code> benötigt dabei eine Funktion namens <code>cols</code>, innerhalb derer wir für jede Spalte, bei der wir von <code>readr</code>s Rat abweichen wollen angeben, eine der folgenden Funktionen nutzen:<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<section id="sec-datenimport-csv-importieren-datentypen" class="level4" data-number="6.2.2.3">
+<h4 data-number="6.2.2.3" class="anchored" data-anchor-id="sec-datenimport-csv-importieren-datentypen"><span class="header-section-number">6.2.2.3</span> Datentypen für Spalten angeben</h4>
+<p>Standardmäßig <strong>“rät” <code>readr</code></strong> bei jeder Spalte, um welchen Datentypen es sich handelt <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7.3.1</a>)</span>. Nicht immer ist <code>readr</code>s Vermutung dabei richtig. Wenn wir möchten, dass <code>meal_plan</code> statt als <code>character</code> als <code>factor</code> eingelesen wird, können wir hierfür den Parameter <code>col_types</code> (<em>column types</em>) nutzen, um <strong>für jede Spalte einen eigenen Datentyp anzugeben</strong>. <code>col_types</code> benötigt dabei eine Funktion namens <code>cols</code>, innerhalb derer wir für jede Spalte, bei der wir von <code>readr</code>s Rat abweichen wollen angeben, eine der folgenden Funktionen nutzen:<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <ul>
 <li><strong><code>col_logical()</code></strong>: Die Variable soll als <code>logical</code> eingelesen werden.</li>
 <li><strong><code>col_integer()</code></strong>: Die Variable soll als <code>integer</code> eingelesen werden.</li>
@@ -630,7 +636,7 @@ Anpassungen nach dem Import
 6          6 Güvenç Attila    Ice cream          Lunch only              6</code></pre>
 </div>
 </div>
-<p>Ein solcher Fall ist nicht durch eine Angabe von Datentypen zu lösen. Stattdessen entscheiden wir uns dafür, <strong>erst die Tabelle einzulesen</strong> und sie <strong>dann zu verändern</strong>. Wir greifen hierfür zunächst auf unseren Code von <a href="#sec-datenimport-csv-importieren-datentypen" class="quarto-xref"><span>Kapitel 6.1.2.3</span></a> zurück.</p>
+<p>Ein solcher Fall ist nicht durch eine Angabe von Datentypen zu lösen. Stattdessen entscheiden wir uns dafür, <strong>erst die Tabelle einzulesen</strong> und sie <strong>dann zu verändern</strong>. Wir greifen hierfür zunächst auf unseren Code von <a href="#sec-datenimport-csv-importieren-datentypen" class="quarto-xref"><span>Kapitel 6.2.2.3</span></a> zurück.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://pos.it/r4ds-students-csv"</span>,</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"N/A"</span>),</span>
@@ -709,8 +715,8 @@ row col expected actual
 </div>
 </div>
 </section>
-<section id="zeilen-überspringen" class="level4" data-number="6.1.2.4">
-<h4 data-number="6.1.2.4" class="anchored" data-anchor-id="zeilen-überspringen"><span class="header-section-number">6.1.2.4</span> Zeilen überspringen</h4>
+<section id="zeilen-überspringen" class="level4" data-number="6.2.2.4">
+<h4 data-number="6.2.2.4" class="anchored" data-anchor-id="zeilen-überspringen"><span class="header-section-number">6.2.2.4</span> Zeilen überspringen</h4>
 <p>Nicht immer enthalten Dateien ausnahmslos Informationen, die uns interessieren. Nehmen wir an, wir hätten es mit einer Datei zu tun, die in den ersten Zeilen wichtige Informationen in Form sog. <em>metadata</em> enthält. Die <strong>eigentlichen Daten beginnen erst in der zweiten Zeile</strong>.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -753,8 +759,8 @@ row col expected actual
 </div>
 </div>
 </section>
-<section id="keine-spaltennamen-nutzen" class="level4" data-number="6.1.2.5">
-<h4 data-number="6.1.2.5" class="anchored" data-anchor-id="keine-spaltennamen-nutzen"><span class="header-section-number">6.1.2.5</span> Keine Spaltennamen nutzen</h4>
+<section id="keine-spaltennamen-nutzen" class="level4" data-number="6.2.2.5">
+<h4 data-number="6.2.2.5" class="anchored" data-anchor-id="keine-spaltennamen-nutzen"><span class="header-section-number">6.2.2.5</span> Keine Spaltennamen nutzen</h4>
 <p>Manchmal kommt es vor, dass eine Datei keine Spaltenbeschriftungen aufweist. Wenn wir dies nicht wüssten, würden die Werte der ersten Zeile standardmäßig von <code>readr</code> als Beschriftungen genutzt werden.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(<span class="st">"1,2,3</span></span>
@@ -780,8 +786,8 @@ row col expected actual
 </div>
 </div>
 </section>
-<section id="eigene-spaltennamen-angeben" class="level4" data-number="6.1.2.6">
-<h4 data-number="6.1.2.6" class="anchored" data-anchor-id="eigene-spaltennamen-angeben"><span class="header-section-number">6.1.2.6</span> Eigene Spaltennamen angeben</h4>
+<section id="eigene-spaltennamen-angeben" class="level4" data-number="6.2.2.6">
+<h4 data-number="6.2.2.6" class="anchored" data-anchor-id="eigene-spaltennamen-angeben"><span class="header-section-number">6.2.2.6</span> Eigene Spaltennamen angeben</h4>
 <p>Wenn wir eine Tabelle mit automatisch erzeugten Variablennamen vermeiden wollen, können wir auch beim Einlesen dem Parameter <code>col_names</code> einen <strong>Vektor mit entsprechenden Namen</strong> geben.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(<span class="st">"1,2,3</span></span>
@@ -797,8 +803,8 @@ row col expected actual
 </div>
 </section>
 </section>
-<section id="exportieren" class="level3" data-number="6.1.3">
-<h3 data-number="6.1.3" class="anchored" data-anchor-id="exportieren"><span class="header-section-number">6.1.3</span> Exportieren</h3>
+<section id="exportieren" class="level3" data-number="6.2.3">
+<h3 data-number="6.2.3" class="anchored" data-anchor-id="exportieren"><span class="header-section-number">6.2.3</span> Exportieren</h3>
 <p>Um eine einmal importierte Tabelle wieder als CSV zu exportieren können wir das Gegenstück zu <code>read_csv()</code> nutzen, welches passenderweise <strong><code>write_csv()</code></strong> heißt.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> Wir möchten unseren sauber importierten <em>data frame</em> <code>students</code> exportieren.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>students</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -845,9 +851,9 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="sec-datenimport-csv-verwandte-funktionen" class="level3" data-number="6.1.4">
-<h3 data-number="6.1.4" class="anchored" data-anchor-id="sec-datenimport-csv-verwandte-funktionen"><span class="header-section-number">6.1.4</span> Verwandte Funktionen</h3>
-<p>Sobald wir einmal die Logik von <code>read_csv()</code> verstanden haben, können wir diese Wissen leicht auf <strong>verwandte Funktionen</strong> übertragen. Tatsächlich finden sich im CSV-Format nämlich unterschiedliche Arten, welche Trennzeichen für Zellenwerte oder welche Dezimalzeichen verwendet werden. Neben <code>read_csv()</code> sind u.a die folgenden Funktionen entsprechend gut zu kennen <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7.2.3</a>)</span>:</p>
+<section id="sec-datenimport-csv-verwandte-funktionen" class="level3" data-number="6.2.4">
+<h3 data-number="6.2.4" class="anchored" data-anchor-id="sec-datenimport-csv-verwandte-funktionen"><span class="header-section-number">6.2.4</span> Verwandte Funktionen</h3>
+<p>Sobald wir einmal die Logik von <code>read_csv()</code> verstanden haben, können wir diese Wissen leicht auf <strong>verwandte Funktionen</strong> übertragen. Tatsächlich finden sich im CSV-Format nämlich unterschiedliche Arten, welche Trennzeichen für Zellenwerte oder welche Dezimalzeichen verwendet werden. Neben <code>read_csv()</code> sind u.a die folgenden Funktionen entsprechend gut zu kennen <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 7.2.3</a>)</span>:</p>
 <ul>
 <li><strong><code>read_csv2()</code></strong>: Diese Funktion verwendet Semikola (<code>;</code>) als Trennzeichen und Kommata (<code>,</code>) als Dezimalzeichen. Dieser Standard außerhalb des englischsprachigen Raums geläufig.</li>
 <li><strong><code>read_tsv()</code></strong>: Diese Funktion verwendet Einschübe (<em>tabs</em>) als Trennzeichen.</li>
@@ -856,17 +862,17 @@ dbl (2): student_id, age
 <p><strong>Für jede <code>read_*()</code>-Funktion existiert zudem eine ergänzende <code>write_*()</code>-Funktion.</strong></p>
 </section>
 </section>
-<section id="xlsx-und-xls" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="xlsx-und-xls"><span class="header-section-number">6.2</span> XLSX und XLS</h2>
-<section id="erste-ansicht-1" class="level3" data-number="6.2.1">
-<h3 data-number="6.2.1" class="anchored" data-anchor-id="erste-ansicht-1"><span class="header-section-number">6.2.1</span> Erste Ansicht</h3>
+<section id="xlsx-und-xls" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="xlsx-und-xls"><span class="header-section-number">6.3</span> XLSX und XLS</h2>
+<section id="erste-ansicht-1" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="erste-ansicht-1"><span class="header-section-number">6.3.1</span> Erste Ansicht</h3>
 <p>Aufgrund der Verbreitung von Microsoft Office-Produkten sind die Dateiformate XLS bzw. XLSX oftmals <strong>unumgänglich</strong>. Deshalb liegen gleich mehrere Pakete vor, um Daten in diesem Formaten in R zu importieren. In diesem Abschnitt möchten wir das Paket <strong><code>readxl</code></strong> kennenlernen. Als <strong>Beispieldatensatz</strong> dient uns <a href="https://docs.google.com/spreadsheets/d/1pWA4NGtTfqK_pQG2b8BdrIuUrMJsGHbE/edit?gid=1805851187#gid=1805851187"><code>sample.xlsx</code></a>. Dieser Datensatz beinhaltet zwei Tabellenblätter (<em>sheets</em>). Das erste Tabellenblatt, <code>bank-full</code>, ist eine Tabelle mit 45211 Zeilen und 17 Spalten, die Informationen zu Bankkunden enthält.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://images.datacamp.com/image/upload/v1678464038/Screenshot_2023_03_08_at_9_05_49_PM_f7a261b840.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Das Tabellenblatt <code>bank-full</code> in <code>sample.xlsx</code> <span class="citation" data-cites="chugh2023">(<a href="#ref-chugh2023" role="doc-biblioref">Chugh 2023</a>)</span>.</figcaption>
+<figcaption>Das Tabellenblatt <code>bank-full</code> in <code>sample.xlsx</code> <span class="citation" data-cites="chugh2023">(<a href="references.html#ref-chugh2023" role="doc-biblioref">Chugh 2023</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -877,14 +883,14 @@ dbl (2): student_id, age
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://images.datacamp.com/image/upload/v1678464098/Screenshot_2023_03_08_at_9_08_53_PM_07208c64b8.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption>Das Tabellenblatt <code>iris</code> in <code>sample.xlsx</code> <span class="citation" data-cites="chugh2023">(<a href="#ref-chugh2023" role="doc-biblioref">Chugh 2023</a>)</span>.</figcaption>
+<figcaption>Das Tabellenblatt <code>iris</code> in <code>sample.xlsx</code> <span class="citation" data-cites="chugh2023">(<a href="references.html#ref-chugh2023" role="doc-biblioref">Chugh 2023</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="importieren-1" class="level3" data-number="6.2.2">
-<h3 data-number="6.2.2" class="anchored" data-anchor-id="importieren-1"><span class="header-section-number">6.2.2</span> Importieren</h3>
+<section id="importieren-1" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="importieren-1"><span class="header-section-number">6.3.2</span> Importieren</h3>
 <p>Die Funktion, um den Inhalt einer Excel-Datei (XLS oder XLSX) einzulesen, heißt <strong><code>read_excel()</code></strong>. Der Parameter <strong><code>path</code></strong> benötigt (ebenso wie <code>file</code> in <code>read_csv()</code>) einen lokalen <strong>Dateipfad</strong> oder eine <strong>Internetadresse.</strong> Wenn wir nichts weiter einlesen, importiert R den Inhalt des ersten Tabellenblattes als <em>tibble</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>bank_full <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/sample.xlsx"</span>) <span class="co"># Angabe des Dateipfads</span></span>
@@ -908,8 +914,8 @@ dbl (2): student_id, age
 #   previous &lt;dbl&gt;, poutcome &lt;chr&gt;, y &lt;chr&gt;</code></pre>
 </div>
 </div>
-<section id="auswahl-eines-bestimmten-tabellenblattes" class="level4" data-number="6.2.2.1">
-<h4 data-number="6.2.2.1" class="anchored" data-anchor-id="auswahl-eines-bestimmten-tabellenblattes"><span class="header-section-number">6.2.2.1</span> Auswahl eines bestimmten Tabellenblattes</h4>
+<section id="auswahl-eines-bestimmten-tabellenblattes" class="level4" data-number="6.3.2.1">
+<h4 data-number="6.3.2.1" class="anchored" data-anchor-id="auswahl-eines-bestimmten-tabellenblattes"><span class="header-section-number">6.3.2.1</span> Auswahl eines bestimmten Tabellenblattes</h4>
 <p>Wenn wir nicht das erste, sondern das zweite Tabellenblatt (<code>iris</code>) importieren möchten, nutzen wir den Parameter <strong><code>sheet</code></strong>. Wir können ihm entweder den <strong>Namen</strong> des Tabellenblattes…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/sample.xlsx"</span>,</span>
@@ -955,15 +961,15 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="auswahl-eines-tabellenbereichs" class="level4" data-number="6.2.2.2">
-<h4 data-number="6.2.2.2" class="anchored" data-anchor-id="auswahl-eines-tabellenbereichs"><span class="header-section-number">6.2.2.2</span> Auswahl eines Tabellenbereichs</h4>
+<section id="auswahl-eines-tabellenbereichs" class="level4" data-number="6.3.2.2">
+<h4 data-number="6.3.2.2" class="anchored" data-anchor-id="auswahl-eines-tabellenbereichs"><span class="header-section-number">6.3.2.2</span> Auswahl eines Tabellenbereichs</h4>
 <p>Selten beinhaltet eine Excel-Datei ausschließlich Daten, die wir benötigen. Regelmäßig enthalten derartige Dateien etwa mehrere (mehr oder weniger nützliche) Überschriften, Fußnoten oder Diagramme. Deshalb können wir mit dem Parameter <strong><code>range</code></strong> einen <strong>Bereich</strong> im Tabellenblatt angeben, dessen Daten wir importieren möchten. Nehmen wir an, wir würden gerne die neun hier ausgewählten Zellenwerte importieren:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./images/spreadsheet-range.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption>Eine Auswahl innerhalb des Tabellenblatts <code>iris</code> in <code>sample.xlsx</code> <span class="citation" data-cites="chugh2023">(<a href="#ref-chugh2023" role="doc-biblioref">Chugh 2023</a>)</span>.</figcaption>
+<figcaption>Eine Auswahl innerhalb des Tabellenblatts <code>iris</code> in <code>sample.xlsx</code> <span class="citation" data-cites="chugh2023">(<a href="references.html#ref-chugh2023" role="doc-biblioref">Chugh 2023</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -1001,11 +1007,11 @@ dbl (2): student_id, age
 2   4.7   3.2   1.3</code></pre>
 </div>
 </div>
-<p>Um zu verhindern, dass die Werte der ersten eingelesenen Zeile als <strong>Spaltennamen</strong> importiert werden, müssen wir in solchen Fällen jedoch weitere Parameter heranziehen (<a href="#sec-datenimport-excel-import-keine-spaltennamen" class="quarto-xref"><span>Kapitel 6.2.2.7</span></a>).</p>
+<p>Um zu verhindern, dass die Werte der ersten eingelesenen Zeile als <strong>Spaltennamen</strong> importiert werden, müssen wir in solchen Fällen jedoch weitere Parameter heranziehen (<a href="#sec-datenimport-excel-import-keine-spaltennamen" class="quarto-xref"><span>Kapitel 6.3.2.7</span></a>).</p>
 </section>
-<section id="einheitliche-spaltennamen" class="level4" data-number="6.2.2.3">
-<h4 data-number="6.2.2.3" class="anchored" data-anchor-id="einheitliche-spaltennamen"><span class="header-section-number">6.2.2.3</span> Einheitliche Spaltennamen</h4>
-<p>Anders als <code>bank-full</code> enthält <code>iris</code> Spaltennamen im sog. <em>camel case</em> (<a href="03-grundlagen.html#sec-grundlagen-eingabe-rechtschreibung" class="quarto-xref"><span>Kapitel 3.1.1</span></a>). Um diese in <em>snake case</em> zu verwandeln, können wir wie zuvor <strong><code>clean_names()</code></strong> nutzen (<a href="#sec-datenimport-csv-importieren-spaltennamen" class="quarto-xref"><span>Kapitel 6.1.2.1</span></a>).</p>
+<section id="einheitliche-spaltennamen" class="level4" data-number="6.3.2.3">
+<h4 data-number="6.3.2.3" class="anchored" data-anchor-id="einheitliche-spaltennamen"><span class="header-section-number">6.3.2.3</span> Einheitliche Spaltennamen</h4>
+<p>Anders als <code>bank-full</code> enthält <code>iris</code> Spaltennamen im sog. <em>camel case</em> (<a href="03-grundlagen.html#sec-grundlagen-eingabe-rechtschreibung" class="quarto-xref"><span>Kapitel 3.1.1</span></a>). Um diese in <em>snake case</em> zu verwandeln, können wir wie zuvor <strong><code>clean_names()</code></strong> nutzen (<a href="#sec-datenimport-csv-importieren-spaltennamen" class="quarto-xref"><span>Kapitel 6.2.2.1</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/sample.xlsx"</span>,</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sheet =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
@@ -1029,17 +1035,17 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="angabe-fehlender-werte" class="level4" data-number="6.2.2.4">
-<h4 data-number="6.2.2.4" class="anchored" data-anchor-id="angabe-fehlender-werte"><span class="header-section-number">6.2.2.4</span> Angabe fehlender Werte</h4>
-<p>Die Angabe von Werten, die als fehlende Werte (<code>NA</code>) erkannt werden sollen, erfolgt analog zu <code>read_csv()</code> mittels des <strong><code>na</code></strong>-Parameters (<a href="#sec-datenimport-csv-import-na" class="quarto-xref"><span>Kapitel 6.1.2.2</span></a>).</p>
+<section id="angabe-fehlender-werte" class="level4" data-number="6.3.2.4">
+<h4 data-number="6.3.2.4" class="anchored" data-anchor-id="angabe-fehlender-werte"><span class="header-section-number">6.3.2.4</span> Angabe fehlender Werte</h4>
+<p>Die Angabe von Werten, die als fehlende Werte (<code>NA</code>) erkannt werden sollen, erfolgt analog zu <code>read_csv()</code> mittels des <strong><code>na</code></strong>-Parameters (<a href="#sec-datenimport-csv-import-na" class="quarto-xref"><span>Kapitel 6.2.2.2</span></a>).</p>
 </section>
-<section id="datentypen-für-spalten-angeben" class="level4" data-number="6.2.2.5">
-<h4 data-number="6.2.2.5" class="anchored" data-anchor-id="datentypen-für-spalten-angeben"><span class="header-section-number">6.2.2.5</span> Datentypen für Spalten angeben</h4>
+<section id="datentypen-für-spalten-angeben" class="level4" data-number="6.3.2.5">
+<h4 data-number="6.3.2.5" class="anchored" data-anchor-id="datentypen-für-spalten-angeben"><span class="header-section-number">6.3.2.5</span> Datentypen für Spalten angeben</h4>
 <p>Standardmäßig <strong>“rät” <code>read_excel()</code></strong> bei jeder Spalte, um welchen Datentypen es sich handelt, ebenso wie <code>read_csv()</code>. Nicht immer ist <code>read_excel()</code>s Vermutung dabei richtig. Wenn wir deshalb Datentypen selbst angeben wollen, nutzen wir eine ähnliche, nicht aber die gleiche Schreibweise wie bei <code>read_csv()</code>.</p>
-<p>Stattdessen benötigt der Parameter <strong><code>col_types</code></strong> einen <strong>Vektor</strong>, der soviele Werte enthält, wie Spalten eingelesen werden sollen. Wir können hierbei aus uns bekannten Werten wie <code>"logical"</code>, <code>"numeric"</code>, <code>"date"</code>, <code>"text"</code>, <code>"list"</code>, <code>"skip"</code> oder <code>"guess"</code> wählen<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. <code>"skip"</code> überspringt dabei eine Spalte und liest den Inhalt nicht ein (ebenso wie <code>col_skip()</code> es bei <code>read_csv()</code> tut, <a href="#sec-datenimport-csv-importieren-datentypen" class="quarto-xref"><span>Kapitel 6.1.2.3</span></a>). Glücklicherweise sind die von uns bisher eingelesenen Tabellen <code>bank_full</code> und <code>iris</code> aber fehlerfrei.</p>
+<p>Stattdessen benötigt der Parameter <strong><code>col_types</code></strong> einen <strong>Vektor</strong>, der soviele Werte enthält, wie Spalten eingelesen werden sollen. Wir können hierbei aus uns bekannten Werten wie <code>"logical"</code>, <code>"numeric"</code>, <code>"date"</code>, <code>"text"</code>, <code>"list"</code>, <code>"skip"</code> oder <code>"guess"</code> wählen<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. <code>"skip"</code> überspringt dabei eine Spalte und liest den Inhalt nicht ein (ebenso wie <code>col_skip()</code> es bei <code>read_csv()</code> tut, <a href="#sec-datenimport-csv-importieren-datentypen" class="quarto-xref"><span>Kapitel 6.2.2.3</span></a>). Glücklicherweise sind die von uns bisher eingelesenen Tabellen <code>bank_full</code> und <code>iris</code> aber fehlerfrei.</p>
 </section>
-<section id="zeilen-überspringen-1" class="level4" data-number="6.2.2.6">
-<h4 data-number="6.2.2.6" class="anchored" data-anchor-id="zeilen-überspringen-1"><span class="header-section-number">6.2.2.6</span> Zeilen überspringen</h4>
+<section id="zeilen-überspringen-1" class="level4" data-number="6.3.2.6">
+<h4 data-number="6.3.2.6" class="anchored" data-anchor-id="zeilen-überspringen-1"><span class="header-section-number">6.3.2.6</span> Zeilen überspringen</h4>
 <p>Auch bei <code>read_excel()</code> gibt es die Möglichkeit, mithilfe des Parameters <strong><code>skip</code></strong> anzugeben, ob – und wenn ja, wieviele – Zeilen übersprungen werden sollen. Anders als bei <code>read_csv()</code> gilt diese Angabe bei <code>read_excel()</code> jedoch auch für die <strong>Kopfzeile</strong>, die oft die Spaltennamen enthält. Dadurch werden die *Werte der ersten Zeile<strong> ohne weitere Angaben </strong>als Spaltennamen verwendet**.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/sample.xlsx"</span>,</span>
@@ -1064,8 +1070,8 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="sec-datenimport-excel-import-keine-spaltennamen" class="level4" data-number="6.2.2.7">
-<h4 data-number="6.2.2.7" class="anchored" data-anchor-id="sec-datenimport-excel-import-keine-spaltennamen"><span class="header-section-number">6.2.2.7</span> Keine Spaltennamen nutzen</h4>
+<section id="sec-datenimport-excel-import-keine-spaltennamen" class="level4" data-number="6.3.2.7">
+<h4 data-number="6.3.2.7" class="anchored" data-anchor-id="sec-datenimport-excel-import-keine-spaltennamen"><span class="header-section-number">6.3.2.7</span> Keine Spaltennamen nutzen</h4>
 <p>Um das <strong>Problem falscher Spaltennamen</strong> zu beheben, kann – wie im Falle von <code>read_csv()</code> – innerhalb von <code>read_excel()</code> mit dem Parameter <strong><code>col_names</code></strong> mit <code>FALSE</code> angegeben werden, dass <strong>keine Spaltennamen</strong> eingelesen werden.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/sample.xlsx"</span>,</span>
@@ -1123,8 +1129,8 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="eigene-spaltennamen-angeben-1" class="level4" data-number="6.2.2.8">
-<h4 data-number="6.2.2.8" class="anchored" data-anchor-id="eigene-spaltennamen-angeben-1"><span class="header-section-number">6.2.2.8</span> Eigene Spaltennamen angeben</h4>
+<section id="eigene-spaltennamen-angeben-1" class="level4" data-number="6.3.2.8">
+<h4 data-number="6.3.2.8" class="anchored" data-anchor-id="eigene-spaltennamen-angeben-1"><span class="header-section-number">6.3.2.8</span> Eigene Spaltennamen angeben</h4>
 <p>Wenn wir eine Tabelle mit automatisch erzeugten Variablennamen vermeiden wollen, können wir – genau wie zuvor bei der Nutzung von <code>read_csv()</code> – auch beim Einlesen dem Parameter <code>col_names</code> einen <strong>Vektor mit eigenen Namen</strong> geben.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/sample.xlsx"</span>,</span>
@@ -1151,15 +1157,15 @@ dbl (2): student_id, age
 </div>
 </section>
 </section>
-<section id="exportieren-1" class="level3" data-number="6.2.3">
-<h3 data-number="6.2.3" class="anchored" data-anchor-id="exportieren-1"><span class="header-section-number">6.2.3</span> Exportieren</h3>
+<section id="exportieren-1" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="exportieren-1"><span class="header-section-number">6.3.3</span> Exportieren</h3>
 <p>Wie der Name des Pakets es bereits andeutet, sind die Funktionen von <code>readxl</code> ausschließlich zum Importieren von Excel-Dateien gedacht. Mit der Funktion <strong><code>write_xlsx()</code></strong> aus dem gleichnamigen Package <a href="https://docs.ropensci.org/writexl/"><code>writexl</code></a> liegt jedoch eine Erweiterung zum Exportieren eines <em>data frames</em> im Excel-Format vor.</p>
 </section>
 </section>
-<section id="r-datenformate" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="r-datenformate"><span class="header-section-number">6.3</span> R-Datenformate</h2>
-<section id="rds" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="rds"><span class="header-section-number">6.3.1</span> RDS</h3>
+<section id="r-datenformate" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="r-datenformate"><span class="header-section-number">6.4</span> R-Datenformate</h2>
+<section id="rds" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="rds"><span class="header-section-number">6.4.1</span> RDS</h3>
 <p>Um Daten zwischen Nutzer*innen von R zu teilen, kommt einem bestimmten Dateiformat eine besondere Bedeutung zu. Dieses Format ist RDS (<strong><em>R</em></strong> <strong><em>D</em>ata</strong> <strong><em>S</em>tructure</strong>). In diesem Format können wir <strong>einzelne Objekte exportieren</strong>, zum Beispiel <em>data frames</em>. Der <strong>Vorteil gegenüber anderen Exportformaten</strong> wie CSV oder XLSX liegt darin, dass das spezielle R-Format alle <strong>Metadaten</strong> mit exportiert. Das heißt, dass etwa alle <strong>Datentypen</strong> genauso erhalten bleiben, wie wir sie in unserer bisherigen R-Sitzung festgelegt haben. Beim Importieren einer zuvor erzeugten RDS-Datei müssen wir keine weiteren Angaben vornehmen.</p>
 <p>Zum <strong>Exportieren</strong> eines R-Objekts nutzen wir die Funktion <strong><code>write_rds()</code></strong><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>, der wir als Input <code>x</code> ein <strong>Objekt</strong> (hier unsere importierte <code>iris</code>-Tabelle) und als <strong>Dateipfad</strong> <code>file</code> einen Dateinamen mit der Endung <code>.rds</code> angeben. Auf diese Weise wird in unserem angegebenen Verzeichnis eine neue Datei <code>iris.rds</code> erzeugt.</p>
 <div class="cell">
@@ -1190,11 +1196,11 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="rdata" class="level3" data-number="6.3.2">
-<h3 data-number="6.3.2" class="anchored" data-anchor-id="rdata"><span class="header-section-number">6.3.2</span> RDATA</h3>
+<section id="rdata" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="rdata"><span class="header-section-number">6.4.2</span> RDATA</h3>
 <p>Über RDS hinaus bietet R mit RDATA noch ein weiteres Datenformat zum Austausch von Daten einer R-Sitzung an.</p>
-<section id="mehrere-objekte" class="level4" data-number="6.3.2.1">
-<h4 data-number="6.3.2.1" class="anchored" data-anchor-id="mehrere-objekte"><span class="header-section-number">6.3.2.1</span> Mehrere Objekte</h4>
+<section id="mehrere-objekte" class="level4" data-number="6.4.2.1">
+<h4 data-number="6.4.2.1" class="anchored" data-anchor-id="mehrere-objekte"><span class="header-section-number">6.4.2.1</span> Mehrere Objekte</h4>
 <p>Mit der Funktion <strong><code>save()</code></strong> können wir ein oder mehrere Objekte zugleich in einer Datei exportieren. Dafür nennen wir der Funktion die Objekte und geben mit <code>file</code> wiederum einen Dateipfad an, der auf <strong><code>.rdata</code></strong> endet.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>bank_full <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/sample.xlsx"</span>,</span>
@@ -1217,8 +1223,8 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="workspace" class="level4" data-number="6.3.2.2">
-<h4 data-number="6.3.2.2" class="anchored" data-anchor-id="workspace"><span class="header-section-number">6.3.2.2</span> Workspace</h4>
+<section id="workspace" class="level4" data-number="6.4.2.2">
+<h4 data-number="6.4.2.2" class="anchored" data-anchor-id="workspace"><span class="header-section-number">6.4.2.2</span> Workspace</h4>
 <p>Wenn wir mit vielen Objekten arbeiten, kann es sinnvoll sein, den <strong>gesamten <em>workspace</em> abzuspeichern</strong> (dies jedoch immer zu tun, wie RStudio es vorschlägt, ist nicht empfehlenswert; <a href="02-workflow.html#sec-workflow-sitzungen" class="quarto-xref"><span>Kapitel 2.2</span></a>). Um dies zu tun, können wir die Funktion <strong><code>save.image()</code></strong> nutzen.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save.image</span>(<span class="at">file =</span> <span class="st">"./files/my_workspace.rdata"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1231,16 +1237,16 @@ dbl (2): student_id, age
 </section>
 </section>
 </section>
-<section id="übungsaufgaben" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="übungsaufgaben"><span class="header-section-number">6.4</span> Übungsaufgaben</h2>
+<section id="übungsaufgaben" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="übungsaufgaben"><span class="header-section-number">6.5</span> Übungsaufgaben</h2>
 <p>Für diese Übungsaufgaben nutzen wir unterschiedliche Datensätze des Bayerischen Landesamtes für Statistik, die wir über <a href="https://www.statistikdaten.bayern.de/genesis/online">Genesis-Online</a> beziehen können.</p>
-<section id="sec-datenimport-uebungsaufgaben-csv" class="level3" data-number="6.4.1">
-<h3 data-number="6.4.1" class="anchored" data-anchor-id="sec-datenimport-uebungsaufgaben-csv"><span class="header-section-number">6.4.1</span> CSV</h3>
+<section id="sec-datenimport-uebungsaufgaben-csv" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="sec-datenimport-uebungsaufgaben-csv"><span class="header-section-number">6.5.1</span> CSV</h3>
 <ol type="1">
 <li>Laden Sie die Tabelle <a href="https://www.statistikdaten.bayern.de/genesis/online?operation=result&amp;code=12612-003z">12612-003z: Lebendgeborene: Gemeinde, Geschlecht, Jahre</a> im CSV-Format herunter. Importieren Sie dann den Inhalt als <code>geburten_bayern</code> in R.
 <ul>
 <li>Betrachten Sie die Datei zunächst in einem Texteditor, um den Inhalt zu verstehen. Welches Trennzeichen wir verwendet? Welche Zeilen enthalten Daten? Wie sind die Spalten benannt?</li>
-<li>Welche <code>read_*()</code>-Funktion Sie müssen Sie verwenden (<a href="#sec-datenimport-csv-verwandte-funktionen" class="quarto-xref"><span>Kapitel 6.1.4</span></a>)?</li>
+<li>Welche <code>read_*()</code>-Funktion Sie müssen Sie verwenden (<a href="#sec-datenimport-csv-verwandte-funktionen" class="quarto-xref"><span>Kapitel 6.2.4</span></a>)?</li>
 <li>Welche Zeilen müssen Sie überspringen (<code>skip</code>)?</li>
 <li>Wieviele Zeilen sollen eingelesen werden (<code>n_max</code>)?</li>
 <li>Wie müssen die Spalten benannt werden (<code>col_names</code>)?</li>
@@ -1248,11 +1254,6 @@ dbl (2): student_id, age
 </ol>
 <p>Ihre Tabelle könnte so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="at">file =</span> <span class="st">"./files/12612-003z.csv"</span>,</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">skip =</span> <span class="dv">7</span>,</span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n_max =</span> <span class="dv">11</span>,</span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"jahr"</span>, <span class="st">"geburten_insgesamt"</span>, <span class="st">"geburten_maennlich"</span>, <span class="st">"geburten_weiblich"</span>))</span>
-<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>geburten</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 11 × 4
     jahr geburten_insgesamt geburten_maennlich geburten_weiblich
@@ -1274,7 +1275,7 @@ dbl (2): student_id, age
 <li>Laden Sie die Tabelle <a href="https://www.statistikdaten.bayern.de/genesis//online?operation=table&amp;code=33111-001z&amp;bypass=true&amp;levelindex=0&amp;levelid=1734102234271">33111-001z: Fläche: Gemeinde, Fläche (ALKIS), Art der tatsächlichen Nutzung (nach ALKIS-Nutzungsarten), Jahre (ab 2014)</a> im CSV-Format herunter. Wählen Sie beim Herunterladen die unten angegebenen Einstellungen aus. Importieren Sie dann den Inhalt als <code>flaechen_bayern</code> in R.
 <ul>
 <li>Betrachten Sie die Datei zunächst in einem Texteditor, um den Inhalt zu verstehen. Welches Trennzeichen wir verwendet? Welche Zeilen enthalten Daten? Wie sind die Spalten benannt?</li>
-<li>Welche <code>read_*()</code>-Funktion Sie müssen Sie verwenden (<a href="#sec-datenimport-csv-verwandte-funktionen" class="quarto-xref"><span>Kapitel 6.1.4</span></a>)?</li>
+<li>Welche <code>read_*()</code>-Funktion Sie müssen Sie verwenden (<a href="#sec-datenimport-csv-verwandte-funktionen" class="quarto-xref"><span>Kapitel 6.2.4</span></a>)?</li>
 <li>Welche Zeilen müssen Sie überspringen (<code>skip</code>)?</li>
 <li>Wieviele Zeilen sollen eingelesen werden (<code>n_max</code>)?</li>
 <li>Wie müssen die Spalten benannt werden (<code>col_names</code>)?</li>
@@ -1293,11 +1294,6 @@ dbl (2): student_id, age
 </div>
 <p>Ihre Tabelle könnte so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv2</span>(<span class="at">file =</span> <span class="st">"./files/33111-001z.csv"</span>,</span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">skip =</span> <span class="dv">11</span>,</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n_max =</span> <span class="dv">5</span>,</span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"code"</span>, <span class="st">"beschreibung"</span>, <span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>),</span>
-<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">"ISO-8859-1"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 12
    code beschreibung     `2014` `2015` `2016` `2017` `2018` `2019` `2020` `2021`
@@ -1311,8 +1307,8 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="xlsx-und-xls-1" class="level3" data-number="6.4.2">
-<h3 data-number="6.4.2" class="anchored" data-anchor-id="xlsx-und-xls-1"><span class="header-section-number">6.4.2</span> XLSX und XLS</h3>
+<section id="xlsx-und-xls-1" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="xlsx-und-xls-1"><span class="header-section-number">6.5.2</span> XLSX und XLS</h3>
 <ol type="1">
 <li>Laden Sie die Tabelle <a href="https://www.statistikdaten.bayern.de/genesis/online?operation=abruftabelleBearbeiten&amp;levelindex=1&amp;levelid=1734104471087&amp;auswahloperation=abruftabelleAuspraegungAuswaehlen&amp;auswahlverzeichnis=ordnungsstruktur&amp;auswahlziel=werteabruf&amp;code=61111-311z&amp;auswahltext=&amp;werteabruf=starten#abreadcrumb">61111-311z: Verbraucherpreisindex (2020=100): Bayern, Index für Erdgas, Jahre (ab 2010)</a> im XLSX-Format herunter. Importieren Sie nur die Spalten für Jahr (Spalte B) und den Verbraucherpreisindex (Spalte D) den Inhalt als <code>gaspreise_bayern</code> in R.
 <ul>
@@ -1323,11 +1319,6 @@ dbl (2): student_id, age
 </ol>
 <p>Ihre Tabelle könnte so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>gaspreise_bayern <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/61111-311z.xlsx"</span>,</span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">range =</span> <span class="st">"B7:D20"</span>,</span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"numeric"</span>, <span class="st">"skip"</span>, <span class="st">"numeric"</span>),</span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"jahr"</span>, <span class="st">"verbraucherpreisindex_gas"</span>))</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>gaspreise_bayern</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 14 × 2
     jahr verbraucherpreisindex_gas
@@ -1358,11 +1349,11 @@ dbl (2): student_id, age
 </ol>
 <p>Ihre Tabelle könnte so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>kaufpreise_bauland_bayern <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/61511-111z.xlsx"</span>,</span>
-<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">range =</span> <span class="st">"A7:I17"</span>,</span>
-<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"numeric"</span>, <span class="fu">rep</span>(<span class="st">"skip"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">"numeric"</span>, <span class="dv">4</span>)),</span>
-<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"jahr"</span>, <span class="st">"faelle_bauland_anzahl"</span>, <span class="st">"faelle_baureifes_land_anzahl"</span>, <span class="st">"kaufwert_bauland_qm"</span>, <span class="st">"kaufwert_baureifes_land_qm"</span>))</span>
-<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>kaufpreise_bauland_bayern</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>kaufpreise_bauland_bayern <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/61511-111z.xlsx"</span>,</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">range =</span> <span class="st">"A7:I17"</span>,</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"numeric"</span>, <span class="fu">rep</span>(<span class="st">"skip"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">"numeric"</span>, <span class="dv">4</span>)),</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"jahr"</span>, <span class="st">"faelle_bauland_anzahl"</span>, <span class="st">"faelle_baureifes_land_anzahl"</span>, <span class="st">"kaufwert_bauland_qm"</span>, <span class="st">"kaufwert_baureifes_land_qm"</span>))</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>kaufpreise_bauland_bayern</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 11 × 5
     jahr faelle_bauland_anzahl faelle_baureifes_land_anzahl kaufwert_bauland_qm
@@ -1382,16 +1373,73 @@ dbl (2): student_id, age
 </div>
 </div>
 </section>
-<section id="r" class="level3" data-number="6.4.3">
-<h3 data-number="6.4.3" class="anchored" data-anchor-id="r"><span class="header-section-number">6.4.3</span> R</h3>
+<section id="r" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="r"><span class="header-section-number">6.5.3</span> R</h3>
 <ol type="1">
 <li>Exportieren Sie <code>geburten</code> als <code>geburten.rds</code>.</li>
-<li>Exportieren Sie <code>geburten</code> und <code>flaechen</code> als <code>meine_daten.rdata</code>.</li>
-<li>Exportieren Sie alle Objekte in Ihrem <em>workspace</em> als <code>mein_workspace.rdata</code>.</li>
+<li>Exportieren Sie <code>geburten</code> und <code>flaechen</code> als <code>my_data.rdata</code>.</li>
+<li>Exportieren Sie alle Objekte in Ihrem <em>workspace</em> als <code>my_workspace.rdata</code>.</li>
+</ol>
+</section>
+</section>
+<section id="lösungen" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="lösungen"><span class="header-section-number">6.6</span> Lösungen</h2>
+<section id="csv-1" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="csv-1"><span class="header-section-number">6.6.1</span> CSV</h3>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="at">file =</span> <span class="st">"./files/12612-003z.csv"</span>,</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">skip =</span> <span class="dv">7</span>,</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n_max =</span> <span class="dv">11</span>,</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"jahr"</span>, <span class="st">"geburten_insgesamt"</span>, <span class="st">"geburten_maennlich"</span>, <span class="st">"geburten_weiblich"</span>))</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>geburten</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv2</span>(<span class="at">file =</span> <span class="st">"./files/33111-001z.csv"</span>,</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">skip =</span> <span class="dv">11</span>,</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">n_max =</span> <span class="dv">5</span>,</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"code"</span>, <span class="st">"beschreibung"</span>, <span class="dv">2014</span><span class="sc">:</span><span class="dv">2023</span>),</span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">"ISO-8859-1"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="xlsx-und-xls-2" class="level3" data-number="6.6.2">
+<h3 data-number="6.6.2" class="anchored" data-anchor-id="xlsx-und-xls-2"><span class="header-section-number">6.6.2</span> XLSX und XLS</h3>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>gaspreise_bayern <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/61111-311z.xlsx"</span>,</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">range =</span> <span class="st">"B7:D20"</span>,</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"numeric"</span>, <span class="st">"skip"</span>, <span class="st">"numeric"</span>),</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"jahr"</span>, <span class="st">"verbraucherpreisindex_gas"</span>))</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>gaspreise_bayern</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>kaufpreise_bauland_bayern <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="at">path =</span> <span class="st">"./files/61511-111z.xlsx"</span>,</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">range =</span> <span class="st">"A7:I17"</span>,</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"numeric"</span>, <span class="fu">rep</span>(<span class="st">"skip"</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="st">"numeric"</span>, <span class="dv">4</span>)),</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"jahr"</span>, <span class="st">"faelle_bauland_anzahl"</span>, <span class="st">"faelle_baureifes_land_anzahl"</span>, <span class="st">"kaufwert_bauland_qm"</span>, <span class="st">"kaufwert_baureifes_land_qm"</span>))</span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>kaufpreise_bauland_bayern</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="r-1" class="level3" data-number="6.6.3">
+<h3 data-number="6.6.3" class="anchored" data-anchor-id="r-1"><span class="header-section-number">6.6.3</span> R</h3>
+<ol type="1">
+<li><code>write_rds(geburten, file = "./files/geburten.rds")</code></li>
+<li><code>save(geburten, flaechen, file = "my_data.rdata")</code></li>
+<li><code>save.image(file = "./files/my_workspace.rdata")</code></li>
 </ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-chugh2023" class="csl-entry" role="listitem">
 Chugh, Vidhi. 2023. <span>„Reading and Importing Excel Files Into R With readxl“</span>. <a href="https://www.datacamp.com/tutorial/r-tutorial-read-excel-into-r" class="uri">https://www.datacamp.com/tutorial/r-tutorial-read-excel-into-r</a>.
 </div>
@@ -1416,7 +1464,7 @@ Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for 
 <li id="fn4"><p>Es hilft, den Code von innen nach außen zu lesen, um ihn zu verstehen.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>Die <em>base R</em>-Grundfunktion heißt <code>write.csv()</code>.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p><code>bank-full</code> ist ein umfangreicher Datensatz einer portugiesischen Finanzinstitution, der als Lehrmaterial für fortgeschrittene Modellierungen dient (für weitere Informationen siehe <a href="https://www.kaggle.com/datasets/krantiswalke/bankfullcsv">kaggle</a>).<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p><code>iris</code> ist einer der meistgenutzten Übungsdatensätze Bereich <em>data science</em> <span class="citation" data-cites="cui2020">(<a href="#ref-cui2020" role="doc-biblioref">Cui 2020</a>)</span>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p><code>iris</code> ist einer der meistgenutzten Übungsdatensätze Bereich <em>data science</em> <span class="citation" data-cites="cui2020">(<a href="references.html#ref-cui2020" role="doc-biblioref">Cui 2020</a>)</span>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>Siehe <code>?read_excel</code>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn9"><p>Diese Funktion basiert auf der <em>base R</em>-Funktion <code>saveRDS()</code>.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn10"><p>Diese Funktion basiert auf der <em>base R</em>-Funktion <code>readRDS()</code>.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1444,150 +1492,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

@@ -91,12 +91,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -157,7 +155,6 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Einführung in R</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -212,7 +209,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -1142,32 +1139,32 @@ Filtering mit <em>base R</em>
 <span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>) <span class="co"># Strings als factors behandeln</span></span>
 <span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>my_data_frame</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name      number
-1     A  1.69840591
-2     B  1.01824389
-3     A  0.83577029
-4     B  0.79474672
-5     A -2.46763457
-6     B -1.56112378
-7     A -0.48586899
-8     B -0.04968706
-9     A -0.02293410
-10    B -0.52622388</code></pre>
+<pre><code>   name     number
+1     A  0.0690451
+2     B -1.2167246
+3     A  0.4833398
+4     B  0.4481453
+5     A -1.4707950
+6     B -0.4827690
+7     A -0.1449537
+8     B -0.1352923
+9     A -0.1411728
+10    B  0.6464303</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>my_data_frame <span class="sc">|&gt;</span> </span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">number_2 =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)) <span class="co"># Erzeugen einer neuen Variable number_2 mit 10 Zufallszahlen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name      number    number_2
-1     A  1.69840591 -1.41923332
-2     B  1.01824389 -0.94465539
-3     A  0.83577029  1.49302136
-4     B  0.79474672  1.19092778
-5     A -2.46763457  0.09028716
-6     B -1.56112378  0.97793702
-7     A -0.48586899 -1.50423253
-8     B -0.04968706 -0.60837677
-9     A -0.02293410 -0.17278577
-10    B -0.52622388 -0.14304903</code></pre>
+<pre><code>   name     number    number_2
+1     A  0.0690451 -0.91968891
+2     B -1.2167246  1.80506131
+3     A  0.4833398 -0.49421038
+4     B  0.4481453  0.93875809
+5     A -1.4707950  1.08971386
+6     B -0.4827690 -1.50655134
+7     A -0.1449537 -0.08164807
+8     B -0.1352923 -1.47958438
+9     A -0.1411728  1.27700835
+10    B  0.6464303 -1.10132625</code></pre>
 </div>
 </div>
 </section>
@@ -1405,7 +1402,7 @@ Weiterführendes Arbeiten mit Bedingungen
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><code>if_else()</code> ist ein einfaches Beispiel für das Arbeiten mit Bedingungen. Wenn es allerdings darum geht, mit <strong>mehreren Bedingungen</strong> zu arbeiten oder bestehende Werte <strong>umzukodieren</strong>, sind andere Funktionen aus dem <code>dplyr</code>-Werkzeugkasten wie <code>case_when()</code> oder <code>case_match()</code> hilfreich <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 12.5</a>)</span>.<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></p>
+<p><code>if_else()</code> ist ein einfaches Beispiel für das Arbeiten mit Bedingungen. Wenn es allerdings darum geht, mit <strong>mehreren Bedingungen</strong> zu arbeiten oder bestehende Werte <strong>umzukodieren</strong>, sind andere Funktionen aus dem <code>dplyr</code>-Werkzeugkasten wie <code>case_when()</code> oder <code>case_match()</code> hilfreich <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 12.5</a>)</span>.<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></p>
 </div>
 </div>
 </section>
@@ -2141,7 +2138,7 @@ Tipp
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-r4ds2023" class="csl-entry" role="listitem">
 Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for Data Science. Import, Tidy, Transform, Visualize and Model Data</em>. 2nd Aufl. Sebastopol: O’Reilly. <a href="https://r4ds.hadley.nz/">https://r4ds.hadley.nz/</a>.
 </div>
@@ -2165,7 +2162,7 @@ Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for 
 <li id="fn12"><p><em>base R</em> verfügt über eine Funktion namens <code>ifelse()</code>, die <code>if_else()</code> nur <a href="https://stackoverflow.com/questions/50646133/dplyr-if-else-vs-base-r-ifelse">leicht verändert</a> hat.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn13"><p>Eine kurze Einführung in diese zwei Funktionen liefert ebenfalls <a href="https://debruine.github.io/post/case_functions/">dieser Blogpost</a>.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn14"><p>Jede <code>tidyverse</code>-Funktion, die die <em>American English</em>-Endung <code>*ize()</code> enthält, existiert auch als <em>British English</em>-Alternative <code>*ise()</code>.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn15"><p>Die folgenden Aufgaben basieren auf <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 3</a>)</span>.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Die folgenden Aufgaben basieren auf <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 3</a>)</span>.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -2190,150 +2187,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

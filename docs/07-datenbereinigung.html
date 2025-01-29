@@ -91,12 +91,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -157,7 +155,6 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Einführung in R</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -212,7 +209,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -286,6 +283,20 @@ div.csl-indent {
   <li><a href="#geburten" id="toc-geburten" class="nav-link" data-scroll-target="#geburten"><span class="header-section-number">7.4.2.3</span> <code>geburten</code></a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#lösungen" id="toc-lösungen" class="nav-link" data-scroll-target="#lösungen"><span class="header-section-number">7.5</span> Lösungen</a>
+  <ul>
+  <li><a href="#variablen-2" id="toc-variablen-2" class="nav-link" data-scroll-target="#variablen-2"><span class="header-section-number">7.5.1</span> Variablen</a>
+  <ul class="collapse">
+  <li><a href="#trennen-2" id="toc-trennen-2" class="nav-link" data-scroll-target="#trennen-2"><span class="header-section-number">7.5.1.1</span> Trennen</a></li>
+  <li><a href="#verbinden-1" id="toc-verbinden-1" class="nav-link" data-scroll-target="#verbinden-1"><span class="header-section-number">7.5.1.2</span> Verbinden</a></li>
+  </ul></li>
+  <li><a href="#tabellenorganisation-2" id="toc-tabellenorganisation-2" class="nav-link" data-scroll-target="#tabellenorganisation-2"><span class="header-section-number">7.5.2</span> Tabellenorganisation</a>
+  <ul class="collapse">
+  <li><a href="#billboard-1" id="toc-billboard-1" class="nav-link" data-scroll-target="#billboard-1"><span class="header-section-number">7.5.2.1</span> <code>billboard</code></a></li>
+  <li><a href="#who2-1" id="toc-who2-1" class="nav-link" data-scroll-target="#who2-1"><span class="header-section-number">7.5.2.2</span> <code>who2</code></a></li>
+  <li><a href="#geburten-1" id="toc-geburten-1" class="nav-link" data-scroll-target="#geburten-1"><span class="header-section-number">7.5.2.3</span> <code>geburten</code></a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -326,7 +337,7 @@ div.csl-indent {
 <h2 data-number="7.1" class="anchored" data-anchor-id="sec-datenbereinigung-tidy-data"><span class="header-section-number">7.1</span> <em>Tidy data</em></h2>
 <section id="definition" class="level3" data-number="7.1.1">
 <h3 data-number="7.1.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">7.1.1</span> Definition</h3>
-<p>Nachdem wir bereits viele Pakete des <code>tidyverse</code> kennengelernt haben, ist die Frage angebracht, weshalb diese Kombination von Paketen das Wort <em>tidy</em> (zu deutsch “ordentlich” oder “aufgeräumt”) im Namen trägt. Tatsächlich verbirgt sich hinter dieser Bezeichnung eine präzise Vorstellung davon, wie Daten idealerweise für die Weitervera<strong>R</strong>beitung in einer Tabelle angeordnet sein sollten. Laut <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 5.2</a>)</span> sind Daten dann <em>tidy</em>, wenn <strong>drei Prinzipien</strong> erfüllt sind:</p>
+<p>Nachdem wir bereits viele Pakete des <code>tidyverse</code> kennengelernt haben, ist die Frage angebracht, weshalb diese Kombination von Paketen das Wort <em>tidy</em> (zu deutsch “ordentlich” oder “aufgeräumt”) im Namen trägt. Tatsächlich verbirgt sich hinter dieser Bezeichnung eine präzise Vorstellung davon, wie Daten idealerweise für die Weitervera<strong>R</strong>beitung in einer Tabelle angeordnet sein sollten. Laut <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="references.html#ref-r4ds2023" role="doc-biblioref">2023, Kap. 5.2</a>)</span> sind Daten dann <em>tidy</em>, wenn <strong>drei Prinzipien</strong> erfüllt sind:</p>
 <ol type="1">
 <li>Jede <strong>Variable</strong> ist eine <strong>Spalte</strong>; jede Spalte ist eine Variable.</li>
 <li>Jede <strong>Beobachtung</strong> ist eine <strong>Zeile</strong>; jede Zeile ist eine Beobachtung.</li>
@@ -338,7 +349,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/images/tidy-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Die Prinzipien ordentlicher Daten <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 5.2</a>)</span>.</figcaption>
+<figcaption>Die Prinzipien ordentlicher Daten <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 5.2</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -594,7 +605,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://bookdown.org/wangminjie/R4DS/images/tidyr-fig.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>Breite und lange Tabellenformate <span class="citation" data-cites="wang2024">(<a href="#ref-wang2024" role="doc-biblioref">Wang 2024</a>)</span>.</figcaption>
+<figcaption>Breite und lange Tabellenformate <span class="citation" data-cites="wang2024">(<a href="references.html#ref-wang2024" role="doc-biblioref">Wang 2024</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -746,12 +757,6 @@ div.csl-indent {
 </ul>
 <p>In einem weiteren Schritt trennen Sie die Variable <code>date.entered</code> in drei separate Variablen (<code>year</code>, <code>month</code> und <code>day</code>). Ihr Ergebnis (ohne die <code>wk</code>-Spalten) sollte so aussehen (beachten Sie auch die Variablentypen!):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(<span class="at">col =</span> date.entered,</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"m"</span>, <span class="st">"d"</span>),</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">sep =</span> <span class="st">"-"</span>,</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">convert =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 317 × 5
    artist         track                       y     m     d
@@ -774,11 +779,6 @@ div.csl-indent {
 <h4 data-number="7.4.1.2" class="anchored" data-anchor-id="verbinden"><span class="header-section-number">7.4.1.2</span> Verbinden</h4>
 <p>Betrachten Sie die durch <code>tidyr</code> mitgelieferte Tabelle <strong><code>table5</code></strong>. Verbinden Sie die Spalten <code>century</code> und <code>year</code> zu einer neuen Spalte <code>year</code>, die eine korrekte, vierstellige Jahresangabe beinhaltet. Nutzen Sie außerdem ein weiteres <code>dplyr</code>-Verb, um die Variable in den richtigen Datentyp zu transformieren (<a href="03-grundlagen.html#sec-grundlagen-datentypen-arbeiten-transformieren" class="quarto-xref"><span>Kapitel 3.4.8.3</span></a>). Ihr Ergebnis sollte so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>table5 <span class="sc">|&gt;</span> </span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(year, </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>        century, year, </span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep =</span> <span class="st">""</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(year))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   country      year rate             
@@ -799,12 +799,6 @@ div.csl-indent {
 <h4 data-number="7.4.2.1" class="anchored" data-anchor-id="billboard"><span class="header-section-number">7.4.2.1</span> <code>billboard</code></h4>
 <p>Verlängern Sie <code>billboard</code> so, dass die Wochenangaben in einer Variable <code>week</code> und die Platzierungen in einer Variable <code>rank</code> dargestellt werden. Ihr Ergebnis sollte so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"wk"</span>), <span class="co"># or !1:2</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="st">"week"</span>,</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"rank"</span>,</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_prefix =</span> <span class="st">"wk"</span>, <span class="co"># or parse_number afterwards</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_drop_na =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5,307 × 5
    artist  track                   date.entered week   rank
@@ -832,11 +826,6 @@ div.csl-indent {
 </ul>
 <p>Nachdem wie in Erfahrung gebracht haben, wofür die Spaltennamen stehen<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, verlängern Sie die Tabelle so, dass die einzelnen Informationen in drei verschiedene Variablen <code>diagnosis</code>, <code>gender</code> und <code>age_group</code> sowie die Fallzahlen in einer Variable <code>count</code> dargestellt werden. Ihr Ergebnis sollte so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>who2 <span class="sc">|&gt;</span> </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">!</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"diagnosis"</span>, <span class="st">"gender"</span>, <span class="st">"age_group"</span>), </span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"count"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 405,440 × 6
    country      year diagnosis gender age_group count
@@ -857,19 +846,19 @@ div.csl-indent {
 </section>
 <section id="geburten" class="level4" data-number="7.4.2.3">
 <h4 data-number="7.4.2.3" class="anchored" data-anchor-id="geburten"><span class="header-section-number">7.4.2.3</span> <code>geburten</code></h4>
-<p>Erzeugen und betrachten Sie die Tabelle <code>geburten</code>, die wir in der letzten Sitzung eingelesen haben (<a href="06-datenimport-und-export.html#sec-datenimport-uebungsaufgaben-csv" class="quarto-xref"><span>Kapitel 6.4.1</span></a>).</p>
+<p>Erzeugen und betrachten Sie die Tabelle <code>geburten</code>, die wir in der letzten Sitzung eingelesen haben (<a href="06-datenimport-und-export.html#sec-datenimport-uebungsaufgaben-csv" class="quarto-xref"><span>Kapitel 6.5.1</span></a>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">jahr =</span> <span class="fu">c</span>(<span class="dv">2013</span>, <span class="dv">2014</span>, <span class="dv">2015</span>, <span class="dv">2016</span>, <span class="dv">2017</span>, <span class="dv">2018</span>, <span class="dv">2019</span>, </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>), </span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_insgesamt =</span> <span class="fu">c</span>(<span class="dv">109562</span>, <span class="dv">113935</span>, </span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">118228</span>, <span class="dv">125689</span>, <span class="dv">126191</span>, <span class="dv">127616</span>, <span class="dv">128227</span>, <span class="dv">128764</span>, <span class="dv">134321</span>, <span class="dv">124897</span>, </span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">116505</span>), </span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_maennlich =</span> <span class="fu">c</span>(<span class="dv">55913</span>, <span class="dv">58695</span>, <span class="dv">60511</span>, <span class="dv">64503</span>, <span class="dv">64294</span>, </span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">65272</span>, <span class="dv">65760</span>, <span class="dv">65932</span>, <span class="dv">68881</span>, <span class="dv">64000</span>, <span class="dv">59917</span>), </span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_weiblich =</span> <span class="fu">c</span>(<span class="dv">53649</span>, </span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>                                         <span class="dv">55240</span>, <span class="dv">57717</span>, <span class="dv">61186</span>, <span class="dv">61897</span>, <span class="dv">62344</span>, <span class="dv">62467</span>, <span class="dv">62832</span>, <span class="dv">65440</span>, <span class="dv">60897</span>, </span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>                                         <span class="dv">56588</span>))</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>geburten</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">jahr =</span> <span class="fu">c</span>(<span class="dv">2013</span>, <span class="dv">2014</span>, <span class="dv">2015</span>, <span class="dv">2016</span>, <span class="dv">2017</span>, <span class="dv">2018</span>, <span class="dv">2019</span>, </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>), </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_insgesamt =</span> <span class="fu">c</span>(<span class="dv">109562</span>, <span class="dv">113935</span>, </span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">118228</span>, <span class="dv">125689</span>, <span class="dv">126191</span>, <span class="dv">127616</span>, <span class="dv">128227</span>, <span class="dv">128764</span>, <span class="dv">134321</span>, <span class="dv">124897</span>, </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">116505</span>), </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_maennlich =</span> <span class="fu">c</span>(<span class="dv">55913</span>, <span class="dv">58695</span>, <span class="dv">60511</span>, <span class="dv">64503</span>, <span class="dv">64294</span>, </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="dv">65272</span>, <span class="dv">65760</span>, <span class="dv">65932</span>, <span class="dv">68881</span>, <span class="dv">64000</span>, <span class="dv">59917</span>), </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">geburten_weiblich =</span> <span class="fu">c</span>(<span class="dv">53649</span>, </span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>                                         <span class="dv">55240</span>, <span class="dv">57717</span>, <span class="dv">61186</span>, <span class="dv">61897</span>, <span class="dv">62344</span>, <span class="dv">62467</span>, <span class="dv">62832</span>, <span class="dv">65440</span>, <span class="dv">60897</span>, </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>                                         <span class="dv">56588</span>))</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>geburten</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 11 × 4
     jahr geburten_insgesamt geburten_maennlich geburten_weiblich
@@ -887,13 +876,10 @@ div.csl-indent {
 11  2023             116505              59917             56588</code></pre>
 </div>
 </div>
-<p>Verlängern Sie diese Tabelle so, dass die Geschlechtsangabe und die Anzahl der Geburten in eigenen Variablen vorliegen. Ihr Ergebnis sollte so aussehen:</p>
+<ol type="1">
+<li>Verlängern Sie diese Tabelle so, dass die Geschlechtsangabe und die Anzahl der Geburten in eigenen Variablen vorliegen. Ihr Ergebnis sollte so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="sc">|&gt;</span> </span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"geburten"</span>),</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"geschlecht"</span>,</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"geburten_"</span>,</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"geburten"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 33 × 3
     jahr geschlecht geburten
@@ -911,14 +897,10 @@ div.csl-indent {
 # ℹ 23 more rows</code></pre>
 </div>
 </div>
-<p>Diese Tabelle ist aufgeräumt, aber für manche Zwecke ungeeignet. Was, wenn wir den Anteil an Geburten je nach Geschlecht und Jahr berechnen wollen? Eine Möglichkeit, dies zu tun, wäre die folgende: Verlängern Sie <code>geburten</code> statt wie zuvor so, dass nur die Spalten <code>geburten_maennlich</code> und <code>geburten_weiblich</code> herangezogen werden. Die Spalten <code>geburten_insgesamt</code> soll hingegen erhalten bleiben. In einem weiteren Schritt nutzen Sie <code>mutate()</code>, um den jeweiligen Anteil zu berechnen. Ihr Ergebnis sollte so aussehen:</p>
+<ol start="2" type="1">
+<li>Diese Tabelle ist aufgeräumt, aber für manche Zwecke ungeeignet. Was, wenn wir den Anteil an Geburten je nach Geschlecht und Jahr berechnen wollen? Eine Möglichkeit, dies zu tun, wäre die folgende: Verlängern Sie <code>geburten</code> statt wie zuvor so, dass nur die Spalten <code>geburten_maennlich</code> und <code>geburten_weiblich</code> herangezogen werden. Die Spalten <code>geburten_insgesamt</code> soll hingegen erhalten bleiben. In einem weiteren Schritt nutzen Sie <code>mutate()</code>, um den jeweiligen Anteil zu berechnen. Ihr Ergebnis sollte so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="sc">|&gt;</span> </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(geburten_maennlich, geburten_weiblich),</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"geschlecht"</span>,</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"geburten_"</span>,</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"geburten"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">anteil =</span> <span class="fu">round</span>(geburten <span class="sc">/</span> geburten_insgesamt <span class="sc">*</span> <span class="dv">100</span>, <span class="at">digits =</span> <span class="dv">1</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 22 × 5
     jahr geburten_insgesamt geschlecht geburten anteil
@@ -936,9 +918,84 @@ div.csl-indent {
 # ℹ 12 more rows</code></pre>
 </div>
 </div>
+</section>
+</section>
+</section>
+<section id="lösungen" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="lösungen"><span class="header-section-number">7.5</span> Lösungen</h2>
+<section id="variablen-2" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="variablen-2"><span class="header-section-number">7.5.1</span> Variablen</h3>
+<section id="trennen-2" class="level4" data-number="7.5.1.1">
+<h4 data-number="7.5.1.1" class="anchored" data-anchor-id="trennen-2"><span class="header-section-number">7.5.1.1</span> Trennen</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(<span class="at">col =</span> date.entered,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"m"</span>, <span class="st">"d"</span>),</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">sep =</span> <span class="st">"-"</span>,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">convert =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="verbinden-1" class="level4" data-number="7.5.1.2">
+<h4 data-number="7.5.1.2" class="anchored" data-anchor-id="verbinden-1"><span class="header-section-number">7.5.1.2</span> Verbinden</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>table5 <span class="sc">|&gt;</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(year, </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>        century, year, </span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep =</span> <span class="st">""</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.numeric</span>(year))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="tabellenorganisation-2" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="tabellenorganisation-2"><span class="header-section-number">7.5.2</span> Tabellenorganisation</h3>
+<section id="billboard-1" class="level4" data-number="7.5.2.1">
+<h4 data-number="7.5.2.1" class="anchored" data-anchor-id="billboard-1"><span class="header-section-number">7.5.2.1</span> <code>billboard</code></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"wk"</span>), <span class="co"># or !1:2</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="st">"week"</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"rank"</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_prefix =</span> <span class="st">"wk"</span>, <span class="co"># or parse_number afterwards</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_drop_na =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="who2-1" class="level4" data-number="7.5.2.2">
+<h4 data-number="7.5.2.2" class="anchored" data-anchor-id="who2-1"><span class="header-section-number">7.5.2.2</span> <code>who2</code></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>who2 <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">!</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"diagnosis"</span>, <span class="st">"gender"</span>, <span class="st">"age_group"</span>), </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">names_sep =</span> <span class="st">"_"</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values_to =</span> <span class="st">"count"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="geburten-1" class="level4" data-number="7.5.2.3">
+<h4 data-number="7.5.2.3" class="anchored" data-anchor-id="geburten-1"><span class="header-section-number">7.5.2.3</span> <code>geburten</code></h4>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="sc">|&gt;</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"geburten"</span>),</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"geschlecht"</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"geburten_"</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"geburten"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>geburten <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(geburten_maennlich, geburten_weiblich),</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"geschlecht"</span>,</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_prefix =</span> <span class="st">"geburten_"</span>,</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"geburten"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">anteil =</span> <span class="fu">round</span>(geburten <span class="sc">/</span> geburten_insgesamt <span class="sc">*</span> <span class="dv">100</span>, <span class="at">digits =</span> <span class="dv">1</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-wang2024" class="csl-entry" role="listitem">
 Wang, Minjie. 2024. <span>„数据科学中的 R 语言“</span>. <a href="https://bookdown.org/wangminjie/R4DS/" class="uri">https://bookdown.org/wangminjie/R4DS/</a>.
 </div>
@@ -952,7 +1009,7 @@ Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for 
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Dieses Kapitel basiert auf <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 5</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Dieses Kapitel basiert auf <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="references.html#ref-r4ds2023" role="doc-biblioref">2023, Kap. 5</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Bei <code>table1</code> bis <code>table5</code> wie auch bei <code>who</code> und <code>who2</code> handelt es sich um Beispieltabellen, die im Paket <code>tidyr</code> vorhanden sind. Sie beziehen sich auf Bevölkerungsangaben und von der Weltgesundheitsorganisation dokumentierte Tuberkulose-Fälle (siehe <code>?table1</code>).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Auch für dieses Package liegt ein <em>cheatsheet</em> vor (<a href="02-workflow.html#sec-workflow-hilfe-und-selbsthilfe-cheatsheets" class="quarto-xref"><span>Kapitel 2.4.5</span></a>). In der aktuellsten Version wurde die Funktion <code>separate()</code> jedoch durch neuere Varianten (<code>separate_wider_position()</code> und <code>separate_wider_delim()</code>) ersetzt. Weil <code>separate()</code> in der älteren Form jedoch nach wie vor sehr verbreitet und seine Logik sich ohne Mühe auf die Nachfolgefunktionen übertragen lässt, nutzen wir in diesem Kapitel nach wie vor <code>separate()</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Siehe <code>?separate</code>. Dasselbe Vorgehen gilt für <code>unite()</code>.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -983,150 +1040,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1529,8 +1442,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-datenimport-und-export.html" class="pagination-link" aria-label="Allgemeiner Ablauf">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span>
+      <a href="./06-datenimport-und-export.html" class="pagination-link" aria-label="Datenimport und -export">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

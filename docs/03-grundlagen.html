@@ -91,12 +91,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -157,7 +155,6 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Einführung in R</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -212,7 +209,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -425,7 +422,7 @@ div.csl-indent {
 <blockquote class="blockquote">
 <p>Um Berechnungen in R zu verstehen sind zwei Sätze hilfreich:<br>
 <em>Alles, was existiert, ist ein Objekt.</em><br>
-<em>Alles, was passiert, ist ein Funktionsaufruf.</em> <span class="citation" data-cites="chambers2014">(<a href="#ref-chambers2014" role="doc-biblioref">Chambers 2014</a>)</span></p>
+<em>Alles, was passiert, ist ein Funktionsaufruf.</em> <span class="citation" data-cites="chambers2014">(<a href="references.html#ref-chambers2014" role="doc-biblioref">Chambers 2014</a>)</span></p>
 </blockquote>
 <p>Die <strong>Vorteile</strong> dieser Art von Programmierung gegenüber der Nutzung von Tabellenkalkulationssoftware wie Excel besteht darin, dass wir eine Reihe von Anweisungen zur Ausführung von Aufgaben einfach verfassen und endlos wiederholen und verändern können.</p>
 <section id="sec-grundlagen-eingabe-objekte" class="level3" data-number="3.2.1">
@@ -796,7 +793,7 @@ Levels: bad neutral good</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.Date</span>()</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "2025-01-28"</code></pre>
+<pre><code>[1] "2025-01-29"</code></pre>
 </div>
 </div>
 <p>Auf Nachfrage bestätigt uns R, dass es sich bei dem <em>output</em> dieser Funktion um ein Objekt mit der Klasse <code>Date</code> handelt.</p>
@@ -927,7 +924,7 @@ Lang- und Kurzschreibweise
 <h3 data-number="3.5.1" class="anchored" data-anchor-id="sec-grundlagen-datenstrukturen-vektor"><span class="header-section-number">3.5.1</span> Vektor</h3>
 <section id="erstellen" class="level4" data-number="3.5.1.1">
 <h4 data-number="3.5.1.1" class="anchored" data-anchor-id="erstellen"><span class="header-section-number">3.5.1.1</span> Erstellen</h4>
-<p>Die grundlegenste Datenstruktur, die auch als das <em>workhorse</em> <span class="citation" data-cites="matloff2011">(<a href="#ref-matloff2011" role="doc-biblioref">Matloff 2011</a>)</span>, also das “Arbeitspferd”, von R bezeichnet wird, ist der Vektor. Ein Vektor ist eine <strong>eindimensionale Reihe von einem oder mehreren Elementen gleichen Typs</strong>. Wir erzeugen diese Reihe mit der uns bereits begegneten Funktion <strong><code>c()</code></strong>, die für <em>concatenate</em> (“aneinanderhängen”, “verbinden”) steht. Einen Vektor der Zahlen 1 bis 5 erstellen wir also so:</p>
+<p>Die grundlegenste Datenstruktur, die auch als das <em>workhorse</em> <span class="citation" data-cites="matloff2011">(<a href="references.html#ref-matloff2011" role="doc-biblioref">Matloff 2011</a>)</span>, also das “Arbeitspferd”, von R bezeichnet wird, ist der Vektor. Ein Vektor ist eine <strong>eindimensionale Reihe von einem oder mehreren Elementen gleichen Typs</strong>. Wir erzeugen diese Reihe mit der uns bereits begegneten Funktion <strong><code>c()</code></strong>, die für <em>concatenate</em> (“aneinanderhängen”, “verbinden”) steht. Einen Vektor der Zahlen 1 bis 5 erstellen wir also so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1173,10 +1170,10 @@ $last_name
 [1] "Vandelay"
 
 $date
-[1] "2025-01-28"
+[1] "2025-01-29"
 
 $random_numbers
-[1] -1.639716894  0.009473728  0.170779145  1.611659084 -0.642393795</code></pre>
+[1]  2.0148606 -0.4391358  1.4214859  0.1434293 -0.7823707</code></pre>
 </div>
 </div>
 <p>Im Prinzip ist eine Liste also eine mächtige Datenstruktur. Dabei müssen wir verstehen, dass nicht nur – wie in unserem Beispiel – Vektoren also Komponente dienen können. Tatsächlich kann eine Liste auch selbst <strong>weitere Listen</strong> enthalten:</p>
@@ -1196,10 +1193,10 @@ $last_name
 [1] "Vandelay"
 
 $date
-[1] "2025-01-28"
+[1] "2025-01-29"
 
 $random_numbers
-[1] -0.655230208 -0.007225251 -0.571441022 -0.612850974  1.092268424
+[1] -0.11074826 -0.08651466 -1.09425958 -0.56976779  0.60387845
 
 $my_second_list
 $my_second_list$component_character
@@ -1216,8 +1213,8 @@ $my_second_list$component_numeric
 <pre><code>List of 5
  $ first_name    : chr "Art"
  $ last_name     : chr "Vandelay"
- $ date          : Date[1:1], format: "2025-01-28"
- $ random_numbers: num [1:5] -0.65523 -0.00723 -0.57144 -0.61285 1.09227
+ $ date          : Date[1:1], format: "2025-01-29"
+ $ random_numbers: num [1:5] -0.1107 -0.0865 -1.0943 -0.5698 0.6039
  $ my_second_list:List of 2
   ..$ component_character: chr "Ein Wort"
   ..$ component_numeric  : int [1:5] 1 2 3 4 5</code></pre>
@@ -1395,16 +1392,16 @@ Datsun 710    22.8   4  108  93</code></pre>
 <span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">number =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)) <span class="co"># Zufallszahlen erzeugen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   name       number
-1     A  1.296606415
-2     B -0.186121806
-3     A -0.380265199
-4     B  0.846355218
-5     A -0.007353198
-6     B  1.021917453
-7     A  1.019699154
-8     B -0.414554968
-9     A  1.564275184
-10    B -0.570575798</code></pre>
+1     A -0.741080033
+2     B -1.316711288
+3     A  1.486603942
+4     B -1.138243670
+5     A -0.007832131
+6     B -0.354206496
+7     A -0.771280986
+8     B  1.151852454
+9     A -0.652550694
+10    B -0.322875285</code></pre>
 </div>
 </div>
 <p>Tatsächlich handelt es sich bei <code>name</code> aber nicht um einen <code>character</code>-String, sondern um einen <code>factor</code>, denn es handelt sich bei A und B um mehrere Beobachtungen derselben Gruppe. Standardmäßig behandelt <code>data.frame()</code> alle Texteingaben als <code>character</code>. Wollen wir das ändern, müssen wir den Parameter <strong><code>stringsAsFactors</code></strong> auf <code>TRUE</code> setzen.</p>
@@ -1413,17 +1410,17 @@ Datsun 710    22.8   4  108  93</code></pre>
 <span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">zahl =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>),</span>
 <span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>) <span class="co"># Strings als factors einlesen</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   name       zahl
-1     A -1.4654663
-2     B -0.3091842
-3     A  0.8435259
-4     B -0.4260960
-5     A  0.1469855
-6     B  1.5689090
-7     A  1.2757797
-8     B -0.9233325
-9     A  2.4420428
-10    B -0.1127494</code></pre>
+<pre><code>   name        zahl
+1     A -0.18581488
+2     B -0.85554346
+3     A  0.07847864
+4     B -0.76365913
+5     A  0.35744945
+6     B  0.42816764
+7     A  0.75523495
+8     B -0.26206592
+9     A  1.71629897
+10    B -0.15952549</code></pre>
 </div>
 </div>
 <p>Und natürlich können wir unseren <em>data frame</em> als Objekt erstellen und dann darauf zugreifen.</p>
@@ -1434,16 +1431,16 @@ Datsun 710    22.8   4  108  93</code></pre>
 <span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a>my_data_frame</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   name       zahl
-1     A  0.3818675
-2     B -0.3839172
-3     A  0.6724293
-4     B  0.2366412
-5     A  0.5139548
-6     B -0.6875128
-7     A  1.1882096
-8     B -3.4976603
-9     A  1.3288991
-10    B  0.2920261</code></pre>
+1     A  2.1275438
+2     B -0.8499969
+3     A -0.2057648
+4     B  0.1780225
+5     A -0.3514293
+6     B  0.2894069
+7     A -1.2539977
+8     B  1.1534838
+9     A  0.2230626
+10    B -1.7269183</code></pre>
 </div>
 </div>
 </section>
@@ -1709,7 +1706,7 @@ Datsun 710    22.8   4  108  93</code></pre>
 </ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-chambers2014" class="csl-entry" role="listitem">
 Chambers, John M. 2014. <span>„"Object-Oriented Programming, Functional Programming and <span>R</span>"“</span>. <em><span>Statistical Science</span></em> 29 (2): 167–80.
 </div>
@@ -1739,7 +1736,7 @@ R Core Team. 2024. <span>„R Manuals: An Introduction to <span>R</span>“</spa
 <li id="fn11"><p>Die Verwechslung von <code>=</code> und <code>==</code> ist vermutlich einer der verbreitetsten Tippfehle<strong>R</strong>.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn12"><p>Neben <code>NA</code> gibt es in R noch den Wert <code>NaN</code> (<em>not a number</em>), wenn etwa durch 0 dividiert wird, <code>Inf</code>, wenn Werte Richtung Unendlichkeit (<em>infinity</em>) laufen sowie <code>NULL</code>-Objekte, die noch nicht definiert, also “leer” sind. Derlei Begriffe <a href="https://stackoverflow.com/questions/15496361/what-is-the-difference-between-nan-and-inf-and-null-and-na-in-r">schlagen wir am ehesten nach</a>, wenn sie uns begegnen.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn13"><p>Natürlich kann R auch mit anderen Datentypen rechnen, hierfür informiert man sich aber je nach Aufgabe am besten separat.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn14"><p>Eine gute Einführung in die Nutzung von Listen liefert <span class="citation" data-cites="matloff2011">Matloff (<a href="#ref-matloff2011" role="doc-biblioref">2011, Kap. 4</a>)</span> wie auch <span class="citation" data-cites="rcoreteam2024">R Core Team (<a href="#ref-rcoreteam2024" role="doc-biblioref">2024, Kap. 6</a>)</span>.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>Eine gute Einführung in die Nutzung von Listen liefert <span class="citation" data-cites="matloff2011">Matloff (<a href="references.html#ref-matloff2011" role="doc-biblioref">2011, Kap. 4</a>)</span> wie auch <span class="citation" data-cites="rcoreteam2024">R Core Team (<a href="references.html#ref-rcoreteam2024" role="doc-biblioref">2024, Kap. 6</a>)</span>.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn15"><p>Spalten werden oftmals auch <strong>Variablen</strong> (<em>variables</em>) genannt. Diese Verwendung kann zu Missverständnissen führen, denn in R erzeugte Objekte mit einem bestimmten Wert (wie oben <code>year</code>) wird gleichermaßen oft als Variable bezeichnet. Hier ist für uns wichtig, uns regelmäßig zu fragen, ob wir unser Vokabular richtig verstehen.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn16"><p>Mit <code>?mtcars</code> können wir mehr über den Datensatz erfahren.<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn17"><p>Ist die Tabelle zu breit, wird sie teils “abgeschnitten.”<a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1771,150 +1768,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

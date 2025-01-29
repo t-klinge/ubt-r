@@ -57,12 +57,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -123,7 +121,6 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Einführung in R</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -178,7 +175,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -224,7 +221,7 @@ div.csl-indent {
   <li><a href="#rstudio" id="toc-rstudio" class="nav-link active" data-scroll-target="#rstudio"><span class="header-section-number">2.1</span> RStudio</a>
   <ul>
   <li><a href="#sec-rstudio-console" id="toc-sec-rstudio-console" class="nav-link" data-scroll-target="#sec-rstudio-console"><span class="header-section-number">2.1.1</span> Console</a></li>
-  <li><a href="#workflow-rstudio-source" id="toc-workflow-rstudio-source" class="nav-link" data-scroll-target="#workflow-rstudio-source"><span class="header-section-number">2.1.2</span> Source</a></li>
+  <li><a href="#sec-workflow-rstudio-source" id="toc-sec-workflow-rstudio-source" class="nav-link" data-scroll-target="#sec-workflow-rstudio-source"><span class="header-section-number">2.1.2</span> Source</a></li>
   <li><a href="#environment" id="toc-environment" class="nav-link" data-scroll-target="#environment"><span class="header-section-number">2.1.3</span> Environment</a></li>
   <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output"><span class="header-section-number">2.1.4</span> Output</a></li>
   </ul></li>
@@ -285,7 +282,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./images/rstudio-panes-labeled.jpeg" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption>Die vier Fenster von RStudio <span class="citation" data-cites="posit2024">(<a href="#ref-posit2024" role="doc-biblioref">Posit 2024</a>)</span>.</figcaption>
+<figcaption>Die vier Fenster von RStudio <span class="citation" data-cites="posit2024">(<a href="references.html#ref-posit2024" role="doc-biblioref">Posit 2024</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -294,8 +291,8 @@ div.csl-indent {
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="sec-rstudio-console"><span class="header-section-number">2.1.1</span> Console</h3>
 <p>Auch <strong>Konsole</strong> oder <strong>Kommandozeile</strong> genannt: Hier “lebt” R. Sämtliche Eingaben in das Programm werden hier, hinter der <strong>Eingabeaufforderung</strong> <code>&gt;</code> getätigt. Wenn es im Verlauf des Kurses heißt, dass Sie etwas eingeben oder ausführen lassen sollen, damit die Konsole gemeint. Rechts vom R-Logo wird die installiert R-Version (hier 4.2.0) sowie das derzeit genutzte Verzeichnis (hier <code>~/rstudio-user-guide/</code>) angezeigt.</p>
 </section>
-<section id="workflow-rstudio-source" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="workflow-rstudio-source"><span class="header-section-number">2.1.2</span> Source</h3>
+<section id="sec-workflow-rstudio-source" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="sec-workflow-rstudio-source"><span class="header-section-number">2.1.2</span> Source</h3>
 <p>Auch <strong>Quelle</strong> oder <strong>Skript-Editor</strong> genannt: Hier können wir R-Code in einer Datei mit der Endung <strong><code>.R</code></strong> schreiben und abspeichern. Neue Skripte können wir in der Menüleiste über <code>File</code> → <code>New File</code> → <code>R Script</code> oder über die Schaltfläche darunter ebenso wie über die Tastenkombination <kbd>Strg+Shift+N</kbd> erstellen. Während wir Eingaben in der Konsole nur mithilfe zusätzlicher Schritte wieder aufrufen können, ist das Verfassen von Skripten eine sichere Art, den eigenen Fortschritt nicht mit Beenden des Programms einzubüßen. Außerdem liefert der Skript-Editor noch zahlreiche weitere <strong>Hilfestellungen</strong>: zum Beispiel färbt er den Code gemäß bestimmter (von uns noch kennenzulernenden) Regeln ein und macht ihn dadurch lesbarer, während er links neben dem Code oftmals schon Hinweise auf mögliche Fehler gibt.</p>
 </section>
 <section id="environment" class="level3" data-number="2.1.3">
@@ -319,7 +316,7 @@ div.csl-indent {
 <p>Wenn wir unseren <em>workspace</em> nicht immer speichern wollen, um unsere Fortschritte festzuhalten, haben wir zwei Möglichkeiten, den Code, den wir schreiben, zu dokumentieren und reproduzieren zu können. Dabei sollten wir stets bedenken, dass wir unsere Arbeitsschritte so dokumentieren, dass sie <strong>uns selbst in der Zukunft helfen</strong>, zu verstehen, was wir getan haben. Darüber hinaus ist gute Dokumentation wichtig, um uns mit Anderen über unsere Arbeit austauschen zu können.</p>
 <section id="skripte" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="skripte"><span class="header-section-number">2.3.1</span> Skripte</h3>
-<p>Die einfachste Art, R-Code zu dokumentieren, ist, für <strong>zusammenhängende Schritte</strong> ein Skript zu schreiben. Der Ort, dies zu tun, ist der Skript-Editor(<span class="citation" data-cites="workflow-rstudio-source">(<a href="#ref-workflow-rstudio-source" role="doc-biblioref"><strong>workflow-rstudio-source?</strong></a>)</span>) in RStudio. Einmal verfasst, können wir <strong>Code auf zwei Weisen ausführen</strong>:</p>
+<p>Die einfachste Art, R-Code zu dokumentieren, ist, für <strong>zusammenhängende Schritte</strong> ein Skript zu schreiben. Der Ort, dies zu tun, ist der Skript-Editor(<a href="#sec-workflow-rstudio-source" class="quarto-xref"><span>Kapitel 2.1.2</span></a>) in RStudio. Einmal verfasst, können wir <strong>Code auf zwei Weisen ausführen</strong>:</p>
 <ul>
 <li>Wenn der Cursor sich an einer Stelle im Code befindet oder der entsprechende Code mit der Maus markiert wurde, können wir ihn mit <kbd>Strg+Enter</kbd> ausführen.</li>
 <li>Alternativ können wir in der kleinen Leiste im Skript-Editor auf <code>Run</code> klicken. Das Dropdown-Menü ermöglicht noch weitere Schritte, etwa das Ausführen von Code-Chunk nach Code-Chunk.</li>
@@ -370,7 +367,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p>Mit diesen grundlegenden Fertigkeiten können wir die unsere Antworten zu den Übungsaufgaben in einem ansprechenden und nachvollziehbaren Format verfassen. Eine weiterführende Einleitung in Quarto bieten <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 28</a>)</span>.</p>
+<p>Mit diesen grundlegenden Fertigkeiten können wir die unsere Antworten zu den Übungsaufgaben in einem ansprechenden und nachvollziehbaren Format verfassen. Eine weiterführende Einleitung in Quarto bieten <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="references.html#ref-r4ds2023" role="doc-biblioref">2023, Kap. 28</a>)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -453,12 +450,12 @@ Prüfungsleistung
 <ul>
 <li><strong>Sie lernen R schlechter.</strong> Der Umgang mit Fehlermeldungen, dem Formulieren eigens gewünschter Datenverarbeitungsschritte und dem Verfassen von Code sind allesamt wichtige Fähigkeiten, die es sich zu erarbeiten lohnt. Wer sich von GenAI bei all diesen Problemen helfen oder sich ihre Bearbeitung gänzlich abnehmen lässt, läuft Gefahr, eine Sprache wie R nicht zu lernen, sondern durch alle sich bietenden Abkürzungen weitgehend auf einem niedrigen Lernniveau zu verharren.</li>
 <li><strong>Die KI kann wenig hilfreiche Ergebnisse liefern</strong>. GenAI-Tools erstellen – wenigstens ohne präzise Eingabeaufforderungen (<em>prompts</em>) – regelmäßig R-Code, der Funktionen und Pakete nutzt, mit denen der User nicht vertraut ist. Gerade zu Beginn ist es aber sinnvoll, sich vorrangig mit solchen Funktionen, die zum Lehrumfang gehören, zu beschäftigen, um diese zu verinnerlichen, bevor man selbstständig neue Funktionalitäten recherchiert und zu anzuwenden lernt.</li>
-<li><strong>Die KI kann falsche Ergebnisse liefern</strong> <span class="citation" data-cites="lenzen2024">(<a href="#ref-lenzen2024" role="doc-biblioref">Lenzen 2024</a>)</span>. Es kann vorkommen, dass GenAI-Tools nicht funktionierenden Code verfassen und trotz anderslautender Prompts Probleme nicht korrigieren. Nur, wer eine Sprache wir R lernt, ist mit der Zeit in der Lage, diese Schwierigkeiten zu erkennen – und selbst zu verbessern.</li>
-<li><strong>Die ökologischen Kosten (vor allem der Wasser- und Energieverbrauch) von GenAI-Tools sind immens</strong> <span class="citation" data-cites="meysenburg2024 parshley2024">(<a href="#ref-meysenburg2024" role="doc-biblioref">Meysenburg 2024</a>; <a href="#ref-parshley2024" role="doc-biblioref">Parshley 2024</a>)</span>. Folglich sollten wir die Funktionalitäten von KI nicht leichtfertig oder aus falscher Bequemlichkeit nutzen. Eine Suchmaschinenabfrage zu einem bestimmten R-Problem wie einer Fehlermeldung oder dem Syntax einer gewünschten Funktion ist bedeutend sparsamer.</li>
+<li><strong>Die KI kann falsche Ergebnisse liefern</strong> <span class="citation" data-cites="lenzen2024">(<a href="references.html#ref-lenzen2024" role="doc-biblioref">Lenzen 2024</a>)</span>. Es kann vorkommen, dass GenAI-Tools nicht funktionierenden Code verfassen und trotz anderslautender Prompts Probleme nicht korrigieren. Nur, wer eine Sprache wir R lernt, ist mit der Zeit in der Lage, diese Schwierigkeiten zu erkennen – und selbst zu verbessern.</li>
+<li><strong>Die ökologischen Kosten (vor allem der Wasser- und Energieverbrauch) von GenAI-Tools sind immens</strong> <span class="citation" data-cites="meysenburg2024 parshley2024">(<a href="references.html#ref-meysenburg2024" role="doc-biblioref">Meysenburg 2024</a>; <a href="references.html#ref-parshley2024" role="doc-biblioref">Parshley 2024</a>)</span>. Folglich sollten wir die Funktionalitäten von KI nicht leichtfertig oder aus falscher Bequemlichkeit nutzen. Eine Suchmaschinenabfrage zu einem bestimmten R-Problem wie einer Fehlermeldung oder dem Syntax einer gewünschten Funktion ist bedeutend sparsamer.</li>
 </ul>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-lenzen2024" class="csl-entry" role="listitem">
 Lenzen, Manuela. 2024. <em>Künstliche Intelligenz. Fakten, Chancen, Risiken</em>. 2nd Aufl. München: C.H. Beck.
 </div>
@@ -506,150 +503,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

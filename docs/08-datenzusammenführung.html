@@ -91,12 +91,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -157,7 +155,6 @@ div.csl-indent {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Einführung in R</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Dunkelmodus umschalten"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Lesemodus umschalten">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -212,7 +209,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-datenimport-und-export.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Allgemeiner Ablauf</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Datenimport und -export</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -287,6 +284,12 @@ div.csl-indent {
   <li><a href="#inner-join" id="toc-inner-join" class="nav-link" data-scroll-target="#inner-join"><span class="header-section-number">8.4.5</span> Inner Join</a></li>
   <li><a href="#semi-join-1" id="toc-semi-join-1" class="nav-link" data-scroll-target="#semi-join-1"><span class="header-section-number">8.4.6</span> Semi Join</a></li>
   <li><a href="#anti-join-1" id="toc-anti-join-1" class="nav-link" data-scroll-target="#anti-join-1"><span class="header-section-number">8.4.7</span> Anti Join</a></li>
+  <li><a href="#left-join-1" id="toc-left-join-1" class="nav-link" data-scroll-target="#left-join-1"><span class="header-section-number">8.4.8</span> Left Join</a></li>
+  <li><a href="#right-join-2" id="toc-right-join-2" class="nav-link" data-scroll-target="#right-join-2"><span class="header-section-number">8.4.9</span> Right Join</a></li>
+  <li><a href="#full-join-2" id="toc-full-join-2" class="nav-link" data-scroll-target="#full-join-2"><span class="header-section-number">8.4.10</span> Full Join</a></li>
+  <li><a href="#inner-join-1" id="toc-inner-join-1" class="nav-link" data-scroll-target="#inner-join-1"><span class="header-section-number">8.4.11</span> Inner Join</a></li>
+  <li><a href="#semi-join-2" id="toc-semi-join-2" class="nav-link" data-scroll-target="#semi-join-2"><span class="header-section-number">8.4.12</span> Semi Join</a></li>
+  <li><a href="#anti-join-2" id="toc-anti-join-2" class="nav-link" data-scroll-target="#anti-join-2"><span class="header-section-number">8.4.13</span> Anti Join</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -480,7 +483,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/diagrams/relational.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>Die Verbindungen zwischen Primärschlüsseln in <code>airlines</code>, <code>airports</code>, <code>planes</code>, <code>weather</code> und Fremdschlüsseln in <code>flights</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.2</a>)</span>.</figcaption>
+<figcaption>Die Verbindungen zwischen Primärschlüsseln in <code>airlines</code>, <code>airports</code>, <code>planes</code>, <code>weather</code> und Fremdschlüsseln in <code>flights</code> <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.2</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -502,7 +505,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/diagrams/join/left.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Die Logik eines <code>left_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+<figcaption>Die Logik eines <code>left_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -667,7 +670,7 @@ Explizite Angabe der Schlüsselfelder
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/diagrams/join/right.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Die Logik eines <code>right_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+<figcaption>Die Logik eines <code>right_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -703,7 +706,7 @@ Explizite Angabe der Schlüsselfelder
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/diagrams/join/full.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Die Logik eines <code>full_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+<figcaption>Die Logik eines <code>full_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -794,7 +797,7 @@ Check, check!
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/diagrams/join/venn.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption>Die Schnittmengen zweier <em>data frames</em> je nach <em>mutating join</em> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+<figcaption>Die Schnittmengen zweier <em>data frames</em> je nach <em>mutating join</em> <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -812,7 +815,7 @@ Check, check!
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/diagrams/join/semi.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Die Logik eines <code>semi_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+<figcaption>Die Logik eines <code>semi_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -848,7 +851,7 @@ Check, check!
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://r4ds.hadley.nz/diagrams/join/anti.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>Die Logik eines <code>anti_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
+<figcaption>Die Logik eines <code>anti_join()</code> <span class="citation" data-cites="r4ds2023">(<a href="references.html#ref-r4ds2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, und Grolemund 2023, Kap. 19.4</a>)</span>.</figcaption>
 </figure>
 </div>
 </div>
@@ -878,7 +881,7 @@ Check, check!
 </section>
 <section id="weitere-arten-von-join" class="level3" data-number="8.3.3">
 <h3 data-number="8.3.3" class="anchored" data-anchor-id="weitere-arten-von-join"><span class="header-section-number">8.3.3</span> Weitere Arten von Join</h3>
-<p>Mit den in diesem Kapitel vorgestellten Arten von <em>joins</em> ist bereits ein großer Bereich abgedeckt. Für weitere Anwendungen finden sich bei <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 19.5</a>)</span> noch fortgeschrittene Funktionen.</p>
+<p>Mit den in diesem Kapitel vorgestellten Arten von <em>joins</em> ist bereits ein großer Bereich abgedeckt. Für weitere Anwendungen finden sich bei <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="references.html#ref-r4ds2023" role="doc-biblioref">2023, Kap. 19.5</a>)</span> noch fortgeschrittene Funktionen.</p>
 </section>
 </section>
 <section id="übungsaufgaben" class="level2" data-number="8.4">
@@ -895,7 +898,7 @@ Check, check!
 </div>
 </div>
 </div>
-<p>Die folgenden Übungsaufgaben beziehen sich auf neun <em>data frames</em> aus dem Package <strong><code>starwarsdb</code></strong>. Wenn wir <code>starwarsdb</code> bereits installiert haben, müssen wir es nur noch mit <code>library(starwarsdb)</code> laden. Wenn wir <code>starwarsdb</code> noch nicht installiert haben (was einige Minuten dauert), können wir stattdessen <a href="https://github.com/ubt-r/starwars/raw/refs/heads/main/starwars.rdata">diese RDATA-Datei</a> herunterladen und sie dann mit mit <code>load()</code> laden:</p>
+<p>Die folgenden Übungsaufgaben beziehen sich auf neun <em>data frames</em> aus dem Package <strong><code>starwarsdb</code></strong>. Wenn wir <code>starwarsdb</code> bereits installiert haben, müssen wir es nur noch mit <code>library(starwarsdb)</code> laden. Wenn wir <code>starwarsdb</code> noch nicht installiert haben (was einige Minuten dauert), können wir stattdessen <a href="https://github.com/t-klinge/ubt-r/raw/refs/heads/master/files/starwars.rdata">diese RDATA-Datei</a> herunterladen und sie dann mit mit <code>load()</code> laden:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"./files/starwars.rdata"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -915,11 +918,10 @@ Check, check!
 </section>
 <section id="left-join" class="level3" data-number="8.4.2">
 <h3 data-number="8.4.2" class="anchored" data-anchor-id="left-join"><span class="header-section-number">8.4.2</span> Left Join</h3>
-<p>Führen Sie <code>films_planets</code> und <code>planets</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<ol type="1">
+<li>Führen Sie <code>films_planets</code> und <code>planets</code> zusammen. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>films_planets <span class="sc">|&gt;</span> </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(planets,</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"planet"</span> <span class="ot">=</span> <span class="st">"name"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 33 × 10
    title  planet rotation_period orbital_period diameter climate gravity terrain
@@ -938,13 +940,10 @@ Check, check!
 # ℹ 2 more variables: surface_water &lt;dbl&gt;, population &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p>Werten Sie die Tabelle mittels <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, in welchem Film die meisten unterschiedlichen Planeten vorkamen. Die Ergebnistabelle soll so aussehen:</p>
+<ol start="2" type="1">
+<li>Werten Sie die Tabelle mittels <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, in welchem Film die meisten unterschiedlichen Planeten vorkamen. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>films_planets <span class="sc">|&gt;</span> </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(planets,</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"planet"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
 # Groups:   title [6]
@@ -961,11 +960,10 @@ Check, check!
 </section>
 <section id="right-join-1" class="level3" data-number="8.4.3">
 <h3 data-number="8.4.3" class="anchored" data-anchor-id="right-join-1"><span class="header-section-number">8.4.3</span> Right Join</h3>
-<p>Führen Sie <code>people</code> und <code>films_people</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<ol type="1">
+<li>Führen Sie <code>people</code> und <code>films_people</code> zusammen. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>people <span class="sc">|&gt;</span> </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(films_people,</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 162 × 12
    name           height  mass hair_color skin_color eye_color birth_year gender
@@ -984,14 +982,10 @@ Check, check!
 # ℹ 4 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;, sex &lt;chr&gt;, title &lt;chr&gt;</code></pre>
 </div>
 </div>
-<p>Werten Sie die Tabelle mittels <code>filter()</code>, <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, in welchem Film die meisten Wookies (<code>species == "Wookie"</code>) vorkamen. Die Ergebnistabelle soll so aussehen:</p>
+<ol start="2" type="1">
+<li>Werten Sie die Tabelle mittels <code>filter()</code>, <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, in welchem Film die meisten Wookies (<code>species == "Wookie"</code>) vorkamen. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>people <span class="sc">|&gt;</span> </span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(films_people,</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"character"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Wookie"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 2
 # Groups:   title [4]
@@ -1006,11 +1000,10 @@ Check, check!
 </section>
 <section id="full-join-1" class="level3" data-number="8.4.4">
 <h3 data-number="8.4.4" class="anchored" data-anchor-id="full-join-1"><span class="header-section-number">8.4.4</span> Full Join</h3>
-<p>Führen Sie <code>films_vehicles</code> und <code>vehicles</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<ol type="1">
+<li>Führen Sie <code>films_vehicles</code> und <code>vehicles</code> zusammen. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>films_vehicles <span class="sc">|&gt;</span> </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(vehicles,</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vehicle"</span> <span class="ot">=</span> <span class="st">"name"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 104 × 15
    title           vehicle type  class model manufacturer cost_in_credits length
@@ -1031,15 +1024,10 @@ Check, check!
 #   hyperdrive_rating &lt;dbl&gt;, MGLT &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p>Werten Sie die Tabelle mittels <code>filter()</code>, <code>group_by()</code> und <code>summarize()</code> so aus, dass Sie erfahren, in welchem Film die schnellsten (<code>mean(max_atmosphering_speed, na.rm = TRUE)</code>) Raumschiffe (<code>type == "starship"</code>) vorkamen. Die Ergebnistabelle soll so aussehen:</p>
+<ol start="2" type="1">
+<li>Werten Sie die Tabelle mittels <code>filter()</code>, <code>group_by()</code> und <code>summarize()</code> so aus, dass Sie erfahren, in welchem Film die schnellsten (<code>mean(max_atmosphering_speed, na.rm = TRUE)</code>) Raumschiffe (<code>type == "starship"</code>) vorkamen. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>films_vehicles <span class="sc">|&gt;</span> </span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(vehicles,</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vehicle"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(type <span class="sc">==</span> <span class="st">"starship"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_speed =</span> <span class="fu">mean</span>(max_atmosphering_speed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_speed))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
   title                   mean_speed
@@ -1055,11 +1043,10 @@ Check, check!
 </section>
 <section id="inner-join" class="level3" data-number="8.4.5">
 <h3 data-number="8.4.5" class="anchored" data-anchor-id="inner-join"><span class="header-section-number">8.4.5</span> Inner Join</h3>
-<p>Führen Sie <code>vehicles</code> und <code>pilots</code> zusammen. Die Ergebnistabelle soll so aussehen:</p>
+<ol type="1">
+<li>Führen Sie <code>vehicles</code> und <code>pilots</code> zusammen. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>vehicles <span class="sc">|&gt;</span> </span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(pilots,</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"vehicle"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 43 × 15
    name              type     class    model manufacturer cost_in_credits length
@@ -1080,13 +1067,10 @@ Check, check!
 #   hyperdrive_rating &lt;dbl&gt;, MGLT &lt;dbl&gt;, pilot &lt;chr&gt;</code></pre>
 </div>
 </div>
-<p>Werten Sie die Tabelle mittels <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, welche Vehikel die meisten unterschiedlichen Pilot*innen hatten. Die Ergebnistabelle soll so aussehen:</p>
+<ol start="2" type="1">
+<li>Werten Sie die Tabelle mittels <code>group_by()</code> und <code>count()</code> so aus, dass Sie erfahren, welche Vehikel die meisten unterschiedlichen Pilot*innen hatten. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>vehicles <span class="sc">|&gt;</span> </span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(pilots,</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"vehicle"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">|&gt;</span> </span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 25 × 2
 # Groups:   name [25]
@@ -1108,16 +1092,13 @@ Check, check!
 </section>
 <section id="semi-join-1" class="level3" data-number="8.4.6">
 <h3 data-number="8.4.6" class="anchored" data-anchor-id="semi-join-1"><span class="header-section-number">8.4.6</span> Semi Join</h3>
-<p>Fügen Sie zunächst <code>films_planets</code> und die Spalten <code>title</code> und <code>episode_id</code> aus <code>films</code> mit <code>left_join()</code> zusammen. Nutzen Sie dann <code>filter()</code>, um nur die ersten drei Episoden auszuwählen (<code>between(episode_id, 1, 3)</code>). Die Ergebnistabelle soll <code>planet_names_first_trilogy</code> heißen und so aussehen:</p>
+<ol type="1">
+<li>Fügen Sie zunächst <code>films_planets</code> und die Spalten <code>title</code> und <code>episode_id</code> aus <code>films</code> mit <code>left_join()</code> zusammen. Nutzen Sie dann <code>filter()</code>, um nur die ersten drei Episoden auszuwählen (<code>between(episode_id, 1, 3)</code>). Die Ergebnistabelle soll <code>planet_names_first_trilogy</code> heißen und so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>planet_names_first_trilogy <span class="ot">&lt;-</span> films_planets <span class="sc">|&gt;</span> </span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(films <span class="sc">|&gt;</span> </span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(title, episode_id)) <span class="sc">|&gt;</span> </span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(episode_id, <span class="dv">1</span>, <span class="dv">3</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Joining with `by = join_by(title)`</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>planet_names_first_trilogy</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 21 × 3
    title                planet    episode_id
@@ -1135,11 +1116,10 @@ Check, check!
 # ℹ 11 more rows</code></pre>
 </div>
 </div>
-<p>Führen Sie desweiteren <code>planets</code> und <code>planet_names_first_trilogy</code> mittels <code>semi_join()</code> zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen der ersten drei Episoden enthält. Die Ergebnistabelle soll so aussehen:</p>
+<ol start="2" type="1">
+<li>Führen Sie desweiteren <code>planets</code> und <code>planet_names_first_trilogy</code> mittels <code>semi_join()</code> zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen der ersten drei Episoden enthält. Die Ergebnistabelle soll so aussehen:</li>
+</ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>planets <span class="sc">|&gt;</span> </span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(planet_names_first_trilogy,</span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"planet"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 15 × 9
    name          rotation_period orbital_period diameter climate gravity terrain
@@ -1167,9 +1147,6 @@ Check, check!
 <h3 data-number="8.4.7" class="anchored" data-anchor-id="anti-join-1"><span class="header-section-number">8.4.7</span> Anti Join</h3>
 <p>Führen Sie <code>planets</code> und <code>planet_names_first_trilogy</code> zusammen, um eine Ergebnistabelle zu erzeugen, die nur die Planeteninformationen aller Planeten, die <em>nicht</em> in den ersten drei Episoden vorkommen, enthält. Die Ergebnistabelle soll so aussehen:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>planets <span class="sc">|&gt;</span> </span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(planet_names_first_trilogy,</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"planet"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 44 × 9
    name      rotation_period orbital_period diameter climate     gravity terrain
@@ -1188,9 +1165,126 @@ Check, check!
 # ℹ 2 more variables: surface_water &lt;dbl&gt;, population &lt;dbl&gt;</code></pre>
 </div>
 </div>
+<p>##Lösungen</p>
+</section>
+<section id="left-join-1" class="level3" data-number="8.4.8">
+<h3 data-number="8.4.8" class="anchored" data-anchor-id="left-join-1"><span class="header-section-number">8.4.8</span> Left Join</h3>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>films_planets <span class="sc">|&gt;</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(planets,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"planet"</span> <span class="ot">=</span> <span class="st">"name"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>films_planets <span class="sc">|&gt;</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(planets,</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"planet"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="right-join-2" class="level3" data-number="8.4.9">
+<h3 data-number="8.4.9" class="anchored" data-anchor-id="right-join-2"><span class="header-section-number">8.4.9</span> Right Join</h3>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>people <span class="sc">|&gt;</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(films_people,</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>people <span class="sc">|&gt;</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(films_people,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"character"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Wookie"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="full-join-2" class="level3" data-number="8.4.10">
+<h3 data-number="8.4.10" class="anchored" data-anchor-id="full-join-2"><span class="header-section-number">8.4.10</span> Full Join</h3>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>films_vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(vehicles,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vehicle"</span> <span class="ot">=</span> <span class="st">"name"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>films_vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(vehicles,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"vehicle"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(type <span class="sc">==</span> <span class="st">"starship"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(title) <span class="sc">|&gt;</span> </span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_speed =</span> <span class="fu">mean</span>(max_atmosphering_speed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_speed))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="inner-join-1" class="level3" data-number="8.4.11">
+<h3 data-number="8.4.11" class="anchored" data-anchor-id="inner-join-1"><span class="header-section-number">8.4.11</span> Inner Join</h3>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(pilots,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"vehicle"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>vehicles <span class="sc">|&gt;</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(pilots,</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"vehicle"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">|&gt;</span> </span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="semi-join-2" class="level3" data-number="8.4.12">
+<h3 data-number="8.4.12" class="anchored" data-anchor-id="semi-join-2"><span class="header-section-number">8.4.12</span> Semi Join</h3>
+<ol type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>planet_names_first_trilogy <span class="ot">&lt;-</span> films_planets <span class="sc">|&gt;</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(films <span class="sc">|&gt;</span> </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(title, episode_id)) <span class="sc">|&gt;</span> </span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">between</span>(episode_id, <span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>planet_names_first_trilogy</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>planets <span class="sc">|&gt;</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">semi_join</span>(planet_names_first_trilogy,</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"planet"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="anti-join-2" class="level3" data-number="8.4.13">
+<h3 data-number="8.4.13" class="anchored" data-anchor-id="anti-join-2"><span class="header-section-number">8.4.13</span> Anti Join</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>planets <span class="sc">|&gt;</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(planet_names_first_trilogy,</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"name"</span> <span class="ot">=</span> <span class="st">"planet"</span>))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-r4ds2023" class="csl-entry" role="listitem">
 Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for Data Science. Import, Tidy, Transform, Visualize and Model Data</em>. 2nd Aufl. Sebastopol: O’Reilly. <a href="https://r4ds.hadley.nz/">https://r4ds.hadley.nz/</a>.
 </div>
@@ -1200,7 +1294,7 @@ Wickham, Hadley, Mine Çetinkaya-Rundel, und Garrett Grolemund. 2023. <em>R for 
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Dieses Kapitel basiert auf <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="#ref-r4ds2023" role="doc-biblioref">2023, Kap. 19</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Dieses Kapitel basiert auf <span class="citation" data-cites="r4ds2023">Wickham, Çetinkaya-Rundel, und Grolemund (<a href="references.html#ref-r4ds2023" role="doc-biblioref">2023, Kap. 19</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Das <code>tidyverse</code> hat <em>joins</em> keineswegs erfunden. <em>Left joins</em>, <em>right joins</em>, <em>inner joins</em> und <em>full joins</em> sind auch im Rahmen von <em>base R</em> unter Nutzung der Funktion <code>merge()</code> möglich (siehe <code>?merge</code>).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Bei einem Schlüsselfeld genügt die Nennung als <code>character</code>. Bei zwei oder mehr Schlüsselfelder müssen diese mit <code>c()</code> angegeben werden.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Hierbei handelt es sich um eine weitere Spielart der uns bereits bekannte <code>slice_*()</code>-Funktionen (<a href="04-datentransformation.html#sec-datentransformation-zeilen-slicing" class="quarto-xref"><span>Kapitel 4.2.2</span></a>).<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1230,150 +1324,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

@@ -656,7 +656,8 @@ Um unsere Rasterdaten `de_precipitation_reprojected_masked_annual` mit `ggplot2`
 
 ```{r}
 de_precipitation_reprojected_masked_annual_df <- as.data.frame(de_precipitation_reprojected_masked_annual, xy = TRUE)
-de_precipitation_reprojected_masked_annual_df
+head(de_precipitation_reprojected_masked_annual_df) # Erste Zeilen anzeigen
+dim(de_precipitation_reprojected_masked_annual_df) # Dimensionen anzeigen
 ```
 
 Unser Ergebnis hat **`r nrow(de_precipitation_reprojected_masked_annual_df)` Zeilen** und **`r ncol(de_precipitation_reprojected_masked_annual_df)` Spalten**: `x` und `y` stehen für die Koordinaten der Rasterzellen und `sum` für den zuvor berechneten jährlichen Niederschlag. Mit diesen Daten können wir unsere Kartenerstellung beginnen.
